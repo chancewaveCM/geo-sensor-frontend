@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm install:*)",
+      "Bash(npm install -g pnpm)",
+      "Bash(npm exec:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm run type-check:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run dev)",
+      "Bash(timeout 5 cmd:*)",
+      "Bash(timeout 3 ping:*)",
+      "Bash(timeout /t 5)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(npx next build:*)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\socho\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--workspace-geo-geo-sensor-frontend\\\\tasks\\\\*.output\")",
+      "Bash(Get-Content $_FullName)",
+      "Bash(Select-Object -Last 20 })",
+      "Bash(dir:*)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(pnpm type-check:*)",
+      "mcp__plugin_oh-my-claudecode_t__lsp_diagnostics_directory"
+    ]
+  }
+}
