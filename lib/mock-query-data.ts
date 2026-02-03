@@ -1,10 +1,22 @@
 // lib/mock-query-data.ts
 import type { LLMResponse, QueryLabResult } from '@/types/query-lab';
 
-export const mockGeminiResponse: LLMResponse = {
-  provider: 'gemini',
-  query: '2024년 최고의 스마트폰을 추천해주세요',
-  response: `2024년 최고의 스마트폰을 추천해드리겠습니다.
+/**
+ * Find the position of a brand mention in the response text.
+ * Returns actual position if found, or fallback position with dev warning.
+ */
+function findBrandPosition(text: string, brandName: string): { start: number; end: number } {
+  const index = text.indexOf(brandName);
+  if (index === -1) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(`[mock-data] Brand "${brandName}" not found in text, using fallback position`);
+    }
+    return { start: 0, end: brandName.length };
+  }
+  return { start: index, end: index + brandName.length };
+}
+
+const geminiResponseText = `2024년 최고의 스마트폰을 추천해드리겠습니다.
 
 1. **Samsung Galaxy S24 Ultra** - 가장 뛰어난 카메라 성능과 S펜 지원으로 생산성이 높습니다. AI 기능이 탁월합니다.
 
@@ -12,11 +24,35 @@ export const mockGeminiResponse: LLMResponse = {
 
 3. **Google Pixel 8 Pro** - 순정 안드로이드 경험과 최고의 컴퓨테이셔널 포토그래피를 자랑합니다.
 
-종합적으로 **Samsung Galaxy S24 Ultra**를 가장 추천드립니다.`,
+종합적으로 **Samsung Galaxy S24 Ultra**를 가장 추천드립니다.`;
+
+const gpt4ResponseText = `2024년 스마트폰 추천 목록입니다:
+
+**프리미엄 추천:**
+- **iPhone 15 Pro Max**: Apple의 최신 플래그십으로, A17 Pro 칩과 뛰어난 카메라 시스템을 갖추고 있습니다.
+
+**안드로이드 추천:**
+- **Samsung Galaxy S24+**: 훌륭한 디스플레이와 강력한 성능을 제공합니다.
+- **OnePlus 12**: 가성비가 뛰어나며 빠른 충전이 장점입니다.
+
+전반적으로 iOS를 선호하시면 **iPhone 15 Pro Max**, 안드로이드를 원하시면 **Samsung Galaxy S24+**를 추천합니다.`;
+
+const geminiSamsungPos = findBrandPosition(geminiResponseText, 'Samsung Galaxy S24 Ultra');
+const geminiIphonePos = findBrandPosition(geminiResponseText, 'iPhone 15 Pro Max');
+const geminiGooglePos = findBrandPosition(geminiResponseText, 'Google Pixel 8 Pro');
+
+const gpt4IphonePos = findBrandPosition(gpt4ResponseText, 'iPhone 15 Pro Max');
+const gpt4SamsungPos = findBrandPosition(gpt4ResponseText, 'Samsung Galaxy S24+');
+const gpt4OneplusPos = findBrandPosition(gpt4ResponseText, 'OnePlus 12');
+
+export const mockGeminiResponse: LLMResponse = {
+  provider: 'gemini',
+  query: '2024년 최고의 스마트폰을 추천해주세요',
+  response: geminiResponseText,
   brandMentions: [
-    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24 Ultra', matchType: 'exact', positionStart: 45, positionEnd: 69, confidence: 1.0 },
-    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: 150, positionEnd: 167, confidence: 1.0 },
-    { brandId: 3, brandName: 'Google', matchedText: 'Google Pixel 8 Pro', matchType: 'exact', positionStart: 250, positionEnd: 268, confidence: 1.0 },
+    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24 Ultra', matchType: 'exact', positionStart: geminiSamsungPos.start, positionEnd: geminiSamsungPos.end, confidence: 1.0 },
+    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: geminiIphonePos.start, positionEnd: geminiIphonePos.end, confidence: 1.0 },
+    { brandId: 3, brandName: 'Google', matchedText: 'Google Pixel 8 Pro', matchType: 'exact', positionStart: geminiGooglePos.start, positionEnd: geminiGooglePos.end, confidence: 1.0 },
   ],
   citations: [
     { brandId: 1, brandName: 'Samsung', citationType: 'recommendation', sentiment: 'positive', context: '가장 뛰어난 카메라 성능' },
@@ -31,20 +67,11 @@ export const mockGeminiResponse: LLMResponse = {
 export const mockGPT4Response: LLMResponse = {
   provider: 'gpt-4',
   query: '2024년 최고의 스마트폰을 추천해주세요',
-  response: `2024년 스마트폰 추천 목록입니다:
-
-**프리미엄 추천:**
-- **iPhone 15 Pro Max**: Apple의 최신 플래그십으로, A17 Pro 칩과 뛰어난 카메라 시스템을 갖추고 있습니다.
-
-**안드로이드 추천:**
-- **Samsung Galaxy S24+**: 훌륭한 디스플레이와 강력한 성능을 제공합니다.
-- **OnePlus 12**: 가성비가 뛰어나며 빠른 충전이 장점입니다.
-
-전반적으로 iOS를 선호하시면 **iPhone 15 Pro Max**, 안드로이드를 원하시면 **Samsung Galaxy S24+**를 추천합니다.`,
+  response: gpt4ResponseText,
   brandMentions: [
-    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: 35, positionEnd: 52, confidence: 1.0 },
-    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24+', matchType: 'exact', positionStart: 180, positionEnd: 199, confidence: 1.0 },
-    { brandId: 4, brandName: 'OnePlus', matchedText: 'OnePlus 12', matchType: 'exact', positionStart: 250, positionEnd: 260, confidence: 1.0 },
+    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: gpt4IphonePos.start, positionEnd: gpt4IphonePos.end, confidence: 1.0 },
+    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24+', matchType: 'exact', positionStart: gpt4SamsungPos.start, positionEnd: gpt4SamsungPos.end, confidence: 1.0 },
+    { brandId: 4, brandName: 'OnePlus', matchedText: 'OnePlus 12', matchType: 'exact', positionStart: gpt4OneplusPos.start, positionEnd: gpt4OneplusPos.end, confidence: 1.0 },
   ],
   citations: [
     { brandId: 2, brandName: 'Apple', citationType: 'recommendation', sentiment: 'positive', context: '최신 플래그십, A17 Pro 칩' },

@@ -2,26 +2,17 @@
 
 import { useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PROVIDER_CONFIG, SENTIMENT_CONFIG } from '@/lib/constants/query-lab-config';
+import { highlightBrandMentions } from '@/lib/utils/text-highlighter';
 import type { LLMResponse, SentimentType } from '@/types/query-lab';
 
 interface ResponsePanelProps {
   response: LLMResponse;
 }
 
-const providerConfig = {
-  'gemini': { name: 'Google Gemini', icon: '✨' },
-  'gpt-4': { name: 'OpenAI GPT-4', icon: '🤖' },
-};
-
-const sentimentConfig: Record<SentimentType, { label: string; color: string; bg: string }> = {
-  positive: { label: 'Positive', color: 'text-green-700', bg: 'bg-green-100' },
-  negative: { label: 'Negative', color: 'text-red-700', bg: 'bg-red-100' },
-  neutral: { label: 'Neutral', color: 'text-gray-700', bg: 'bg-gray-100' },
-};
-
 export function ResponsePanel({ response }: ResponsePanelProps) {
-  const provider = providerConfig[response.provider];
-  const sentiment = sentimentConfig[response.sentiment.overall];
+  const provider = PROVIDER_CONFIG[response.provider];
+  const sentiment = SENTIMENT_CONFIG[response.sentiment.overall];
 
   const uniqueBrands = useMemo(() => {
     const brands = new Map<string, { count: number; sentiment: SentimentType }>();
@@ -45,54 +36,10 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
     }));
   }, [response]);
 
-  const renderHighlightedText = () => {
-    if (response.brandMentions.length === 0) {
-      return <p className="whitespace-pre-wrap">{response.response}</p>;
-    }
-
-    const sortedMentions = [...response.brandMentions].sort(
-      (a, b) => a.positionStart - b.positionStart
-    );
-
-    const parts: React.ReactNode[] = [];
-    let lastEnd = 0;
-
-    for (const mention of sortedMentions) {
-      if (mention.positionStart < lastEnd || mention.positionEnd > response.response.length) {
-        continue;
-      }
-
-      if (mention.positionStart > lastEnd) {
-        parts.push(
-          <span key={`text-${lastEnd}`}>
-            {response.response.slice(lastEnd, mention.positionStart)}
-          </span>
-        );
-      }
-
-      parts.push(
-        <mark
-          key={`mention-${mention.positionStart}`}
-          className="bg-[#FEF3C7] px-1 rounded cursor-pointer hover:bg-yellow-300 transition-colors"
-          title={`${mention.brandName} (${mention.matchType}, ${Math.round(mention.confidence * 100)}% confidence)`}
-        >
-          {response.response.slice(mention.positionStart, mention.positionEnd)}
-        </mark>
-      );
-
-      lastEnd = mention.positionEnd;
-    }
-
-    if (lastEnd < response.response.length) {
-      parts.push(
-        <span key={`text-${lastEnd}`}>
-          {response.response.slice(lastEnd)}
-        </span>
-      );
-    }
-
-    return <p className="whitespace-pre-wrap leading-relaxed">{parts}</p>;
-  };
+  const highlightedText = useMemo(
+    () => highlightBrandMentions(response.response, response.brandMentions),
+    [response.response, response.brandMentions]
+  );
 
   return (
     <Card className="h-full">
@@ -114,8 +61,8 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="prose prose-sm max-w-none text-gray-700">
-          {renderHighlightedText()}
+        <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed">
+          {highlightedText}
         </div>
 
         {uniqueBrands.length > 0 && (
@@ -123,7 +70,7 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
             <p className="text-xs font-medium text-gray-500 mb-2">Brand Mentions</p>
             <div className="flex flex-wrap gap-2">
               {uniqueBrands.map((brand) => {
-                const sentimentStyle = sentimentConfig[brand.sentiment];
+                const sentimentStyle = SENTIMENT_CONFIG[brand.sentiment];
                 return (
                   <span
                     key={brand.name}

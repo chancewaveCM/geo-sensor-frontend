@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import { exportAsJSON, exportAsCSV } from '@/lib/utils/file-export';
 import type { QueryLabResult } from '@/types/query-lab';
 
 interface ExportButtonProps {
@@ -23,58 +24,13 @@ export function ExportButton({ result }: ExportButtonProps) {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const downloadFile = (content: string, filename: string, mimeType: string) => {
-    const blob = new Blob([content], { type: mimeType });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
-
-  const exportToJSON = () => {
-    const dataStr = JSON.stringify(result, null, 2);
-    downloadFile(dataStr, `query-lab-${result.id}.json`, 'application/json');
+  const handleExportJSON = () => {
+    exportAsJSON(result);
     setIsOpen(false);
   };
 
-  const exportToCSV = () => {
-    const rows: string[][] = [];
-
-    rows.push([
-      'Query',
-      'Provider',
-      'Brand',
-      'Citation Share (%)',
-      'Match Type',
-      'Sentiment',
-      'Citation Type',
-      'Context',
-    ]);
-
-    for (const response of result.responses) {
-      for (const citation of response.citations) {
-        rows.push([
-          result.query,
-          response.provider,
-          citation.brandName,
-          (response.citationShare[citation.brandName] || 0).toString(),
-          response.brandMentions.find(m => m.brandName === citation.brandName)?.matchType || '',
-          citation.sentiment,
-          citation.citationType,
-          citation.context,
-        ]);
-      }
-    }
-
-    const csvContent = rows.map(row =>
-      row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')
-    ).join('\n');
-
-    downloadFile(csvContent, `query-lab-${result.id}.csv`, 'text/csv');
+  const handleExportCSV = () => {
+    exportAsCSV(result);
     setIsOpen(false);
   };
 
@@ -97,7 +53,7 @@ export function ExportButton({ result }: ExportButtonProps) {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-50">
           <button
-            onClick={exportToJSON}
+            onClick={handleExportJSON}
             className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
           >
             <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +62,7 @@ export function ExportButton({ result }: ExportButtonProps) {
             Export as JSON
           </button>
           <button
-            onClick={exportToCSV}
+            onClick={handleExportCSV}
             className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2"
           >
             <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">

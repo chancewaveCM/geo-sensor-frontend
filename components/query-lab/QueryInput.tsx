@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PROVIDERS } from '@/lib/constants/query-lab-config';
 import type { LLMProvider } from '@/types/query-lab';
 
 interface QueryInputProps {
@@ -12,11 +13,6 @@ interface QueryInputProps {
   onSubmit: () => void;
   isLoading: boolean;
 }
-
-const providers: { id: LLMProvider; name: string; icon: string }[] = [
-  { id: 'gemini', name: 'Google Gemini', icon: '✨' },
-  { id: 'gpt-4', name: 'OpenAI GPT-4', icon: '🤖' },
-];
 
 export function QueryInput({
   query,
@@ -70,7 +66,7 @@ export function QueryInput({
             Select LLM Providers
           </label>
           <div className="flex flex-wrap gap-3">
-            {providers.map((provider) => (
+            {PROVIDERS.map((provider) => (
               <button
                 key={provider.id}
                 type="button"

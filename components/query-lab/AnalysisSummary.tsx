@@ -1,28 +1,12 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import type { LLMResponse, ComparisonSummary, SentimentType, LLMProvider } from '@/types/query-lab';
+import { PROVIDER_CONFIG, SENTIMENT_CONFIG } from '@/lib/constants/query-lab-config';
+import type { ComparisonSummary, LLMProvider } from '@/types/query-lab';
 
 interface AnalysisSummaryProps {
   summary: ComparisonSummary;
-  responses: LLMResponse[];
 }
-
-const sentimentConfig: Record<SentimentType, { label: string; color: string; bg: string; border: string }> = {
-  positive: { label: 'Positive', color: 'text-green-700', bg: 'bg-green-100', border: 'border-green-200' },
-  negative: { label: 'Negative', color: 'text-red-700', bg: 'bg-red-100', border: 'border-red-200' },
-  neutral: { label: 'Neutral', color: 'text-gray-700', bg: 'bg-gray-100', border: 'border-gray-200' },
-};
-
-const providerColors: Record<LLMProvider, string> = {
-  'gemini': 'bg-blue-500',
-  'gpt-4': 'bg-emerald-500',
-};
-
-const providerNames: Record<LLMProvider, string> = {
-  'gemini': 'Gemini',
-  'gpt-4': 'GPT-4',
-};
 
 export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
   const maxShare = Math.max(
@@ -56,10 +40,10 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
                       return (
                         <div key={provider} className="flex-1">
                           <div className="flex items-center gap-2">
-                            <span className="text-xs text-gray-500 w-12">{providerNames[provider]}</span>
+                            <span className="text-xs text-gray-500 w-12">{PROVIDER_CONFIG[provider].name}</span>
                             <div className="flex-1 h-4 bg-gray-100 rounded overflow-hidden">
                               <div
-                                className={`h-full ${providerColors[provider]} transition-all duration-300`}
+                                className={`h-full ${PROVIDER_CONFIG[provider].color} transition-all duration-300`}
                                 style={{ width: `${(share / maxShare) * 100}%` }}
                               />
                             </div>
@@ -78,8 +62,8 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
           <div className="flex gap-4 mt-4 pt-3 border-t border-gray-100">
             {summary.providers.map((provider) => (
               <div key={provider} className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded ${providerColors[provider]}`} />
-                <span className="text-xs text-gray-600">{providerNames[provider]}</span>
+                <div className={`w-3 h-3 rounded ${PROVIDER_CONFIG[provider].color}`} />
+                <span className="text-xs text-gray-600">{PROVIDER_CONFIG[provider].name}</span>
               </div>
             ))}
           </div>
@@ -89,7 +73,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
           <h3 className="text-sm font-medium text-gray-700 mb-3">Sentiment Analysis</h3>
           <div className="grid grid-cols-2 gap-4">
             {summary.sentimentComparison.map((item) => {
-              const sentiment = sentimentConfig[item.sentiment];
+              const sentiment = SENTIMENT_CONFIG[item.sentiment];
               return (
                 <div
                   key={item.provider}
@@ -97,7 +81,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">
-                      {providerNames[item.provider]}
+                      {PROVIDER_CONFIG[item.provider].name}
                     </span>
                     <span className={`text-sm font-semibold ${sentiment.color}`}>
                       {sentiment.label}

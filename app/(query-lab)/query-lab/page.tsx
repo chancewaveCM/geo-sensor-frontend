@@ -8,24 +8,42 @@ import { ExportButton } from '@/components/query-lab/ExportButton';
 import { mockQueryResult, generateComparisonSummary } from '@/lib/mock-query-data';
 import type { LLMProvider, QueryLabResult } from '@/types/query-lab';
 
+/** Simulated API latency for mock data */
+const SIMULATED_API_DELAY_MS = 1500;
+
 export default function QueryLabPage() {
   const [query, setQuery] = useState('');
   const [selectedProviders, setSelectedProviders] = useState<LLMProvider[]>(['gemini', 'gpt-4']);
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<QueryLabResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async () => {
-    if (!query.trim() || selectedProviders.length === 0) return;
+    if (!query.trim() || selectedProviders.length === 0) {
+      return;
+    }
 
     setIsLoading(true);
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    setError(null);
+    try {
+      await new Promise(resolve => setTimeout(resolve, SIMULATED_API_DELAY_MS));
 
-    setResult({
-      ...mockQueryResult,
-      query,
-      timestamp: new Date().toISOString(),
-    });
-    setIsLoading(false);
+      const filteredResponses = mockQueryResult.responses.filter(
+        r => selectedProviders.includes(r.provider)
+      );
+
+      setResult({
+        ...mockQueryResult,
+        query,
+        timestamp: new Date().toISOString(),
+        responses: filteredResponses,
+      });
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'An unexpected error occurred';
+      setError(`Query failed: ${message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const comparisonSummary = result ? generateComparisonSummary(result) : null;
@@ -51,6 +69,12 @@ export default function QueryLabPage() {
         isLoading={isLoading}
       />
 
+      {error && (
+        <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
+      )}
+
       {result && (
         <>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -63,7 +87,7 @@ export default function QueryLabPage() {
           </div>
 
           {comparisonSummary && (
-            <AnalysisSummary summary={comparisonSummary} responses={result.responses} />
+            <AnalysisSummary summary={comparisonSummary} />
           )}
         </>
       )}
