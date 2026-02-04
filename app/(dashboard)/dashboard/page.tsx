@@ -18,25 +18,25 @@ export default function DashboardPage() {
       {/* Stats Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="Total Projects"
+          title="총 프로젝트"
           value={mockStats.totalProjects}
           trend={{ value: 12.5, isPositive: true }}
           icon={<FolderKanban className="h-6 w-6" />}
         />
         <StatsCard
-          title="Citation Share"
+          title="인용률"
           value={`${mockStats.citationShare}%`}
           trend={{ value: 8.2, isPositive: true }}
           icon={<TrendingUp className="h-6 w-6" />}
         />
         <StatsCard
-          title="Queries Analyzed"
+          title="분석된 쿼리"
           value={mockStats.queriesAnalyzed.toLocaleString()}
           trend={{ value: 15.3, isPositive: true }}
           icon={<BarChart3 className="h-6 w-6" />}
         />
         <StatsCard
-          title="Avg Position"
+          title="평균 순위"
           value={mockStats.avgPosition.toFixed(1)}
           trend={{ value: 5.7, isPositive: false }}
           icon={<Target className="h-6 w-6" />}

@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useAuth } from '@/hooks/useAuth'
+import { checkEmailAvailability } from '@/lib/auth'
+import { EmailAvailabilityIndicator } from '@/components/auth/EmailAvailabilityIndicator'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -25,16 +27,23 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator'
+import { isPasswordValid, SPECIAL_CHARS } from '@/lib/utils/password-validation'
 
 const registerSchema = z
   .object({
-    name: z.string().min(2, 'Name must be at least 2 characters'),
-    email: z.string().email('Invalid email address'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(6, 'Password must be at least 6 characters'),
+    name: z.string().min(2, '이름은 2자 이상이어야 합니다'),
+    email: z.string().email('올바른 이메일 주소를 입력하세요'),
+    password: z
+      .string()
+      .min(8, '비밀번호는 8자 이상이어야 합니다')
+      .refine((password) => isPasswordValid(password), {
+        message: '비밀번호는 모든 요구사항을 충족해야 합니다',
+      }),
+    confirmPassword: z.string().min(8, '비밀번호는 8자 이상이어야 합니다'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: '비밀번호가 일치하지 않습니다',
     path: ['confirmPassword'],
   })
 
@@ -43,6 +52,8 @@ type RegisterFormValues = z.infer<typeof registerSchema>
 export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [emailStatus, setEmailStatus] = useState<'idle' | 'checking' | 'available' | 'unavailable'>('idle')
+  const [emailMessage, setEmailMessage] = useState<string>('')
   const { register: registerUser } = useAuth()
 
   const form = useForm<RegisterFormValues>({
@@ -54,6 +65,47 @@ export default function RegisterPage() {
       confirmPassword: '',
     },
   })
+
+  // Email availability check with debounce
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name !== 'email') return
+
+      const email = value.email || ''
+
+      if (!email || email.length === 0) {
+        setEmailStatus('idle')
+        setEmailMessage('')
+        return
+      }
+
+      // Basic email validation before API call
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      if (!emailRegex.test(email)) {
+        setEmailStatus('idle')
+        setEmailMessage('')
+        return
+      }
+
+      const timeoutId = setTimeout(async () => {
+        setEmailStatus('checking')
+        setEmailMessage('확인 중...')
+
+        try {
+          const result = await checkEmailAvailability(email)
+          setEmailStatus(result.available ? 'available' : 'unavailable')
+          setEmailMessage(result.message)
+        } catch (error) {
+          setEmailStatus('idle')
+          setEmailMessage('')
+        }
+      }, 500)
+
+      return () => clearTimeout(timeoutId)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form])
 
   async function onSubmit(data: RegisterFormValues) {
     setIsLoading(true)
@@ -71,7 +123,7 @@ export default function RegisterPage() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Registration failed. Please try again.'
+          : '회원가입에 실패했습니다. 다시 시도해주세요.'
       )
     } finally {
       setIsLoading(false)
@@ -82,9 +134,9 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold">회원가입</CardTitle>
           <CardDescription>
-            Enter your information to create your account
+            계정을 만들기 위한 정보를 입력하세요
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -101,11 +153,11 @@ export default function RegisterPage() {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>이름</FormLabel>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="John Doe"
+                        placeholder="홍길동"
                         disabled={isLoading}
                         {...field}
                       />
@@ -120,7 +172,7 @@ export default function RegisterPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>이메일</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -129,6 +181,7 @@ export default function RegisterPage() {
                         {...field}
                       />
                     </FormControl>
+                    <EmailAvailabilityIndicator status={emailStatus} message={emailMessage} />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -139,15 +192,16 @@ export default function RegisterPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>비밀번호</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Create a password"
+                        placeholder="비밀번호 생성"
                         disabled={isLoading}
                         {...field}
                       />
                     </FormControl>
+                    <PasswordStrengthIndicator password={field.value} />
                     <FormMessage />
                   </FormItem>
                 )}
@@ -158,11 +212,11 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>비밀번호 확인</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Confirm your password"
+                        placeholder="비밀번호 확인"
                         disabled={isLoading}
                         {...field}
                       />
@@ -177,19 +231,19 @@ export default function RegisterPage() {
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={isLoading}
               >
-                {isLoading ? 'Creating account...' : 'Create account'}
+                {isLoading ? '계정 생성 중...' : '계정 만들기'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-muted-foreground text-center">
-            Already have an account?{' '}
+            이미 계정이 있으신가요?{' '}
             <Link
               href="/login"
               className="text-blue-600 hover:text-blue-700 underline underline-offset-4"
             >
-              Sign in
+              로그인
             </Link>
           </div>
         </CardFooter>

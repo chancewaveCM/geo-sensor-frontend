@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   Zap,
+  Target,
 } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
@@ -20,22 +21,27 @@ const navItems: Array<{
   icon: React.ComponentType<{ className?: string }>
 }> = [
   {
-    title: 'Dashboard',
+    title: '대시보드',
     href: '/',
     icon: LayoutDashboard,
   },
   {
-    title: 'Projects',
+    title: '프로젝트',
     href: '/projects',
     icon: FolderKanban,
   },
   {
-    title: 'Query Lab',
+    title: '쿼리 랩',
     href: '/query-lab',
     icon: FlaskConical,
   },
   {
-    title: 'Settings',
+    title: '분석',
+    href: '/analysis',
+    icon: Target,
+  },
+  {
+    title: '설정',
     href: '/settings',
     icon: Settings,
   },
@@ -78,7 +84,7 @@ export function Sidebar() {
             </div>
             <div>
               <h2 className="text-lg font-bold">GEO Sensor</h2>
-              <p className="text-xs text-muted-foreground">MVP Dashboard</p>
+              <p className="text-xs text-muted-foreground">MVP 대시보드</p>
             </div>
           </div>
 
@@ -111,12 +117,12 @@ export function Sidebar() {
           {/* Footer */}
           <div className="border-t p-4">
             <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-4">
-              <p className="text-xs font-medium">Need Help?</p>
+              <p className="text-xs font-medium">도움이 필요하세요?</p>
               <p className="text-xs text-muted-foreground mt-1">
-                Check out our documentation
+                문서를 확인하세요
               </p>
               <button className="mt-3 w-full rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90">
-                View Docs
+                문서 보기
               </button>
             </div>
           </div>

@@ -8,10 +8,10 @@ export function DashboardHeader() {
       <div className="flex h-16 items-center justify-between px-6">
         <div>
           <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Dashboard
+            대시보드
           </h1>
           <p className="text-sm text-muted-foreground">
-            Welcome back! Here's your performance overview.
+            다시 오신 것을 환영합니다! 성과 개요입니다.
           </p>
         </div>
 
@@ -30,8 +30,8 @@ export function DashboardHeader() {
               <User className="h-4 w-4" />
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium">Demo User</p>
-              <p className="text-xs text-muted-foreground">Admin</p>
+              <p className="text-sm font-medium">데모 사용자</p>
+              <p className="text-xs text-muted-foreground">관리자</p>
             </div>
           </button>
         </div>

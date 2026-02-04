@@ -19,11 +19,11 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-medium">Analysis Summary</CardTitle>
+        <CardTitle className="text-lg font-medium">분석 요약</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Citation Share Comparison</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-3">인용률 비교</h3>
           <div className="space-y-3">
             {summary.citationShareComparison
               .sort((a, b) => {
@@ -70,7 +70,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
         </div>
 
         <div className="pt-4 border-t border-gray-200">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Sentiment Analysis</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-3">감성 분석</h3>
           <div className="grid grid-cols-2 gap-4">
             {summary.sentimentComparison.map((item) => {
               const sentiment = SENTIMENT_CONFIG[item.sentiment];
@@ -107,16 +107,16 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
         </div>
 
         <div className="pt-4 border-t border-gray-200">
-          <h3 className="text-sm font-medium text-gray-700 mb-3">Brand Mentions Analysis</h3>
+          <h3 className="text-sm font-medium text-gray-700 mb-3">브랜드 언급 분석</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-blue-50 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-blue-800">
-                  Common Brands ({summary.commonBrands.length})
+                  공통 브랜드 ({summary.commonBrands.length})
                 </span>
               </div>
-              <p className="text-xs text-blue-600 mb-2">Mentioned by all providers</p>
+              <p className="text-xs text-blue-600 mb-2">모든 제공자가 언급</p>
               <div className="flex flex-wrap gap-1">
                 {summary.commonBrands.length > 0 ? (
                   summary.commonBrands.map((brand) => (
@@ -128,7 +128,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-blue-500 italic">No common brands</span>
+                  <span className="text-xs text-blue-500 italic">공통 브랜드 없음</span>
                 )}
               </div>
             </div>
@@ -136,10 +136,10 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
             <div className="p-4 bg-amber-50 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-amber-800">
-                  Unique Brands ({summary.uniqueBrands.length})
+                  고유 브랜드 ({summary.uniqueBrands.length})
                 </span>
               </div>
-              <p className="text-xs text-amber-600 mb-2">Mentioned by only one provider</p>
+              <p className="text-xs text-amber-600 mb-2">하나의 제공자만 언급</p>
               <div className="flex flex-wrap gap-1">
                 {summary.uniqueBrands.length > 0 ? (
                   summary.uniqueBrands.map((brand) => (
@@ -151,7 +151,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-amber-500 italic">No unique brands</span>
+                  <span className="text-xs text-amber-500 italic">고유 브랜드 없음</span>
                 )}
               </div>
             </div>
@@ -164,19 +164,19 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
               <p className="text-2xl font-bold text-gray-900">
                 {summary.citationShareComparison.length}
               </p>
-              <p className="text-xs text-gray-500">Total Brands</p>
+              <p className="text-xs text-gray-500">전체 브랜드</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-blue-600">
                 {summary.commonBrands.length}
               </p>
-              <p className="text-xs text-gray-500">Common</p>
+              <p className="text-xs text-gray-500">공통</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-amber-600">
                 {summary.uniqueBrands.length}
               </p>
-              <p className="text-xs text-gray-500">Unique</p>
+              <p className="text-xs text-gray-500">고유</p>
             </div>
           </div>
         </div>

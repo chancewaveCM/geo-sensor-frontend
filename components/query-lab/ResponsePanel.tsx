@@ -67,7 +67,7 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
 
         {uniqueBrands.length > 0 && (
           <div className="pt-3 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-500 mb-2">Brand Mentions</p>
+            <p className="text-xs font-medium text-gray-500 mb-2">브랜드 언급</p>
             <div className="flex flex-wrap gap-2">
               {uniqueBrands.map((brand) => {
                 const sentimentStyle = SENTIMENT_CONFIG[brand.sentiment];
@@ -90,7 +90,7 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
         )}
 
         <div className="pt-3 border-t border-gray-100">
-          <p className="text-xs font-medium text-gray-500 mb-2">Citation Share</p>
+          <p className="text-xs font-medium text-gray-500 mb-2">인용률</p>
           <div className="space-y-2">
             {Object.entries(response.citationShare)
               .sort(([, a], [, b]) => b - a)

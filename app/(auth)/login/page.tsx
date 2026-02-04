@@ -27,8 +27,8 @@ import {
 import { Input } from '@/components/ui/input'
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
+  email: z.string().email('올바른 이메일 주소를 입력하세요'),
+  password: z.string().min(6, '비밀번호는 6자 이상이어야 합니다'),
 })
 
 type LoginFormValues = z.infer<typeof loginSchema>
@@ -58,7 +58,7 @@ export default function LoginPage() {
       setErrorMessage(
         error instanceof Error
           ? error.message
-          : 'Login failed. Please check your credentials and try again.'
+          : '로그인에 실패했습니다. 이메일과 비밀번호를 확인하세요.'
       )
     } finally {
       setIsLoading(false)
@@ -69,9 +69,9 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+          <CardTitle className="text-2xl font-bold">로그인</CardTitle>
           <CardDescription>
-            Enter your email and password to access your account
+            계정에 로그인하세요
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -88,7 +88,7 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>이메일</FormLabel>
                     <FormControl>
                       <Input
                         type="email"
@@ -107,11 +107,11 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>비밀번호</FormLabel>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Enter your password"
+                        placeholder="비밀번호 입력"
                         disabled={isLoading}
                         {...field}
                       />
@@ -126,19 +126,19 @@ export default function LoginPage() {
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={isLoading}
               >
-                {isLoading ? 'Signing in...' : 'Sign in'}
+                {isLoading ? '로그인 중...' : '로그인'}
               </Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col space-y-2">
           <div className="text-sm text-muted-foreground text-center">
-            Don't have an account?{' '}
+            계정이 없으신가요?{' '}
             <Link
               href="/register"
               className="text-blue-600 hover:text-blue-700 underline underline-offset-4"
             >
-              Sign up
+              회원가입
             </Link>
           </div>
         </CardFooter>

@@ -88,3 +88,8 @@ export function getAccessToken(): string | null {
 export function isAuthenticated(): boolean {
   return !!getAccessToken()
 }
+
+export async function checkEmailAvailability(email: string): Promise<{ available: boolean; message: string }> {
+  const response = await apiClient.get<{ available: boolean; message: string }>(`/api/v1/users/check-email?email=${encodeURIComponent(email)}`)
+  return response.data
+}

@@ -52,9 +52,9 @@ export default function QueryLabPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Query Lab</h1>
+          <h1 className="text-2xl font-bold text-gray-900">쿼리 랩</h1>
           <p className="text-gray-500 mt-1">
-            Compare LLM responses and analyze brand citations
+            LLM 응답을 비교하고 브랜드 인용을 분석하세요
           </p>
         </div>
         {result && <ExportButton result={result} />}
@@ -100,11 +100,10 @@ export default function QueryLabPage() {
             </svg>
           </div>
           <h3 className="text-lg font-medium text-gray-900 mb-2">
-            Enter a query to get started
+            시작하려면 쿼리를 입력하세요
           </h3>
           <p className="text-gray-500 max-w-md mx-auto">
-            Type your question above and select which LLM providers to compare.
-            We will analyze the responses for brand citations and sentiment.
+            위에 질문을 입력하고 비교할 LLM 제공자를 선택하세요. 브랜드 인용과 감성을 분석해 드립니다.
           </p>
         </div>
       )}

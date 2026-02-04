@@ -40,12 +40,12 @@ export function QueryInput({
   return (
     <Card>
       <CardHeader className="pb-4">
-        <CardTitle className="text-lg font-medium">Query Input</CardTitle>
+        <CardTitle className="text-lg font-medium">쿼리 입력</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <label htmlFor="query" className="block text-sm font-medium text-gray-700 mb-2">
-            Enter your question
+            질문을 입력하세요
           </label>
           <textarea
             id="query"
@@ -57,13 +57,13 @@ export function QueryInput({
             disabled={isLoading}
           />
           <p className="mt-1 text-xs text-gray-500">
-            Press Ctrl+Enter (Cmd+Enter on Mac) to submit
+            Ctrl+Enter (Mac: Cmd+Enter)로 제출
           </p>
         </div>
 
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
-            Select LLM Providers
+            LLM 제공자 선택
           </label>
           <div className="flex flex-wrap gap-3">
             {PROVIDERS.map((provider) => (
@@ -90,7 +90,7 @@ export function QueryInput({
           </div>
           {selectedProviders.length === 0 && (
             <p className="mt-2 text-sm text-amber-600">
-              Please select at least one provider
+              최소 1개의 제공자를 선택하세요
             </p>
           )}
         </div>
@@ -107,14 +107,14 @@ export function QueryInput({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Analyzing...
+                분석 중...
               </>
             ) : (
               <>
                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                Analyze Query
+                쿼리 분석
               </>
             )}
           </Button>
