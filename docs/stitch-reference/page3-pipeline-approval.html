@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Global GEO Pipeline & Approval Workflow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-mono { font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace; }
+
+        /* Enhanced diff viewer styles */
+        .diff-added {
+            background-color: rgba(34, 197, 94, 0.12);
+            color: #15803d;
+            border-left: 3px solid #22c55e;
+        }
+        .diff-removed {
+            background-color: rgba(239, 68, 68, 0.12);
+            color: #b91c1c;
+            text-decoration: line-through;
+            border-left: 3px solid #ef4444;
+        }
+
+        /* Line number hover effect */
+        .diff-line:hover .line-number {
+            background-color: rgba(255, 104, 33, 0.1);
+        }
+
+        /* Loading animation */
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .animate-pulse-glow {
+            animation: pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Toast notification slide-in */
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        .toast-enter {
+            animation: slideInRight 0.3s ease-out;
+        }
+
+        /* Modal backdrop blur */
+        .modal-backdrop {
+            backdrop-filter: blur(8px);
+        }
+
+        /* Button loading state */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+        }
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Form validation states */
+        .input-error {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+        .input-success {
+            border-color: #22c55e;
+            background-color: rgba(34, 197, 94, 0.05);
+        }
+
+        /* Collapsible diff sections */
+        .diff-collapsed {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .diff-expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        /* Responsive utilities */
+        @media (max-width: 1024px) {
+            .sidebar-mobile-hidden {
+                display: none;
+            }
+        }
+    </style>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff6821",
+                        "navy": "#1e3a8a",
+                        "background-light": "#f8fafc",
+                        "background-dark": "#23150f",
+                    },
+                    fontFamily: {
+                        "display": ["Inter"],
+                        "mono": ["Monaco", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "8px",
+                        "lg": "12px",
+                        "xl": "16px",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+
+<!-- Toast Notification Container -->
+<div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2" role="status" aria-live="polite"></div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-backdrop bg-black/30" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="bg-white dark:bg-slate-900 rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+        <div class="p-6 border-b border-slate-200 dark:border-slate-800">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-full bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-orange-600 dark:text-orange-400 text-2xl">warning</span>
+                </div>
+                <h3 id="modal-title" class="text-lg font-bold text-navy dark:text-white">Confirm Action</h3>
+            </div>
+        </div>
+        <div class="p-6">
+            <p id="modal-message" class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed"></p>
+        </div>
+        <div class="p-6 bg-slate-50 dark:bg-slate-800/50 flex gap-3 justify-end">
+            <button id="modal-cancel" class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-800 transition-all" aria-label="Cancel action">
+                Cancel
+            </button>
+            <button id="modal-confirm" class="px-6 py-2 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all" aria-label="Confirm action">
+                Confirm
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="flex h-screen overflow-hidden">
+
+<!-- Left Sidebar (256px - standardized) -->
+<aside class="w-64 flex flex-col bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 shrink-0 sidebar-mobile-hidden">
+    <!-- Logo Header (64px) -->
+    <div class="h-16 px-6 flex items-center border-b border-slate-200 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-orange-600 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-xl">public</span>
+            </div>
+            <div>
+                <h1 class="text-sm font-black tracking-tight text-navy dark:text-white uppercase">GEO Pipeline</h1>
+                <p class="text-[10px] text-slate-500 font-medium">Localization Manager</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex-1 overflow-y-auto p-4 space-y-1">
+        <div class="px-3 py-2 text-xs font-semibold text-slate-400 uppercase tracking-wider">Regions</div>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#" aria-label="United States region">
+            <span class="material-symbols-outlined text-xl">flag</span>
+            <span class="text-sm font-medium">US - United States</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary text-white shadow-lg shadow-primary/20 transition-all" href="#" aria-current="page" aria-label="South Korea region">
+            <span class="material-symbols-outlined text-xl">flag</span>
+            <span class="text-sm font-medium">KR - South Korea</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#" aria-label="Japan region">
+            <span class="material-symbols-outlined text-xl">flag</span>
+            <span class="text-sm font-medium">JP - Japan</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#" aria-label="Europe region">
+            <span class="material-symbols-outlined text-xl">flag</span>
+            <span class="text-sm font-medium">EU - Europe</span>
+        </a>
+        <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" href="#" aria-label="China region">
+            <span class="material-symbols-outlined text-xl">flag</span>
+            <span class="text-sm font-medium">CN - China</span>
+        </a>
+    </div>
+
+    <div class="p-4 border-t border-slate-100 dark:border-slate-800">
+        <label for="ai-engine-select" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">AI Engine</label>
+        <div class="relative">
+            <select id="ai-engine-select" class="w-full pl-3 pr-10 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg appearance-none focus:outline-none focus:ring-2 focus:ring-primary/50" aria-label="Select AI engine">
+                <option>Naver HyperClova</option>
+                <option>OpenAI GPT-4o</option>
+                <option>Anthropic Claude 3</option>
+            </select>
+            <span class="material-symbols-outlined absolute right-3 top-2 text-slate-400 pointer-events-none">expand_more</span>
+        </div>
+    </div>
+</aside>
+
+<!-- Center Workspace -->
+<main class="flex-1 flex flex-col overflow-hidden relative">
+    <!-- Breadcrumbs -->
+    <nav class="px-8 pt-6" aria-label="Breadcrumb">
+        <ol class="flex items-center gap-2 text-sm text-slate-500">
+            <li><a href="#" class="hover:text-slate-700 dark:hover:text-slate-300">Pipeline</a></li>
+            <li><span class="material-symbols-outlined text-sm">chevron_right</span></li>
+            <li class="font-semibold text-slate-900 dark:text-white" aria-current="page">Approval Workflow</li>
+        </ol>
+    </nav>
+
+    <div class="flex-1 overflow-y-auto px-8 py-6 pb-32">
+        <!-- Page Heading -->
+        <div class="flex flex-col lg:flex-row lg:justify-between lg:items-end gap-4 mb-6">
+            <div>
+                <div class="flex items-center gap-3 mb-1 flex-wrap">
+                    <h2 class="text-3xl font-black text-navy dark:text-white">Metadata Change Review</h2>
+                    <span class="px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-600 text-xs font-bold uppercase tracking-wide">Pending Approval</span>
+                </div>
+                <p class="text-slate-500">Reviewing localized metadata for Seoul marketing campaign (v2.5.0)</p>
+            </div>
+            <button class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-slate-600 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors shadow-sm" aria-label="View change history">
+                <span class="material-symbols-outlined text-lg">history</span>
+                View History
+            </button>
+        </div>
+
+        <!-- Diff Viewer Card -->
+        <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-sm overflow-hidden">
+            <!-- Diff Header -->
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-4 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
+                <div class="flex items-center gap-4 flex-wrap">
+                    <span class="text-sm font-bold text-navy dark:text-slate-300">korea_launch_v2.json</span>
+                    <div class="flex gap-2">
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-700 font-bold" aria-label="12 additions">+12</span>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded bg-red-100 text-red-700 font-bold" aria-label="4 deletions">-4</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button id="expand-collapse-btn" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors" aria-label="Expand or collapse diff" title="Expand/Collapse">
+                        <span class="material-symbols-outlined text-xl">unfold_more</span>
+                    </button>
+                    <button id="copy-diff-btn" class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors" aria-label="Copy diff to clipboard" title="Copy">
+                        <span class="material-symbols-outlined text-xl">content_copy</span>
+                    </button>
+                    <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors" aria-label="Search in diff" title="Search">
+                        <span class="material-symbols-outlined text-xl">search</span>
+                    </button>
+                    <button class="p-1.5 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-500 transition-colors" aria-label="Diff settings" title="Settings">
+                        <span class="material-symbols-outlined text-xl">settings</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div id="diff-loading" class="hidden p-12 flex flex-col items-center justify-center gap-4">
+                <div class="w-12 h-12 border-4 border-slate-200 dark:border-slate-700 border-t-primary rounded-full animate-spin"></div>
+                <p class="text-sm text-slate-500 font-medium">Loading changes...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="diff-error" class="hidden p-12 flex flex-col items-center justify-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-red-600 dark:text-red-400 text-3xl">error</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-400 font-medium">Failed to load diff</p>
+                <button class="px-4 py-2 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-sm font-bold hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors">
+                    Retry
+                </button>
+            </div>
+
+            <!-- Success State (Diff Content) -->
+            <div id="diff-content" class="diff-expanded" role="code">
+                <div class="font-mono text-[13px] leading-relaxed overflow-x-auto">
+                    <table class="w-full border-collapse">
+                        <tbody>
+                            <tr class="group diff-line">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900">124</td>
+                                <td class="px-4 py-0.5 whitespace-pre">  "meta_title": {</td>
+                            </tr>
+                            <tr class="group diff-line diff-removed">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-red-200 bg-red-50/50">-</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "en": "Global Launch - Premium Experience",</td>
+                            </tr>
+                            <tr class="group diff-line diff-added">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-green-200 bg-green-50/50">+</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "en": "Global Launch - Next-Gen GEO Optimization",</td>
+                            </tr>
+                            <tr class="group diff-line">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900">125</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "ko": "글로벌 런칭 - 차세대 GEO 최적화",</td>
+                            </tr>
+                            <tr class="group diff-line diff-added">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-green-200 bg-green-50/50">+</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "ko_alt": "하이퍼클로바 기반 자동 번역 결과물",</td>
+                            </tr>
+                            <tr class="group diff-line">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900">126</td>
+                                <td class="px-4 py-0.5 whitespace-pre">  },</td>
+                            </tr>
+                            <tr class="group diff-line">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900">127</td>
+                                <td class="px-4 py-0.5 whitespace-pre">  "keywords": [</td>
+                            </tr>
+                            <tr class="group diff-line diff-removed">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-red-200 bg-red-50/50">-</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "legacy", "v1", "manual"</td>
+                            </tr>
+                            <tr class="group diff-line diff-added">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-green-200 bg-green-50/50">+</td>
+                                <td class="px-4 py-0.5 whitespace-pre">    "ai-optimized", "hyperclova", "real-time-sync"</td>
+                            </tr>
+                            <tr class="group diff-line">
+                                <td class="line-number w-12 text-right pr-4 py-0.5 text-slate-400 select-none border-r border-slate-100 dark:border-slate-800 bg-slate-50/30 dark:bg-slate-900">128</td>
+                                <td class="px-4 py-0.5 whitespace-pre">  ]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Approver Signature Field -->
+        <div class="mt-8 p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl">
+            <h3 class="text-sm font-bold text-navy dark:text-white mb-4 uppercase tracking-wide">Approver Verification</h3>
+            <form id="approval-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-1.5">
+                    <label for="approver-name" class="text-xs font-medium text-slate-500">Full Name *</label>
+                    <input
+                        id="approver-name"
+                        name="name"
+                        class="w-full px-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none transition-colors"
+                        placeholder="e.g. Min-jun Kim"
+                        type="text"
+                        required
+                        aria-label="Approver full name"
+                        aria-required="true"
+                    />
+                    <p id="name-error" class="hidden text-xs text-red-600 dark:text-red-400 mt-1">Please enter your full name</p>
+                </div>
+                <div class="space-y-1.5">
+                    <label for="approver-email" class="text-xs font-medium text-slate-500">Work Email *</label>
+                    <input
+                        id="approver-email"
+                        name="email"
+                        class="w-full px-4 py-2 text-sm bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-primary/50 outline-none transition-colors"
+                        placeholder="m.kim@corp.com"
+                        type="email"
+                        required
+                        aria-label="Approver work email"
+                        aria-required="true"
+                    />
+                    <p id="email-error" class="hidden text-xs text-red-600 dark:text-red-400 mt-1">Please enter a valid email address</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Bottom Action Bar (Fixed) -->
+    <div class="absolute bottom-0 left-0 right-0 h-20 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between px-8 py-3 gap-3 z-10">
+        <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-orange-500 animate-pulse" aria-hidden="true"></span>
+            <span class="text-xs font-semibold text-slate-500 uppercase tracking-widest">Awaiting Decision</span>
+        </div>
+        <div class="flex gap-3 flex-wrap justify-end">
+            <button
+                id="rollback-btn"
+                class="px-6 py-2.5 rounded-lg bg-black dark:bg-slate-700 text-white text-sm font-bold hover:bg-slate-800 dark:hover:bg-slate-600 transition-all"
+                aria-label="Rollback changes"
+            >
+                Rollback
+            </button>
+            <button
+                id="request-changes-btn"
+                class="px-6 py-2.5 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-bold hover:bg-slate-50 dark:hover:bg-slate-800 transition-all"
+                aria-label="Request changes"
+            >
+                Request Changes
+            </button>
+            <button
+                id="approve-btn"
+                class="px-8 py-2.5 rounded-lg bg-primary text-white text-sm font-bold hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all"
+                aria-label="Approve and deploy changes"
+            >
+                Approve & Deploy
+            </button>
+        </div>
+    </div>
+</main>
+
+<!-- Right Sidebar (320px) -->
+<aside class="w-[320px] flex flex-col bg-white dark:bg-slate-900 border-l border-slate-200 dark:border-slate-800 shrink-0 sidebar-mobile-hidden">
+    <div class="p-6">
+        <h3 class="text-sm font-black text-navy dark:text-white uppercase tracking-wider mb-6">Conversion Funnel</h3>
+        <div class="space-y-4">
+            <!-- Funnel Stage 1 -->
+            <div class="relative">
+                <div class="flex flex-col gap-1 p-5 rounded-xl border border-slate-100 dark:border-slate-800 bg-navy text-white relative z-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-widest opacity-70">SNS Engagement</span>
+                        <span class="text-[10px] px-1.5 py-0.5 bg-white/20 rounded font-bold">+5.2%</span>
+                    </div>
+                    <div class="text-2xl font-black">12,500</div>
+                    <div class="text-[10px] opacity-60">Reach & Social Interactions</div>
+                </div>
+                <!-- Connector -->
+                <div class="h-4 flex justify-center items-center">
+                    <div class="w-px h-full bg-slate-200 dark:bg-slate-800"></div>
+                </div>
+            </div>
+
+            <!-- Funnel Stage 2 -->
+            <div class="relative">
+                <div class="flex flex-col gap-1 p-5 rounded-xl border border-slate-100 dark:border-slate-800 bg-blue-600 text-white relative z-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-widest opacity-70">Web Reference</span>
+                        <span class="text-[10px] px-1.5 py-0.5 bg-white/20 rounded font-bold">+37.5%</span>
+                    </div>
+                    <div class="text-2xl font-black">4,700</div>
+                    <div class="text-[10px] opacity-60">Search & Direct Traffic</div>
+                </div>
+                <!-- Connector -->
+                <div class="h-4 flex justify-center items-center">
+                    <div class="w-px h-full bg-slate-200 dark:bg-slate-800"></div>
+                </div>
+            </div>
+
+            <!-- Funnel Stage 3 -->
+            <div class="relative">
+                <div class="flex flex-col gap-1 p-5 rounded-xl border border-slate-100 dark:border-slate-800 bg-primary text-white relative z-10">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold uppercase tracking-widest opacity-70">AI Citation</span>
+                        <span class="text-[10px] px-1.5 py-0.5 bg-white/20 rounded font-bold">-2.1%</span>
+                    </div>
+                    <div class="text-2xl font-black">1,820</div>
+                    <div class="text-[10px] opacity-60">LLM & Search generative mention</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 p-4 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700">
+            <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest mb-3">Health Insight</p>
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
+                    <span class="material-symbols-outlined">trending_up</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-navy dark:text-slate-200">Optimal Performance</p>
+                    <p class="text-[10px] text-slate-500 leading-tight">Localization is yielding 12% higher intent in KR vs US.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-auto p-6 border-t border-slate-100 dark:border-slate-800">
+        <div class="w-full h-32 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-hidden relative" aria-label="Abstract gradient mapping of global data flow">
+            <div class="absolute inset-0 opacity-40 bg-gradient-to-br from-primary via-navy to-blue-500"></div>
+            <div class="absolute inset-0 flex items-center justify-center">
+                <span class="text-[10px] font-bold text-navy/40 dark:text-white/40 uppercase tracking-widest">Global Traffic Map</span>
+            </div>
+        </div>
+    </div>
+</aside>
+
+</div>
+
+<script>
+// Toast notification system
+function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast-enter px-6 py-4 rounded-lg shadow-lg border max-w-md ${
+        type === 'success'
+            ? 'bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 text-green-800 dark:text-green-200'
+            : type === 'error'
+            ? 'bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 text-red-800 dark:text-red-200'
+            : 'bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 text-blue-800 dark:text-blue-200'
+    }`;
+    toast.innerHTML = `
+        <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined">${type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info'}</span>
+            <p class="text-sm font-medium">${message}</p>
+        </div>
+    `;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        toast.style.transition = 'all 0.3s ease-out';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Modal functionality
+function showModal(title, message, onConfirm) {
+    const modal = document.getElementById('confirmation-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const confirmBtn = document.getElementById('modal-confirm');
+    const cancelBtn = document.getElementById('modal-cancel');
+
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    modal.classList.remove('hidden');
+
+    // Focus management
+    confirmBtn.focus();
+
+    const handleConfirm = () => {
+        modal.classList.add('hidden');
+        onConfirm();
+        cleanup();
+    };
+
+    const handleCancel = () => {
+        modal.classList.add('hidden');
+        cleanup();
+    };
+
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') handleCancel();
+    };
+
+    const cleanup = () => {
+        confirmBtn.removeEventListener('click', handleConfirm);
+        cancelBtn.removeEventListener('click', handleCancel);
+        document.removeEventListener('keydown', handleEscape);
+    };
+
+    confirmBtn.addEventListener('click', handleConfirm);
+    cancelBtn.addEventListener('click', handleCancel);
+    document.addEventListener('keydown', handleEscape);
+}
+
+// Form validation
+function validateForm() {
+    const nameInput = document.getElementById('approver-name');
+    const emailInput = document.getElementById('approver-email');
+    const nameError = document.getElementById('name-error');
+    const emailError = document.getElementById('email-error');
+
+    let isValid = true;
+
+    // Name validation
+    if (!nameInput.value.trim()) {
+        nameInput.classList.add('input-error');
+        nameError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        nameInput.classList.remove('input-error');
+        nameInput.classList.add('input-success');
+        nameError.classList.add('hidden');
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(emailInput.value)) {
+        emailInput.classList.add('input-error');
+        emailError.classList.remove('hidden');
+        isValid = false;
+    } else {
+        emailInput.classList.remove('input-error');
+        emailInput.classList.add('input-success');
+        emailError.classList.add('hidden');
+    }
+
+    return isValid;
+}
+
+// Button loading state
+function setButtonLoading(button, isLoading) {
+    if (isLoading) {
+        button.classList.add('btn-loading');
+        button.disabled = true;
+        button.dataset.originalText = button.textContent;
+        button.textContent = '';
+    } else {
+        button.classList.remove('btn-loading');
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || button.textContent;
+    }
+}
+
+// Approve button handler
+document.getElementById('approve-btn').addEventListener('click', function() {
+    if (!validateForm()) {
+        showToast('Please complete all required fields', 'error');
+        return;
+    }
+
+    showModal(
+        'Approve & Deploy',
+        'Are you sure you want to approve these changes and deploy them to production? This action cannot be undone.',
+        () => {
+            const btn = this;
+            setButtonLoading(btn, true);
+
+            // Simulate API call
+            setTimeout(() => {
+                setButtonLoading(btn, false);
+                showToast('Changes approved and deployed successfully!', 'success');
+            }, 2000);
+        }
+    );
+});
+
+// Rollback button handler
+document.getElementById('rollback-btn').addEventListener('click', function() {
+    showModal(
+        'Rollback Changes',
+        'Are you sure you want to rollback these changes? All modifications will be discarded.',
+        () => {
+            const btn = this;
+            setButtonLoading(btn, true);
+
+            setTimeout(() => {
+                setButtonLoading(btn, false);
+                showToast('Changes rolled back successfully', 'success');
+            }, 1500);
+        }
+    );
+});
+
+// Request changes button handler
+document.getElementById('request-changes-btn').addEventListener('click', function() {
+    showToast('Change request dialog would open here', 'info');
+});
+
+// Copy diff to clipboard
+document.getElementById('copy-diff-btn').addEventListener('click', function() {
+    const diffContent = document.querySelector('#diff-content table').innerText;
+    navigator.clipboard.writeText(diffContent).then(() => {
+        showToast('Diff copied to clipboard', 'success');
+    }).catch(() => {
+        showToast('Failed to copy diff', 'error');
+    });
+});
+
+// Expand/collapse diff
+document.getElementById('expand-collapse-btn').addEventListener('click', function() {
+    const diffContent = document.getElementById('diff-content');
+    const icon = this.querySelector('.material-symbols-outlined');
+
+    if (diffContent.classList.contains('diff-expanded')) {
+        diffContent.classList.remove('diff-expanded');
+        diffContent.classList.add('diff-collapsed');
+        icon.textContent = 'unfold_less';
+    } else {
+        diffContent.classList.remove('diff-collapsed');
+        diffContent.classList.add('diff-expanded');
+        icon.textContent = 'unfold_more';
+    }
+});
+
+// Real-time form validation
+document.getElementById('approver-name').addEventListener('input', function() {
+    if (this.value.trim()) {
+        this.classList.remove('input-error');
+        this.classList.add('input-success');
+        document.getElementById('name-error').classList.add('hidden');
+    }
+});
+
+document.getElementById('approver-email').addEventListener('input', function() {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (emailRegex.test(this.value)) {
+        this.classList.remove('input-error');
+        this.classList.add('input-success');
+        document.getElementById('email-error').classList.add('hidden');
+    }
+});
+
+// Keyboard navigation for action buttons
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('approve-btn').click();
+        }
+    }
+});
+
+// Simulate loading state (remove in production)
+// Uncomment to test loading/error states:
+// setTimeout(() => {
+//     document.getElementById('diff-content').classList.add('hidden');
+//     document.getElementById('diff-loading').classList.remove('hidden');
+// }, 1000);
+</script>
+
+</body>
+</html>

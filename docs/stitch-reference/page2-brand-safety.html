@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Brand Safety & Risk Control Center - GEO Sensor Platform</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#ff6821",
+                    "navy": "#1e3a8a",
+                    "slate-dark": "#1e293b",
+                    "background-light": "#f8fafc",
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "8px",
+                    "lg": "8px",
+                    "xl": "8px",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+</script>
+<style>
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+
+    /* Smooth transitions */
+    .transition-all-smooth {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Focus indicators */
+    *:focus-visible {
+        outline: 2px solid #ff6821;
+        outline-offset: 2px;
+    }
+
+    /* Hover effects */
+    .hover-lift {
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .hover-lift:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Loading animation */
+    @keyframes shimmer {
+        0% { background-position: -1000px 0; }
+        100% { background-position: 1000px 0; }
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 1000px 100%;
+        animation: shimmer 2s infinite;
+    }
+
+    /* Sidebar toggle animation */
+    .sidebar-collapsed {
+        width: 80px;
+    }
+
+    .sidebar-expanded {
+        width: 256px;
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .sidebar-mobile-hidden {
+            transform: translateX(-100%);
+        }
+    }
+</style>
+</head>
+<body class="bg-background-light font-display min-h-screen text-slate-900">
+
+<div class="flex min-h-screen">
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <aside id="sidebar" class="sidebar-expanded transition-all-smooth bg-white border-r border-gray-200 flex flex-col fixed left-0 top-0 h-full z-40" aria-label="Main navigation">
+        <!-- Logo Section -->
+        <div class="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+            <div class="flex items-center gap-3">
+                <div class="size-8 flex items-center justify-center bg-primary rounded-lg text-white">
+                    <span class="material-symbols-outlined" aria-hidden="true">security</span>
+                </div>
+                <span id="logo-text" class="text-sm font-bold text-slate-900 transition-opacity">GEO Sensor</span>
+            </div>
+            <button id="sidebar-toggle" class="p-2 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Toggle sidebar">
+                <span class="material-symbols-outlined text-slate-600">menu</span>
+            </button>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="flex-1 px-4 py-6 overflow-y-auto" role="navigation">
+            <ul class="space-y-2">
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-all-smooth group" aria-label="Dashboard">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary" aria-hidden="true">dashboard</span>
+                        <span class="sidebar-text text-sm font-medium">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-primary/10 text-primary rounded-lg transition-all-smooth group" aria-current="page" aria-label="Risk Monitor - Current page">
+                        <span class="material-symbols-outlined" aria-hidden="true">security</span>
+                        <span class="sidebar-text text-sm font-bold">Risk Monitor</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-all-smooth group" aria-label="Sources">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary" aria-hidden="true">source</span>
+                        <span class="sidebar-text text-sm font-medium">Sources</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-all-smooth group" aria-label="Logs">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary" aria-hidden="true">description</span>
+                        <span class="sidebar-text text-sm font-medium">Logs</span>
+                    </a>
+                </li>
+                <li class="pt-4 mt-4 border-t border-gray-200">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-all-smooth group" aria-label="Analytics">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary" aria-hidden="true">analytics</span>
+                        <span class="sidebar-text text-sm font-medium">Analytics</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-slate-600 hover:bg-gray-50 hover:text-primary rounded-lg transition-all-smooth group" aria-label="Settings">
+                        <span class="material-symbols-outlined text-slate-400 group-hover:text-primary" aria-hidden="true">settings</span>
+                        <span class="sidebar-text text-sm font-medium">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- User Profile (Bottom) -->
+        <div class="px-4 py-4 border-t border-gray-200">
+            <button class="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors w-full" aria-label="User profile menu">
+                <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-8 border-2 border-gray-200" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB08HoDvrLjzPKumEI_ZJ8RHw-6mdrQDpIHsDpk8a1JBbKlvcwSJ_fmQ0-CXlksnADWmcFJ_Ka0N6p121KVBjNHk1a0huXDYSSTitGm3FowTRc6xEMBSpFByryi37-1PU0A2te5-vIAmiMHucTG5NW_vH-GwAak4FEhXueeRV0fcpObWEJOJH2ukfwTZgAefHAqn7jG5St4UWjayu7F8L9ZfjZjIyvDtE4E5RJ4oFj4TuwcP9wQoaU-Baegvg3aoCIQMQYRws8qBwM");'></div>
+                <div class="sidebar-text text-left flex-1">
+                    <p class="text-sm font-semibold text-slate-900">Admin User</p>
+                    <p class="text-xs text-slate-500">admin@geo.com</p>
+                </div>
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT AREA -->
+    <div id="main-content" class="flex-1 flex flex-col transition-all-smooth" style="margin-left: 256px;">
+        <!-- TOP HEADER -->
+        <header class="h-16 flex items-center justify-between border-b border-gray-200 bg-white px-6">
+            <div class="flex items-center gap-4">
+                <button id="mobile-menu-toggle" class="p-2 hover:bg-gray-100 rounded-lg md:hidden" aria-label="Toggle mobile menu">
+                    <span class="material-symbols-outlined text-slate-600">menu</span>
+                </button>
+                <h1 class="text-lg font-bold text-slate-900">Brand Safety & Risk Control Center</h1>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <label class="flex items-center bg-gray-100 rounded-lg px-3 py-1.5 w-64 hidden md:flex">
+                    <span class="material-symbols-outlined text-gray-400 text-sm" aria-hidden="true">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full placeholder:text-gray-400 ml-2" placeholder="Search incidents..." type="text" aria-label="Search incidents"/>
+                </label>
+                <button class="relative p-2 text-slate-600 hover:bg-gray-100 rounded-lg transition-colors" aria-label="Notifications">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 size-2 bg-red-500 rounded-full" aria-hidden="true"></span>
+                </button>
+            </div>
+        </header>
+
+        <!-- ALERT SUMMARY BAR -->
+        <div class="bg-slate-dark text-white px-6 py-4" role="status" aria-live="polite">
+            <div class="flex flex-wrap gap-4 items-center justify-between">
+                <div class="flex gap-4 items-center flex-wrap">
+                    <span class="text-xs font-bold uppercase tracking-wider text-gray-400 mr-2">System Status:</span>
+                    <div class="flex items-center gap-2 bg-red-500/20 border border-red-500/50 px-3 py-1 rounded-full" role="alert" aria-label="12 critical incidents">
+                        <div class="size-2 bg-red-500 rounded-full animate-pulse" aria-hidden="true"></div>
+                        <span class="text-xs font-bold">12 CRITICAL</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-amber-500/20 border border-amber-500/50 px-3 py-1 rounded-full" aria-label="45 warning incidents">
+                        <div class="size-2 bg-amber-500 rounded-full" aria-hidden="true"></div>
+                        <span class="text-xs font-bold">45 WARNING</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-emerald-500/20 border border-emerald-500/50 px-3 py-1 rounded-full" aria-label="1,240 safe responses">
+                        <div class="size-2 bg-emerald-500 rounded-full" aria-hidden="true"></div>
+                        <span class="text-xs font-bold">1,240 SAFE</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-gray-700 border border-gray-600 px-3 py-1 rounded-full ml-2" aria-label="Total 1,297 responses">
+                        <span class="text-xs font-bold text-gray-300">TOTAL: 1,297</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs font-bold transition-colors" aria-label="Refresh data">
+                        <span class="material-symbols-outlined text-sm" aria-hidden="true">refresh</span> REFRESH
+                    </button>
+                    <button class="flex items-center gap-2 px-3 py-1.5 bg-gray-800 hover:bg-gray-700 rounded-lg text-xs font-bold transition-colors" aria-label="Open configuration">
+                        <span class="material-symbols-outlined text-sm" aria-hidden="true">settings</span> CONFIG
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN DASHBOARD CONTENT -->
+        <main class="flex-1 flex gap-6 px-6 py-6 overflow-hidden">
+            <!-- Left Panel: Live Monitor (70%) -->
+            <section class="flex-[0.7] flex flex-col gap-4">
+                <div class="flex items-center justify-between px-2">
+                    <h2 class="text-xl font-bold text-slate-900">Live AI Response Monitor</h2>
+                    <div class="flex gap-2">
+                        <span class="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded border border-gray-200">Active Filters: All Risk Levels</span>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden h-[calc(100vh-280px)]">
+                    <!-- Monitor Tabs -->
+                    <div class="flex border-b border-gray-200 px-4" role="tablist" aria-label="Monitor views">
+                        <button class="px-4 py-3 text-sm font-bold border-b-2 border-primary text-primary transition-colors" role="tab" aria-selected="true" aria-controls="realtime-panel">
+                            Real-time Feed
+                        </button>
+                        <button class="px-4 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" role="tab" aria-selected="false" aria-controls="flagged-panel">
+                            Flagged Responses
+                        </button>
+                        <button class="px-4 py-3 text-sm font-medium text-slate-500 hover:text-slate-700 transition-colors" role="tab" aria-selected="false" aria-controls="history-panel">
+                            Corrected History
+                        </button>
+                    </div>
+
+                    <!-- Feed Content -->
+                    <div id="realtime-panel" class="flex-1 overflow-y-auto p-4" role="tabpanel" aria-live="polite">
+                        <div id="incident-feed" class="space-y-4">
+                            <!-- Incident Card 1 - CRITICAL -->
+                            <article class="p-6 border-l-4 border-red-500 bg-red-50/50 rounded-lg flex flex-col gap-3 shadow-sm border border-gray-100 hover-lift" role="alert" aria-labelledby="incident-1-title">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div class="flex items-center gap-3 flex-wrap">
+                                        <span class="px-2 py-1 bg-red-100 text-red-600 text-[10px] font-black rounded uppercase tracking-widest" aria-label="Critical severity">CRITICAL</span>
+                                        <div class="flex items-center gap-2 text-slate-500 text-xs font-medium">
+                                            <span class="material-symbols-outlined text-base" aria-hidden="true">smart_toy</span>
+                                            ChatGPT-4
+                                        </div>
+                                        <div class="w-1 h-1 bg-gray-300 rounded-full" aria-hidden="true"></div>
+                                        <time class="text-xs text-gray-400" datetime="2024-01-01T10:42:00">2 mins ago</time>
+                                    </div>
+                                    <span class="text-xs text-slate-400">ID: #AI-9482</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <h3 id="incident-1-title" class="font-bold text-slate-900">Hallucination: Bankruptcy Claim Detected</h3>
+                                    <blockquote class="text-sm text-slate-600 line-clamp-2 leading-relaxed italic border-l-2 border-gray-200 pl-3">
+                                        "According to recent reports, the GEO Corp parent company filed for Chapter 11 bankruptcy in early 2024 following its failed acquisition..."
+                                    </blockquote>
+                                </div>
+                                <div class="flex justify-end gap-2 mt-1">
+                                    <button class="px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-gray-100 rounded transition-colors border border-gray-200" aria-label="View details for incident AI-9482">
+                                        View Details
+                                    </button>
+                                    <button class="px-3 py-1.5 text-xs font-bold bg-primary text-white hover:bg-orange-600 rounded transition-colors shadow-sm" aria-label="Suggest correction for incident AI-9482">
+                                        Suggest Correction
+                                    </button>
+                                </div>
+                            </article>
+
+                            <!-- Incident Card 2 - WARNING -->
+                            <article class="p-6 border-l-4 border-amber-500 bg-amber-50/50 rounded-lg flex flex-col gap-3 shadow-sm border border-gray-100 hover-lift" aria-labelledby="incident-2-title">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div class="flex items-center gap-3 flex-wrap">
+                                        <span class="px-2 py-1 bg-amber-100 text-amber-600 text-[10px] font-black rounded uppercase tracking-widest" aria-label="Warning severity">WARNING</span>
+                                        <div class="flex items-center gap-2 text-slate-500 text-xs font-medium">
+                                            <span class="material-symbols-outlined text-base" aria-hidden="true">search_spark</span>
+                                            Perplexity
+                                        </div>
+                                        <div class="w-1 h-1 bg-gray-300 rounded-full" aria-hidden="true"></div>
+                                        <time class="text-xs text-gray-400" datetime="2024-01-01T10:28:00">14 mins ago</time>
+                                    </div>
+                                    <span class="text-xs text-slate-400">ID: #AI-9467</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <h3 id="incident-2-title" class="font-bold text-slate-900">Misinformation: Outdated Product Pricing</h3>
+                                    <p class="text-sm text-slate-600 line-clamp-2 leading-relaxed">
+                                        AI is citing the 2022 Enterprise subscription rates ($499/mo) instead of the current 2024 rates ($649/mo).
+                                    </p>
+                                </div>
+                                <div class="flex justify-end gap-2 mt-1">
+                                    <button class="px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-gray-100 rounded transition-colors border border-gray-200" aria-label="View details for incident AI-9467">
+                                        View Details
+                                    </button>
+                                    <button class="px-3 py-1.5 text-xs font-bold bg-primary text-white hover:bg-orange-600 rounded transition-colors" aria-label="Suggest correction for incident AI-9467">
+                                        Suggest Correction
+                                    </button>
+                                </div>
+                            </article>
+
+                            <!-- Incident Card 3 - SAFE -->
+                            <article class="p-6 border-l-4 border-emerald-500 bg-white rounded-lg flex flex-col gap-3 shadow-sm border border-gray-100 hover-lift" aria-labelledby="incident-3-title">
+                                <div class="flex items-center justify-between flex-wrap gap-2">
+                                    <div class="flex items-center gap-3 flex-wrap">
+                                        <span class="px-2 py-1 bg-emerald-100 text-emerald-600 text-[10px] font-black rounded uppercase tracking-widest" aria-label="Safe status">SAFE</span>
+                                        <div class="flex items-center gap-2 text-slate-500 text-xs font-medium">
+                                            <span class="material-symbols-outlined text-base" aria-hidden="true">cloud_done</span>
+                                            Anthropic Claude
+                                        </div>
+                                        <div class="w-1 h-1 bg-gray-300 rounded-full" aria-hidden="true"></div>
+                                        <time class="text-xs text-gray-400" datetime="2024-01-01T09:57:00">45 mins ago</time>
+                                    </div>
+                                    <span class="text-xs text-slate-400">ID: #AI-9431</span>
+                                </div>
+                                <div class="space-y-2">
+                                    <h3 id="incident-3-title" class="font-bold text-slate-900">Verified: Quarterly Earnings Report</h3>
+                                    <blockquote class="text-sm text-slate-600 line-clamp-2 leading-relaxed italic border-l-2 border-emerald-100 pl-3">
+                                        "GEO Sensor Platform announced its Q3 earnings today, showing a 15% increase in year-over-year revenue..."
+                                    </blockquote>
+                                </div>
+                            </article>
+
+                            <!-- Loading State (Hidden by default) -->
+                            <div id="loading-state" class="hidden space-y-4">
+                                <div class="p-6 rounded-lg border border-gray-200 skeleton h-32"></div>
+                                <div class="p-6 rounded-lg border border-gray-200 skeleton h-32"></div>
+                                <div class="p-6 rounded-lg border border-gray-200 skeleton h-32"></div>
+                            </div>
+
+                            <!-- Empty State (Hidden by default) -->
+                            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-16 text-center">
+                                <div class="size-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                                    <span class="material-symbols-outlined text-gray-400 text-3xl" aria-hidden="true">inbox</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-2">No incidents detected</h3>
+                                <p class="text-sm text-slate-500 max-w-sm">
+                                    All AI responses are currently within safety parameters. New incidents will appear here automatically.
+                                </p>
+                            </div>
+
+                            <!-- Error State (Hidden by default) -->
+                            <div id="error-state" class="hidden flex flex-col items-center justify-center py-16 text-center" role="alert">
+                                <div class="size-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+                                    <span class="material-symbols-outlined text-red-500 text-3xl" aria-hidden="true">error</span>
+                                </div>
+                                <h3 class="text-lg font-bold text-slate-900 mb-2">Failed to load incidents</h3>
+                                <p class="text-sm text-slate-500 max-w-sm mb-4">
+                                    We couldn't retrieve the latest incident data. Please check your connection and try again.
+                                </p>
+                                <button class="px-4 py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-600 transition-colors" aria-label="Retry loading incidents">
+                                    Retry
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Side Stats (30%) -->
+            <aside class="flex-[0.3] flex flex-col gap-6" aria-label="Statistics and controls">
+                <!-- Official Source Status Card -->
+                <section class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                    <div class="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                        <h3 class="font-bold text-slate-900 text-sm">Official Source Status</h3>
+                        <button class="p-1 hover:bg-gray-100 rounded transition-colors" aria-label="Source status information">
+                            <span class="material-symbols-outlined text-slate-400 text-sm">info</span>
+                        </button>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <!-- Source 1 - Synced -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-base" aria-hidden="true">language</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Corporate Website</p>
+                                    <p class="text-[10px] text-slate-500">Sync: 12 min ago</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded" aria-label="Status: Synced">SYNCED</span>
+                        </div>
+
+                        <!-- Source 2 - Outdated -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-base" aria-hidden="true">article</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">SEC Filings Feed</p>
+                                    <p class="text-[10px] text-slate-500">Sync: 1 day ago</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded" aria-label="Status: Outdated">OUTDATED</span>
+                        </div>
+
+                        <!-- Source 3 - Error -->
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="size-8 rounded bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
+                                    <span class="material-symbols-outlined text-base" aria-hidden="true">share</span>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">PR Newswire API</p>
+                                    <p class="text-[10px] text-slate-500">Last attempt: Failed</p>
+                                </div>
+                            </div>
+                            <span class="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded" role="alert" aria-label="Status: Error">ERROR</span>
+                        </div>
+
+                        <button class="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-xs font-bold text-slate-500 hover:border-primary hover:text-primary transition-all flex items-center justify-center gap-2" aria-label="Add new source">
+                            <span class="material-symbols-outlined text-sm" aria-hidden="true">add_circle</span> Add Source
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Threat Detection Log -->
+                <section class="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm flex-1">
+                    <div class="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="font-bold text-slate-900 text-sm">Threat Detection Log</h3>
+                    </div>
+                    <div class="p-6 relative">
+                        <!-- Timeline Line -->
+                        <div class="absolute left-6 top-6 bottom-6 w-px bg-gray-200" aria-hidden="true"></div>
+                        <ul class="space-y-6 relative" role="list">
+                            <li class="flex gap-4 items-start">
+                                <div class="size-4 rounded-full bg-red-500 ring-4 ring-red-50 relative z-10 translate-y-1 flex-shrink-0" aria-hidden="true"></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Negative citation spike</p>
+                                    <p class="text-[10px] text-slate-500">Social Media & News Feed</p>
+                                    <time class="text-[9px] text-gray-400" datetime="2024-01-01T10:42:00">10:42 AM</time>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="size-4 rounded-full bg-amber-500 ring-4 ring-amber-50 relative z-10 translate-y-1 flex-shrink-0" aria-hidden="true"></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">Sentiment deviation detected</p>
+                                    <p class="text-[10px] text-slate-500">Reddit r/technology</p>
+                                    <time class="text-[9px] text-gray-400" datetime="2024-01-01T09:15:00">09:15 AM</time>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 items-start">
+                                <div class="size-4 rounded-full bg-blue-500 ring-4 ring-blue-50 relative z-10 translate-y-1 flex-shrink-0" aria-hidden="true"></div>
+                                <div>
+                                    <p class="text-xs font-bold text-slate-900">New AI crawler detected</p>
+                                    <p class="text-[10px] text-slate-500">Corporate Domain Index</p>
+                                    <time class="text-[9px] text-gray-400" datetime="2024-01-01T08:30:00">08:30 AM</time>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Quick Shield Toggle Card -->
+                <section class="bg-navy rounded-lg p-5 text-white shadow-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <div class="flex items-center gap-3">
+                            <span class="material-symbols-outlined text-blue-300" aria-hidden="true">verified_user</span>
+                            <span class="text-sm font-bold uppercase tracking-wider">Quick Shield</span>
+                        </div>
+                        <!-- Toggle Switch -->
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input id="shield-toggle" checked class="sr-only peer" type="checkbox" aria-label="Toggle automatic response blocking"/>
+                            <div class="w-11 h-6 bg-gray-600 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+                        </label>
+                    </div>
+                    <p class="text-xs text-blue-100 leading-relaxed mb-4">
+                        Automatic AI response blocking is ACTIVE. Hallucinations with high risk scores will be intercepted automatically.
+                    </p>
+                    <div class="flex items-center gap-2 text-[10px] font-bold text-emerald-400 bg-black/20 px-2 py-1 rounded" role="status">
+                        <span class="material-symbols-outlined text-xs" aria-hidden="true">check_circle</span>
+                        ALL SYSTEMS OPTIMAL
+                    </div>
+                </section>
+            </aside>
+        </main>
+
+        <!-- Footer Bar -->
+        <footer class="px-6 py-2 border-t border-gray-200 bg-white flex justify-between items-center text-[10px] font-medium text-slate-400 flex-wrap gap-2">
+            <div class="flex gap-4 flex-wrap">
+                <span>&copy; 2024 GEO Sensor Platform</span>
+                <span>Security Level: Tier 4</span>
+                <span>Server: US-East-Primary</span>
+            </div>
+            <div class="flex gap-4 flex-wrap">
+                <span class="flex items-center gap-1" aria-label="API status: Stable">
+                    <span class="size-1.5 bg-emerald-500 rounded-full" aria-hidden="true"></span> API Stable
+                </span>
+                <span class="flex items-center gap-1" aria-label="LLM index status: Current">
+                    <span class="size-1.5 bg-emerald-500 rounded-full" aria-hidden="true"></span> LLM Index Current
+                </span>
+            </div>
+        </footer>
+    </div>
+</div>
+
+<!-- Mobile Menu Overlay -->
+<div id="mobile-overlay" class="fixed inset-0 bg-black/50 z-30 hidden md:hidden" aria-hidden="true"></div>
+
+<script>
+    // Sidebar toggle functionality
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    const mainContent = document.getElementById('main-content');
+    const logoText = document.getElementById('logo-text');
+    const sidebarTexts = document.querySelectorAll('.sidebar-text');
+
+    let isCollapsed = false;
+
+    sidebarToggle.addEventListener('click', () => {
+        isCollapsed = !isCollapsed;
+
+        if (isCollapsed) {
+            sidebar.classList.remove('sidebar-expanded');
+            sidebar.classList.add('sidebar-collapsed');
+            mainContent.style.marginLeft = '80px';
+            logoText.style.opacity = '0';
+            sidebarTexts.forEach(text => text.style.opacity = '0');
+        } else {
+            sidebar.classList.remove('sidebar-collapsed');
+            sidebar.classList.add('sidebar-expanded');
+            mainContent.style.marginLeft = '256px';
+            logoText.style.opacity = '1';
+            sidebarTexts.forEach(text => text.style.opacity = '1');
+        }
+    });
+
+    // Mobile menu toggle
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+
+    mobileMenuToggle?.addEventListener('click', () => {
+        sidebar.classList.toggle('sidebar-mobile-hidden');
+        mobileOverlay.classList.toggle('hidden');
+    });
+
+    mobileOverlay.addEventListener('click', () => {
+        sidebar.classList.add('sidebar-mobile-hidden');
+        mobileOverlay.classList.add('hidden');
+    });
+
+    // Demo: Toggle between different states
+    let currentState = 'loaded'; // 'loaded', 'loading', 'empty', 'error'
+
+    function toggleState(newState) {
+        const feed = document.getElementById('incident-feed').children;
+        const loadingState = document.getElementById('loading-state');
+        const emptyState = document.getElementById('empty-state');
+        const errorState = document.getElementById('error-state');
+
+        // Hide all states
+        for (let card of feed) {
+            if (card.tagName === 'ARTICLE') {
+                card.classList.add('hidden');
+            }
+        }
+        loadingState.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        errorState.classList.add('hidden');
+
+        // Show selected state
+        switch (newState) {
+            case 'loading':
+                loadingState.classList.remove('hidden');
+                break;
+            case 'empty':
+                emptyState.classList.remove('hidden');
+                break;
+            case 'error':
+                errorState.classList.remove('hidden');
+                break;
+            default: // 'loaded'
+                for (let card of feed) {
+                    if (card.tagName === 'ARTICLE') {
+                        card.classList.remove('hidden');
+                    }
+                }
+        }
+
+        currentState = newState;
+    }
+
+    // Add keyboard shortcuts for demo (Shift + 1/2/3/4)
+    document.addEventListener('keydown', (e) => {
+        if (e.shiftKey) {
+            switch (e.key) {
+                case '1':
+                    toggleState('loaded');
+                    console.log('State: Loaded');
+                    break;
+                case '2':
+                    toggleState('loading');
+                    console.log('State: Loading');
+                    break;
+                case '3':
+                    toggleState('empty');
+                    console.log('State: Empty');
+                    break;
+                case '4':
+                    toggleState('error');
+                    console.log('State: Error');
+                    break;
+            }
+        }
+    });
+
+    // Log keyboard shortcuts info
+    console.log('%c🎨 Demo Controls', 'font-size: 16px; font-weight: bold; color: #ff6821;');
+    console.log('%cShift + 1: Loaded state', 'color: #10b981;');
+    console.log('%cShift + 2: Loading state', 'color: #3b82f6;');
+    console.log('%cShift + 3: Empty state', 'color: #6b7280;');
+    console.log('%cShift + 4: Error state', 'color: #ef4444;');
+
+    // Simulated real-time feed update
+    setInterval(() => {
+        if (currentState === 'loaded') {
+            const feedElement = document.getElementById('incident-feed');
+            const articles = feedElement.querySelectorAll('article');
+
+            // Add subtle animation to first card to simulate new data
+            if (articles.length > 0) {
+                articles[0].style.animation = 'pulse 1s ease-in-out';
+                setTimeout(() => {
+                    articles[0].style.animation = '';
+                }, 1000);
+            }
+        }
+    }, 10000); // Every 10 seconds
+
+    // Shield toggle feedback
+    const shieldToggle = document.getElementById('shield-toggle');
+    shieldToggle?.addEventListener('change', (e) => {
+        const statusText = e.target.checked ? 'ACTIVE' : 'DISABLED';
+        console.log(`Quick Shield: ${statusText}`);
+    });
+</script>
+
+</body>
+</html>
