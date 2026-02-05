@@ -248,9 +248,6 @@ export function StitchSidebar({ className }: StitchSidebarProps) {
           </div>
         </div>
       </aside>
-
-      {/* Spacer for desktop layout */}
-      <div className="hidden md:block md:w-64" aria-hidden="true" />
     </>
   )
 }
