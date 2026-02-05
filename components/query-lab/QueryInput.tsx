@@ -44,7 +44,7 @@ export function QueryInput({
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label htmlFor="query" className="block text-sm font-medium text-gray-700 mb-2">
+          <label htmlFor="query" className="block text-sm font-medium text-foreground mb-2">
             질문을 입력하세요
           </label>
           <textarea
@@ -53,16 +53,16 @@ export function QueryInput({
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="예: 2024년 최고의 스마트폰을 추천해주세요"
-            className="w-full min-h-[120px] px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-y text-gray-900 placeholder-gray-400"
+            className="w-full min-h-[120px] px-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-brand-orange focus:border-brand-orange resize-y text-foreground placeholder-muted-foreground bg-background"
             disabled={isLoading}
           />
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-muted-foreground">
             Ctrl+Enter (Mac: Cmd+Enter)로 제출
           </p>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             LLM 제공자 선택
           </label>
           <div className="flex flex-wrap gap-3">
@@ -74,14 +74,14 @@ export function QueryInput({
                 disabled={isLoading}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all ${
                   selectedProviders.includes(provider.id)
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
+                    ? 'border-brand-orange bg-brand-orange/10 text-foreground'
+                    : 'border-border bg-card text-muted-foreground hover:border-brand-orange/50'
                 } ${isLoading ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
               >
                 <span className="text-lg">{provider.icon}</span>
                 <span className="font-medium">{provider.name}</span>
                 {selectedProviders.includes(provider.id) && (
-                  <svg className="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-5 h-5 text-brand-orange" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}

@@ -53,7 +53,7 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
             <span className={`px-2 py-1 rounded-full text-xs font-medium ${sentiment.bg} ${sentiment.color}`}>
               {sentiment.label}
             </span>
-            <span className="text-xs text-gray-500">
+            <span className="text-xs text-muted-foreground">
               {response.processingTimeMs}ms
             </span>
           </div>
@@ -61,13 +61,13 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <div className="prose prose-sm max-w-none text-gray-700 whitespace-pre-wrap leading-relaxed">
+        <div className="prose prose-sm max-w-none text-foreground whitespace-pre-wrap leading-relaxed">
           {highlightedText}
         </div>
 
         {uniqueBrands.length > 0 && (
-          <div className="pt-3 border-t border-gray-100">
-            <p className="text-xs font-medium text-gray-500 mb-2">브랜드 언급</p>
+          <div className="pt-3 border-t border-border">
+            <p className="text-xs font-medium text-muted-foreground mb-2">브랜드 언급</p>
             <div className="flex flex-wrap gap-2">
               {uniqueBrands.map((brand) => {
                 const sentimentStyle = SENTIMENT_CONFIG[brand.sentiment];
@@ -89,21 +89,21 @@ export function ResponsePanel({ response }: ResponsePanelProps) {
           </div>
         )}
 
-        <div className="pt-3 border-t border-gray-100">
-          <p className="text-xs font-medium text-gray-500 mb-2">인용률</p>
+        <div className="pt-3 border-t border-border">
+          <p className="text-xs font-medium text-muted-foreground mb-2">인용률</p>
           <div className="space-y-2">
             {Object.entries(response.citationShare)
               .sort(([, a], [, b]) => b - a)
               .map(([brand, share]) => (
                 <div key={brand} className="flex items-center gap-2">
-                  <span className="text-xs text-gray-600 w-20 truncate">{brand}</span>
-                  <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <span className="text-xs text-muted-foreground w-20 truncate">{brand}</span>
+                  <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full transition-all"
+                      className="h-full bg-brand-orange rounded-full transition-all"
                       style={{ width: `${share}%` }}
                     />
                   </div>
-                  <span className="text-xs font-medium text-gray-700 w-10 text-right">
+                  <span className="text-xs font-medium text-foreground w-10 text-right">
                     {share}%
                   </span>
                 </div>

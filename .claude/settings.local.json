@@ -25,7 +25,23 @@
       "Bash(dir:*)",
       "Bash(npx tsc --noEmit)",
       "Bash(pnpm type-check:*)",
-      "mcp__plugin_oh-my-claudecode_t__lsp_diagnostics_directory"
+      "mcp__plugin_oh-my-claudecode_t__lsp_diagnostics_directory",
+      "mcp__plugin_oh-my-claudecode_t__lsp_diagnostics",
+      "Bash(python -m ruff check:*)",
+      "Bash(source:*)",
+      "Bash(python -c:*)",
+      "Bash(pip install:*)",
+      "Bash(.venv/Scripts/pip.exe install:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "mcp__plugin_oh-my-claudecode_t__ast_grep_search",
+      "Bash(ruff check:*)",
+      "Bash(python -m py_compile:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: F1-01 Multi-LLM API integration with OpenAI and Gemini\n\n- Add multi_llm.py service for parallel LLM querying with fallback\n- Add llm.py API endpoints \\(/query, /health, /providers\\)\n- Register LLM router in API v1\n- Update config to use gemini-2.0-flash model\n- Export MultiLLMService and MultiLLMResponse from llm module\n- Add proper error logging for all exception handlers\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\ndocs: Add Stitch UI/UX reference designs for enterprise dashboards\n\n- Strategic GEO Performance Analysis Dashboard\n- Brand Safety & Risk Control Center\n- Global GEO Pipeline & Approval Workflow\n- Enterprise ROI & Settlement Hub\n- Comprehensive design system documentation\n\nReference implementations for future frontend development.\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(claude:*)",
+      "Bash(where:*)",
+      "Bash(tasklist:*)"
     ]
   }
 }

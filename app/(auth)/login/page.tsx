@@ -67,12 +67,20 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">로그인</CardTitle>
-          <CardDescription>
-            계정에 로그인하세요
-          </CardDescription>
+      <Card className="w-full max-w-md bg-card shadow-xl border-brand-navy/10">
+        <CardHeader className="space-y-4 pb-8">
+          {/* GEO Sensor Logo */}
+          <div className="flex justify-center">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-brand-orange via-brand-orange to-brand-navy bg-clip-text text-transparent">
+              GEO Sensor
+            </h1>
+          </div>
+          <div className="space-y-1 text-center">
+            <CardTitle className="text-2xl font-bold text-brand-navy">로그인</CardTitle>
+            <CardDescription>
+              계정에 로그인하세요
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -94,6 +102,7 @@ export default function LoginPage() {
                         type="email"
                         placeholder="name@example.com"
                         disabled={isLoading}
+                        className="focus-visible:ring-brand-orange"
                         {...field}
                       />
                     </FormControl>
@@ -113,6 +122,7 @@ export default function LoginPage() {
                         type="password"
                         placeholder="비밀번호 입력"
                         disabled={isLoading}
+                        className="focus-visible:ring-brand-orange"
                         {...field}
                       />
                     </FormControl>
@@ -123,7 +133,7 @@ export default function LoginPage() {
 
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-brand-orange hover:bg-brand-orange/90 text-white font-semibold shadow-md hover:shadow-lg transition-all"
                 disabled={isLoading}
               >
                 {isLoading ? '로그인 중...' : '로그인'}
@@ -131,12 +141,22 @@ export default function LoginPage() {
             </form>
           </Form>
         </CardContent>
-        <CardFooter className="flex flex-col space-y-2">
+        <CardFooter className="flex flex-col space-y-4 pt-6">
+          {/* Divider for potential social login */}
+          <div className="relative">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground">또는</span>
+            </div>
+          </div>
+
           <div className="text-sm text-muted-foreground text-center">
             계정이 없으신가요?{' '}
             <Link
               href="/register"
-              className="text-blue-600 hover:text-blue-700 underline underline-offset-4"
+              className="text-brand-orange hover:text-brand-orange/90 font-medium underline underline-offset-4 transition-colors"
             >
               회원가입
             </Link>

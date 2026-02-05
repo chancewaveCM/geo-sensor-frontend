@@ -1,7 +1,16 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// ⚠️ TEMPORARY: Disable auth for UX testing
+// Set to false to re-enable authentication
+const DISABLE_AUTH_FOR_TESTING = true
+
 export function middleware(request: NextRequest) {
+  // Skip all auth checks when testing flag is enabled
+  if (DISABLE_AUTH_FOR_TESTING) {
+    return NextResponse.next()
+  }
+
   const token = request.cookies.get('access_token')?.value ||
                 request.headers.get('authorization')?.replace('Bearer ', '')
 

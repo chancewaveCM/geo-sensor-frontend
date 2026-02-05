@@ -1,5 +1,5 @@
-import { Sidebar } from '@/components/dashboard/Sidebar'
-import { DashboardHeader } from '@/components/dashboard/DashboardHeader'
+import { StitchSidebar } from '@/components/stitch/StitchSidebar'
+import { StitchHeader } from '@/components/stitch/StitchHeader'
 
 export default function AnalysisLayout({
   children,
@@ -8,10 +8,18 @@ export default function AnalysisLayout({
 }) {
   return (
     <div className="min-h-screen bg-background">
-      <Sidebar />
-      <div className="lg:pl-64">
-        <DashboardHeader />
-        <main className="p-6">{children}</main>
+      <StitchSidebar />
+      <div className="md:pl-64">
+        <StitchHeader
+          title="분석"
+          breadcrumb={[{ label: 'Tools' }, { label: '분석' }]}
+          showTimeFilter={false}
+        />
+        <main className="p-6">
+          <div className="animate-fade-in">
+            {children}
+          </div>
+        </main>
       </div>
     </div>
   )

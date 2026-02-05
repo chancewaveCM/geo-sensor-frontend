@@ -79,7 +79,7 @@ export function Sidebar() {
         <div className="flex h-full flex-col">
           {/* Logo */}
           <div className="flex h-16 items-center gap-2 border-b px-6">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-purple-500">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-brand-orange to-brand-navy">
               <Zap className="h-6 w-6 text-white" />
             </div>
             <div>
@@ -100,14 +100,14 @@ export function Sidebar() {
                   className={cn(
                     'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all',
                     isActive
-                      ? 'bg-primary text-primary-foreground shadow-md'
+                      ? 'bg-primary text-primary-foreground shadow-md border-l-4 border-l-brand-orange'
                       : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                   )}
                 >
                   <item.icon className="h-5 w-5" />
                   {item.title}
                   {isActive && (
-                    <div className="ml-auto h-2 w-2 rounded-full bg-primary-foreground" />
+                    <div className="ml-auto h-2 w-2 rounded-full bg-brand-orange" />
                   )}
                 </Link>
               )
@@ -116,7 +116,7 @@ export function Sidebar() {
 
           {/* Footer */}
           <div className="border-t p-4">
-            <div className="rounded-lg bg-gradient-to-br from-blue-500/10 to-purple-500/10 p-4">
+            <div className="rounded-lg bg-brand-orange/10 p-4 border-l-4 border-l-brand-orange">
               <p className="text-xs font-medium">도움이 필요하세요?</p>
               <p className="text-xs text-muted-foreground mt-1">
                 문서를 확인하세요

@@ -49,7 +49,7 @@ export function StatsCard({ title, value, trend, icon }: StatsCardProps) {
           )}
         </div>
       </CardContent>
-      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 opacity-50" />
+      <div className="absolute bottom-0 left-0 h-full w-1 bg-brand-orange" />
     </Card>
   )
 }

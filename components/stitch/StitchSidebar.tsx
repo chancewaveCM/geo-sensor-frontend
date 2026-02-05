@@ -3,10 +3,13 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
+  Home,
+  LayoutDashboard,
   BarChart3,
   Shield,
   GitBranch,
   DollarSign,
+  LineChart,
   FlaskConical,
   Settings,
   Menu,
@@ -31,7 +34,22 @@ interface NavSection {
 
 const navigationSections: NavSection[] = [
   {
-    title: 'Main Dashboards',
+    title: 'OVERVIEW',
+    items: [
+      {
+        title: '홈',
+        href: '/',
+        icon: Home,
+      },
+      {
+        title: '대시보드',
+        href: '/dashboard',
+        icon: LayoutDashboard,
+      },
+    ],
+  },
+  {
+    title: 'ANALYSIS',
     items: [
       {
         title: 'Strategic Analysis',
@@ -44,27 +62,38 @@ const navigationSections: NavSection[] = [
         icon: Shield,
       },
       {
-        title: 'Pipeline & Approval',
+        title: 'Pipeline',
         href: '/dashboard/pipeline',
         icon: GitBranch,
         badge: '3',
       },
       {
-        title: 'ROI & Settlement',
+        title: 'ROI Hub',
         href: '/dashboard/roi',
         icon: DollarSign,
       },
     ],
   },
   {
+    title: 'TOOLS',
     items: [
       {
-        title: 'Query Lab',
+        title: '분석',
+        href: '/analysis',
+        icon: LineChart,
+      },
+      {
+        title: '쿼리 랩',
         href: '/query-lab',
         icon: FlaskConical,
       },
+    ],
+  },
+  {
+    title: 'SETTINGS',
+    items: [
       {
-        title: 'Settings',
+        title: '설정',
         href: '/settings',
         icon: Settings,
       },
