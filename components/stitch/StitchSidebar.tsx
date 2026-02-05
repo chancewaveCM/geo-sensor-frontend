@@ -177,9 +177,9 @@ export function StitchSidebar({ className }: StitchSidebarProps) {
           {/* Navigation Sections */}
           <nav className="flex-1 space-y-1 overflow-y-auto p-4">
             {navigationSections.map((section, sectionIndex) => (
-              <div key={sectionIndex} className={cn(sectionIndex > 0 && 'mt-6')}>
+              <div key={sectionIndex} className={cn(sectionIndex > 0 && 'mt-6 pt-4 border-t border-border/50')}>
                 {section.title && (
-                  <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <p className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/80">
                     {section.title}
                   </p>
                 )}
