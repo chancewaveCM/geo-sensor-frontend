@@ -153,7 +153,7 @@ export default function HomePage() {
         />
 
         {/* Page Content */}
-        <main className="p-3 md:p-4 space-y-6">
+        <main className="p-4 md:p-6 space-y-6">
           {/* Hero Section */}
           <section
             className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-orange via-orange-500 to-brand-navy p-8 md:p-10 text-white animate-fade-in"
@@ -442,7 +442,7 @@ function LoadingSkeleton() {
         <div className="h-16 border-b bg-card" />
 
         {/* Content skeleton */}
-        <div className="p-3 md:p-4 space-y-6">
+        <div className="p-4 md:p-6 space-y-6">
           {/* Hero skeleton */}
           <div className="h-72 rounded-2xl bg-muted animate-pulse" />
 

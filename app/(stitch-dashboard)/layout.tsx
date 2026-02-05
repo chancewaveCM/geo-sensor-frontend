@@ -50,7 +50,7 @@ export default function StitchDashboardLayout({
         />
 
         {/* Page Content */}
-        <main className="min-h-[calc(100vh-4rem)]">
+        <main className="min-h-[calc(100vh-4rem)] p-4 md:p-6">
           <div className="animate-fade-in">
             {children}
           </div>
