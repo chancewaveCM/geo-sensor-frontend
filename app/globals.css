@@ -25,12 +25,35 @@
     --ring: 217 91% 60%;
     --radius: 0.5rem;
     --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
-    /* Stitch Brand Colors */
+    --warning-foreground: 0 0% 100%;
+    --error: 0 84.2% 60.2%;
+    --error-foreground: 210 40% 98%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    /* Background variants */
+    --background-subtle: 0 0% 98%;
+    --card-hover: 0 0% 98%;
+    /* Border variants */
+    --border-strong: 214.3 31.8% 80%;
+    /* Brand Colors */
     --brand-orange: 24 100% 56%;
     --brand-orange-hover: 24 100% 46%;
     --brand-navy: 222 80% 33%;
     --brand-navy-hover: 222 80% 23%;
+    --brand-navy-light: 222 80% 93%;
+    /* Gray Scale */
+    --gray-50: 210 40% 98%;
+    --gray-100: 210 40% 96.1%;
+    --gray-200: 214.3 31.8% 91.4%;
+    --gray-300: 212.7 26.8% 83.9%;
+    --gray-400: 215 20.2% 65.1%;
+    --gray-500: 215.4 16.3% 46.9%;
+    --gray-600: 215.3 19.3% 34.5%;
+    --gray-700: 217.2 32.6% 17.5%;
+    --gray-800: 222.2 47.4% 11.2%;
+    --gray-900: 222.2 84% 4.9%;
     /* Chart Colors */
     --chart-1: 24 100% 56%;
     --chart-2: 222 80% 33%;
@@ -38,6 +61,48 @@
     --chart-4: 217 91% 60%;
     --chart-5: 271 76% 53%;
     --chart-6: 45 93% 47%;
+    --chart-7: 0 84% 60%;
+    --chart-8: 199 89% 48%;
+    --chart-grid: 220 13% 91%;
+    --chart-axis-text: 220 9% 46%;
+    /* Category Badge Colors */
+    --category-introductory-bg: 213 97% 87%;
+    --category-introductory-text: 226 71% 40%;
+    --category-comparative-bg: 270 100% 95%;
+    --category-comparative-text: 274 72% 47%;
+    --category-critical-bg: 0 93% 94%;
+    --category-critical-text: 0 63% 43%;
+    /* Rank / Medal Colors */
+    --rank-gold-from: 48 96% 53%;
+    --rank-gold-to: 45 93% 47%;
+    --rank-silver-from: 213 27% 84%;
+    --rank-silver-to: 215 16% 47%;
+    --rank-bronze-from: 38 92% 50%;
+    --rank-bronze-to: 26 90% 37%;
+    /* Grade Colors */
+    --grade-a: 142 71% 45%;
+    --grade-b: 217 91% 60%;
+    --grade-c: 48 96% 53%;
+    --grade-d: 25 95% 53%;
+    --grade-f: 0 84% 60%;
+    /* Sentiment Colors */
+    --sentiment-positive: 142 71% 45%;
+    --sentiment-neutral: 38 92% 50%;
+    --sentiment-negative: 0 84% 60%;
+    /* Trend Colors */
+    --trend-up: 142 71% 45%;
+    --trend-down: 0 84% 60%;
+    /* Step / Wizard Colors */
+    --step-completed-bg: 141 85% 93%;
+    --step-completed-text: 138 76% 30%;
+    --step-completed-hover: 141 85% 86%;
+    --step-completed-icon: 142 72% 39%;
+    --step-completed-line: 142 71% 45%;
+    /* Status Colors */
+    --status-active: 142 71% 45%;
+    --status-inactive: 215.4 16.3% 46.9%;
+    --status-pending: 38 92% 50%;
+    --status-error: 0 84% 60%;
   }
 
   .dark {
@@ -60,11 +125,36 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 224.3 76.3% 48%;
-    /* Stitch Brand Colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --error: 0 62.8% 30.6%;
+    --error-foreground: 210 40% 98%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    /* Background variants */
+    --background-subtle: 222.2 84% 7%;
+    --card-hover: 222.2 84% 7%;
+    /* Border variants */
+    --border-strong: 217.2 32.6% 30%;
+    /* Brand Colors */
     --brand-orange: 24 100% 56%;
     --brand-orange-hover: 24 100% 46%;
     --brand-navy: 222 80% 33%;
     --brand-navy-hover: 222 80% 23%;
+    --brand-navy-light: 222 80% 20%;
+    /* Gray Scale (inverted for dark) */
+    --gray-50: 222.2 84% 4.9%;
+    --gray-100: 217.2 32.6% 17.5%;
+    --gray-200: 217.2 32.6% 20%;
+    --gray-300: 215.3 19.3% 34.5%;
+    --gray-400: 215.4 16.3% 46.9%;
+    --gray-500: 215 20.2% 65.1%;
+    --gray-600: 212.7 26.8% 83.9%;
+    --gray-700: 214.3 31.8% 91.4%;
+    --gray-800: 210 40% 96.1%;
+    --gray-900: 210 40% 98%;
     /* Chart Colors */
     --chart-1: 24 100% 56%;
     --chart-2: 222 80% 33%;
@@ -72,6 +162,48 @@
     --chart-4: 217 91% 60%;
     --chart-5: 271 76% 53%;
     --chart-6: 45 93% 47%;
+    --chart-7: 0 84% 60%;
+    --chart-8: 199 89% 48%;
+    --chart-grid: 217.2 32.6% 20%;
+    --chart-axis-text: 215 20.2% 65.1%;
+    /* Category Badge Colors */
+    --category-introductory-bg: 226 71% 20%;
+    --category-introductory-text: 213 97% 75%;
+    --category-comparative-bg: 274 72% 20%;
+    --category-comparative-text: 270 100% 80%;
+    --category-critical-bg: 0 63% 20%;
+    --category-critical-text: 0 93% 80%;
+    /* Rank / Medal Colors */
+    --rank-gold-from: 48 96% 53%;
+    --rank-gold-to: 45 93% 47%;
+    --rank-silver-from: 213 27% 84%;
+    --rank-silver-to: 215 16% 47%;
+    --rank-bronze-from: 38 92% 50%;
+    --rank-bronze-to: 26 90% 37%;
+    /* Grade Colors */
+    --grade-a: 142 71% 45%;
+    --grade-b: 217 91% 60%;
+    --grade-c: 48 96% 53%;
+    --grade-d: 25 95% 53%;
+    --grade-f: 0 84% 60%;
+    /* Sentiment Colors */
+    --sentiment-positive: 142 71% 45%;
+    --sentiment-neutral: 38 92% 50%;
+    --sentiment-negative: 0 84% 60%;
+    /* Trend Colors */
+    --trend-up: 142 71% 45%;
+    --trend-down: 0 84% 60%;
+    /* Step / Wizard Colors */
+    --step-completed-bg: 142 72% 15%;
+    --step-completed-text: 141 85% 70%;
+    --step-completed-hover: 142 72% 20%;
+    --step-completed-icon: 142 72% 39%;
+    --step-completed-line: 142 71% 45%;
+    /* Status Colors */
+    --status-active: 142 71% 45%;
+    --status-inactive: 215 20.2% 65.1%;
+    --status-pending: 38 92% 50%;
+    --status-error: 0 84% 60%;
   }
 }
 

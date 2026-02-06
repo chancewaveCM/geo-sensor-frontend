@@ -1,10 +1,24 @@
 // types/pipeline.ts
 
-export type PipelineStatus = 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+export type PipelineStatus =
+  | 'pending'
+  | 'generating_categories'
+  | 'expanding_queries'
+  | 'executing_queries'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';
+
+export const ACTIVE_PIPELINE_STATUSES: PipelineStatus[] = [
+  'pending',
+  'generating_categories',
+  'expanding_queries',
+  'executing_queries',
+];
 
 export interface StartPipelineRequest {
   company_profile_id: number;
-  category_count: number;      // 2-20
+  category_count: number;      // 1-20
   queries_per_category: number; // 1-20
   llm_providers: string[];     // ['gemini', 'openai']
 }

@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Bell, Calendar, ChevronRight, LogOut, Menu, Settings, User } from 'lucide-react'
+import { Bell, Calendar, LogOut, Menu, Settings, User } from 'lucide-react'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,41 +12,28 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
+import { Breadcrumbs } from './Breadcrumbs'
+import type { AppHeaderProps, TimeRange } from './types'
 
-type TimeRange = '7d' | '30d' | '90d' | 'custom'
-
-interface Breadcrumb {
-  label: string
-  href?: string
-}
-
-interface StitchHeaderProps {
-  title: string
-  breadcrumb?: Breadcrumb[]
-  showTimeFilter?: boolean
-  onTimeRangeChange?: (range: TimeRange) => void
-  onMobileMenuClick?: () => void
-  notificationCount?: number
-  userName?: string
-  userRole?: string
-}
-
-export function StitchHeader({
+export function AppHeader({
   title,
-  breadcrumb,
-  showTimeFilter = true,
+  breadcrumbs = [],
+  showTimeFilter = false,
   onTimeRangeChange,
-  onMobileMenuClick,
   notificationCount = 0,
-  userName = 'Alex Strategist',
-  userRole = 'Pro Account',
-}: StitchHeaderProps) {
+  onMobileMenuToggle,
+  variant = 'default',
+}: AppHeaderProps) {
   const [activeRange, setActiveRange] = useState<TimeRange>('30d')
+
+  if (variant === 'none') return null
 
   const handleRangeChange = (range: TimeRange) => {
     setActiveRange(range)
     onTimeRangeChange?.(range)
   }
+
+  const showBreadcrumbs = variant === 'default' && breadcrumbs.length > 0
 
   return (
     <header className="sticky top-0 z-10 h-16 border-b bg-card/80 backdrop-blur-md supports-[backdrop-filter]:bg-card/80">
@@ -55,8 +42,8 @@ export function StitchHeader({
         <div className="flex items-center gap-4">
           {/* Mobile menu button */}
           <button
-            onClick={onMobileMenuClick}
-            className="md:hidden rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/50"
+            onClick={onMobileMenuToggle}
+            className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/50 md:hidden"
             aria-label="Toggle menu"
           >
             <Menu className="h-5 w-5" />
@@ -64,79 +51,36 @@ export function StitchHeader({
 
           {/* Title and breadcrumb */}
           <div>
-            {breadcrumb && breadcrumb.length > 0 && (
-              <nav aria-label="Breadcrumb" className="mb-1">
-                <ol className="flex items-center gap-1 text-xs text-muted-foreground">
-                  {breadcrumb.map((item, index) => (
-                    <li key={index} className="flex items-center gap-1">
-                      {item.href ? (
-                        <Link
-                          href={item.href as any}
-                          className="transition-colors hover:text-foreground"
-                        >
-                          {item.label}
-                        </Link>
-                      ) : (
-                        <span>{item.label}</span>
-                      )}
-                      {index < breadcrumb.length - 1 && (
-                        <ChevronRight className="h-3 w-3" aria-hidden="true" />
-                      )}
-                    </li>
-                  ))}
-                </ol>
-              </nav>
+            {showBreadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+            {title && (
+              <h1 className="text-lg font-bold tracking-tight text-foreground md:text-xl">
+                {title}
+              </h1>
             )}
-            <h1 className="text-lg font-bold tracking-tight text-foreground md:text-xl">
-              {title}
-            </h1>
           </div>
         </div>
 
         {/* Right: Time filter + Notifications + User menu */}
         <div className="flex items-center gap-2 md:gap-4">
           {/* Time range filter - segmented buttons */}
-          {showTimeFilter && (
+          {showTimeFilter && variant === 'default' && (
             <div className="hidden rounded-lg bg-muted p-1 sm:flex">
-              <button
-                onClick={() => handleRangeChange('7d')}
-                className={cn(
-                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 md:px-4',
-                  activeRange === '7d'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-card/50 hover:text-foreground'
-                )}
-                aria-label="7 day view"
-                aria-pressed={activeRange === '7d'}
-              >
-                7D
-              </button>
-              <button
-                onClick={() => handleRangeChange('30d')}
-                className={cn(
-                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 md:px-4',
-                  activeRange === '30d'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-card/50 hover:text-foreground'
-                )}
-                aria-label="30 day view"
-                aria-pressed={activeRange === '30d'}
-              >
-                30D
-              </button>
-              <button
-                onClick={() => handleRangeChange('90d')}
-                className={cn(
-                  'rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 md:px-4',
-                  activeRange === '90d'
-                    ? 'bg-primary text-primary-foreground shadow-sm'
-                    : 'text-muted-foreground hover:bg-card/50 hover:text-foreground'
-                )}
-                aria-label="90 day view"
-                aria-pressed={activeRange === '90d'}
-              >
-                90D
-              </button>
+              {(['7d', '30d', '90d'] as const).map((range) => (
+                <button
+                  key={range}
+                  onClick={() => handleRangeChange(range)}
+                  className={cn(
+                    'rounded-md px-3 py-1.5 text-xs font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary/50 md:px-4',
+                    activeRange === range
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:bg-card/50 hover:text-foreground'
+                  )}
+                  aria-label={`${range.replace('d', '')} day view`}
+                  aria-pressed={activeRange === range}
+                >
+                  {range.toUpperCase()}
+                </button>
+              ))}
               <button
                 onClick={() => handleRangeChange('custom')}
                 className={cn(
@@ -177,8 +121,8 @@ export function StitchHeader({
                   <User className="h-4 w-4" />
                 </div>
                 <div className="hidden text-left lg:block">
-                  <p className="text-sm font-medium leading-tight">{userName}</p>
-                  <p className="text-xs text-muted-foreground leading-tight">{userRole}</p>
+                  <p className="text-sm font-medium leading-tight">Alex Strategist</p>
+                  <p className="text-xs text-muted-foreground leading-tight">Pro Account</p>
                 </div>
               </button>
             </DropdownMenuTrigger>
@@ -189,9 +133,11 @@ export function StitchHeader({
                 <User className="mr-2 h-4 w-4" />
                 <span>프로필</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>설정</span>
+              <DropdownMenuItem asChild>
+                <Link href="/settings">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>설정</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-destructive focus:text-destructive">

@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from 'recharts'
 import { Award } from 'lucide-react'
+import { getTokenColor } from '@/lib/design-tokens'
 
 interface GeoScoreData {
   overall: number
@@ -25,15 +26,15 @@ interface GeoScoreChartProps {
 const getGradeColor = (grade: string) => {
   switch (grade) {
     case 'A':
-      return 'text-green-500 border-green-500 bg-green-500/10'
+      return 'text-grade-a border-grade-a bg-grade-a/10'
     case 'B':
-      return 'text-blue-500 border-blue-500 bg-blue-500/10'
+      return 'text-grade-b border-grade-b bg-grade-b/10'
     case 'C':
-      return 'text-yellow-500 border-yellow-500 bg-yellow-500/10'
+      return 'text-grade-c border-grade-c bg-grade-c/10'
     case 'D':
-      return 'text-orange-500 border-orange-500 bg-orange-500/10'
+      return 'text-grade-d border-grade-d bg-grade-d/10'
     default:
-      return 'text-red-500 border-red-500 bg-red-500/10'
+      return 'text-grade-f border-grade-f bg-grade-f/10'
   }
 }
 
@@ -90,17 +91,17 @@ export function GeoScoreChart({ data }: GeoScoreChartProps) {
           <div className="flex-1 w-full">
             <ResponsiveContainer width="100%" height={300}>
               <RadarChart data={data.dimensions}>
-                <PolarGrid stroke="#e5e7eb" />
+                <PolarGrid stroke={getTokenColor('--chart-grid')} />
                 <PolarAngleAxis
                   dataKey="name"
-                  tick={{ fontSize: 11, fill: '#6b7280' }}
+                  tick={{ fontSize: 11, fill: getTokenColor('--chart-axis-text') }}
                 />
                 <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
                 <Radar
                   name="Score"
                   dataKey="score"
-                  stroke="#3B82F6"
-                  fill="#3B82F6"
+                  stroke={getTokenColor('--chart-4')}
+                  fill={getTokenColor('--chart-4')}
                   fillOpacity={0.6}
                   animationDuration={800}
                 />
@@ -123,7 +124,7 @@ export function GeoScoreChart({ data }: GeoScoreChartProps) {
               <div className="flex items-center gap-2">
                 <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-chart-4 to-chart-5 transition-all duration-500"
                     style={{ width: `${dimension.score}%` }}
                   />
                 </div>

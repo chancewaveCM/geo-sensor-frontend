@@ -1,6 +1,6 @@
 // types/query-lab.ts
 
-export type LLMProvider = 'gemini' | 'gpt-4';
+export type LLMProvider = 'gemini' | 'openai';
 
 export type SentimentType = 'positive' | 'negative' | 'neutral';
 

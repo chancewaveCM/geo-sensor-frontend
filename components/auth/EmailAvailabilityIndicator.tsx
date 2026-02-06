@@ -18,8 +18,8 @@ export function EmailAvailabilityIndicator({
     <div className={cn(
       'flex items-center gap-2 text-xs mt-1',
       status === 'checking' && 'text-muted-foreground',
-      status === 'available' && 'text-green-600',
-      status === 'unavailable' && 'text-red-600'
+      status === 'available' && 'text-success',
+      status === 'unavailable' && 'text-destructive'
     )}>
       {status === 'checking' && <Loader2 className="h-3 w-3 animate-spin" />}
       {status === 'available' && <Check className="h-3 w-3" />}

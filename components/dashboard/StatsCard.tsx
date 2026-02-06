@@ -23,17 +23,17 @@ export function StatsCard({ title, value, trend, icon }: StatsCardProps) {
                 {trend.value === 0 ? (
                   <Minus className="h-4 w-4 text-muted-foreground" />
                 ) : trend.isPositive ? (
-                  <ArrowUp className="h-4 w-4 text-green-500" />
+                  <ArrowUp className="h-4 w-4 text-trend-up" />
                 ) : (
-                  <ArrowDown className="h-4 w-4 text-red-500" />
+                  <ArrowDown className="h-4 w-4 text-trend-down" />
                 )}
                 <span
                   className={`text-sm font-medium ${
                     trend.value === 0
                       ? 'text-muted-foreground'
                       : trend.isPositive
-                      ? 'text-green-500'
-                      : 'text-red-500'
+                      ? 'text-trend-up'
+                      : 'text-trend-down'
                   }`}
                 >
                   {Math.abs(trend.value)}%

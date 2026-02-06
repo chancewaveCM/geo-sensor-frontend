@@ -43,7 +43,7 @@ export function SafetyActionPanel({
     >
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center gap-3">
-          <Shield className="h-5 w-5 text-blue-300" aria-hidden="true" />
+          <Shield className="h-5 w-5 text-white/70" aria-hidden="true" />
           <span className="text-sm font-bold uppercase tracking-wider">Quick Shield</span>
         </div>
         <Switch
@@ -51,11 +51,11 @@ export function SafetyActionPanel({
           onCheckedChange={handleShieldToggle}
           disabled={isToggling}
           aria-label="Toggle automatic response blocking"
-          className="data-[state=checked]:bg-emerald-500"
+          className="data-[state=checked]:bg-success"
         />
       </div>
 
-      <p className="text-xs text-blue-100 leading-relaxed mb-4">
+      <p className="text-xs text-white/70 leading-relaxed mb-4">
         {settings.shieldActive ? (
           <>
             Automatic AI response blocking is <strong>ACTIVE</strong>. Hallucinations with high
@@ -73,8 +73,8 @@ export function SafetyActionPanel({
         className={cn(
           "flex items-center gap-2 text-[10px] font-bold px-2 py-1 rounded mb-4",
           settings.shieldActive
-            ? "text-emerald-400 bg-black/20"
-            : "text-amber-400 bg-amber-900/20"
+            ? "text-success bg-black/20"
+            : "text-warning bg-warning/10"
         )}
         role="status"
       >
@@ -86,7 +86,7 @@ export function SafetyActionPanel({
         <Button
           variant="secondary"
           size="sm"
-          className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold border-0"
+          className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold border-0"
           onClick={() => onAction('refresh')}
           aria-label="Refresh data"
         >
@@ -96,7 +96,7 @@ export function SafetyActionPanel({
         <Button
           variant="secondary"
           size="sm"
-          className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold border-0"
+          className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold border-0"
           onClick={() => onAction('config')}
           aria-label="Open configuration"
         >

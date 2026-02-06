@@ -15,6 +15,7 @@ export interface CompanyProfile {
   website_url?: string
   project_id?: number
   owner_id: number
+  is_active: boolean
   created_at: string
   updated_at: string
 }
@@ -29,6 +30,18 @@ export interface CompanyProfileCreate {
   unique_value?: string
   website_url?: string
   project_id?: number
+}
+
+export interface CompanyProfileUpdate {
+  name?: string
+  industry?: string
+  description?: string
+  target_audience?: string
+  main_products?: string
+  competitors?: string
+  unique_value?: string
+  website_url?: string
+  is_active?: boolean
 }
 
 export interface GeneratedQuery {

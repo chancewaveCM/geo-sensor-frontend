@@ -1,135 +1,166 @@
-// lib/mock-query-data.ts
-import type { LLMResponse, QueryLabResult } from '@/types/query-lab';
-
-/**
- * Find the position of a brand mention in the response text.
- * Returns actual position if found, or fallback position with dev warning.
- */
-function findBrandPosition(text: string, brandName: string): { start: number; end: number } {
-  const index = text.indexOf(brandName);
-  if (index === -1) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn(`[mock-data] Brand "${brandName}" not found in text, using fallback position`);
-    }
-    return { start: 0, end: brandName.length };
-  }
-  return { start: index, end: index + brandName.length };
-}
-
-const geminiResponseText = `2024년 최고의 스마트폰을 추천해드리겠습니다.
-
-1. **Samsung Galaxy S24 Ultra** - 가장 뛰어난 카메라 성능과 S펜 지원으로 생산성이 높습니다. AI 기능이 탁월합니다.
-
-2. **iPhone 15 Pro Max** - 안정적인 iOS 생태계와 뛰어난 영상 촬영 능력을 제공합니다.
-
-3. **Google Pixel 8 Pro** - 순정 안드로이드 경험과 최고의 컴퓨테이셔널 포토그래피를 자랑합니다.
-
-종합적으로 **Samsung Galaxy S24 Ultra**를 가장 추천드립니다.`;
-
-const gpt4ResponseText = `2024년 스마트폰 추천 목록입니다:
-
-**프리미엄 추천:**
-- **iPhone 15 Pro Max**: Apple의 최신 플래그십으로, A17 Pro 칩과 뛰어난 카메라 시스템을 갖추고 있습니다.
-
-**안드로이드 추천:**
-- **Samsung Galaxy S24+**: 훌륭한 디스플레이와 강력한 성능을 제공합니다.
-- **OnePlus 12**: 가성비가 뛰어나며 빠른 충전이 장점입니다.
-
-전반적으로 iOS를 선호하시면 **iPhone 15 Pro Max**, 안드로이드를 원하시면 **Samsung Galaxy S24+**를 추천합니다.`;
-
-const geminiSamsungPos = findBrandPosition(geminiResponseText, 'Samsung Galaxy S24 Ultra');
-const geminiIphonePos = findBrandPosition(geminiResponseText, 'iPhone 15 Pro Max');
-const geminiGooglePos = findBrandPosition(geminiResponseText, 'Google Pixel 8 Pro');
-
-const gpt4IphonePos = findBrandPosition(gpt4ResponseText, 'iPhone 15 Pro Max');
-const gpt4SamsungPos = findBrandPosition(gpt4ResponseText, 'Samsung Galaxy S24+');
-const gpt4OneplusPos = findBrandPosition(gpt4ResponseText, 'OnePlus 12');
+﻿import type { LLMResponse, QueryLabResult } from '@/types/query-lab'
 
 export const mockGeminiResponse: LLMResponse = {
   provider: 'gemini',
-  query: '2024년 최고의 스마트폰을 추천해주세요',
-  response: geminiResponseText,
+  query: '2024년 스마트폰 추천해줘',
+  response:
+    'Samsung Galaxy S24 Ultra, iPhone 15 Pro Max, Google Pixel 8 Pro를 추천합니다. 종합 추천은 Samsung Galaxy S24 Ultra입니다.',
   brandMentions: [
-    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24 Ultra', matchType: 'exact', positionStart: geminiSamsungPos.start, positionEnd: geminiSamsungPos.end, confidence: 1.0 },
-    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: geminiIphonePos.start, positionEnd: geminiIphonePos.end, confidence: 1.0 },
-    { brandId: 3, brandName: 'Google', matchedText: 'Google Pixel 8 Pro', matchType: 'exact', positionStart: geminiGooglePos.start, positionEnd: geminiGooglePos.end, confidence: 1.0 },
+    {
+      brandId: 1,
+      brandName: 'Samsung',
+      matchedText: 'Samsung Galaxy S24 Ultra',
+      matchType: 'exact',
+      positionStart: 0,
+      positionEnd: 24,
+      confidence: 1.0,
+    },
+    {
+      brandId: 2,
+      brandName: 'Apple',
+      matchedText: 'iPhone 15 Pro Max',
+      matchType: 'exact',
+      positionStart: 26,
+      positionEnd: 42,
+      confidence: 1.0,
+    },
+    {
+      brandId: 3,
+      brandName: 'Google',
+      matchedText: 'Google Pixel 8 Pro',
+      matchType: 'exact',
+      positionStart: 44,
+      positionEnd: 61,
+      confidence: 1.0,
+    },
   ],
   citations: [
-    { brandId: 1, brandName: 'Samsung', citationType: 'recommendation', sentiment: 'positive', context: '가장 뛰어난 카메라 성능' },
-    { brandId: 2, brandName: 'Apple', citationType: 'comparison', sentiment: 'positive', context: '안정적인 iOS 생태계' },
-    { brandId: 3, brandName: 'Google', citationType: 'mention', sentiment: 'positive', context: '최고의 컴퓨테이셔널 포토그래피' },
+    {
+      brandId: 1,
+      brandName: 'Samsung',
+      citationType: 'recommendation',
+      sentiment: 'positive',
+      context: 'flagship recommendation',
+    },
+    {
+      brandId: 2,
+      brandName: 'Apple',
+      citationType: 'comparison',
+      sentiment: 'positive',
+      context: 'iOS ecosystem stability',
+    },
+    {
+      brandId: 3,
+      brandName: 'Google',
+      citationType: 'mention',
+      sentiment: 'positive',
+      context: 'camera quality',
+    },
   ],
   sentiment: { overall: 'positive', score: 0.8 },
-  citationShare: { 'Samsung': 50, 'Apple': 25, 'Google': 25 },
+  citationShare: { Samsung: 50, Apple: 25, Google: 25 },
   processingTimeMs: 1250,
-};
+}
 
-export const mockGPT4Response: LLMResponse = {
-  provider: 'gpt-4',
-  query: '2024년 최고의 스마트폰을 추천해주세요',
-  response: gpt4ResponseText,
+export const mockOpenAIResponse: LLMResponse = {
+  provider: 'openai',
+  query: '2024년 스마트폰 추천해줘',
+  response:
+    'iPhone 15 Pro Max와 Samsung Galaxy S24+를 우선 추천하며, 가성비로 OnePlus 12도 고려할 수 있습니다.',
   brandMentions: [
-    { brandId: 2, brandName: 'Apple', matchedText: 'iPhone 15 Pro Max', matchType: 'exact', positionStart: gpt4IphonePos.start, positionEnd: gpt4IphonePos.end, confidence: 1.0 },
-    { brandId: 1, brandName: 'Samsung', matchedText: 'Samsung Galaxy S24+', matchType: 'exact', positionStart: gpt4SamsungPos.start, positionEnd: gpt4SamsungPos.end, confidence: 1.0 },
-    { brandId: 4, brandName: 'OnePlus', matchedText: 'OnePlus 12', matchType: 'exact', positionStart: gpt4OneplusPos.start, positionEnd: gpt4OneplusPos.end, confidence: 1.0 },
+    {
+      brandId: 2,
+      brandName: 'Apple',
+      matchedText: 'iPhone 15 Pro Max',
+      matchType: 'exact',
+      positionStart: 0,
+      positionEnd: 16,
+      confidence: 1.0,
+    },
+    {
+      brandId: 1,
+      brandName: 'Samsung',
+      matchedText: 'Samsung Galaxy S24+',
+      matchType: 'exact',
+      positionStart: 20,
+      positionEnd: 39,
+      confidence: 1.0,
+    },
+    {
+      brandId: 4,
+      brandName: 'OnePlus',
+      matchedText: 'OnePlus 12',
+      matchType: 'exact',
+      positionStart: 52,
+      positionEnd: 62,
+      confidence: 1.0,
+    },
   ],
   citations: [
-    { brandId: 2, brandName: 'Apple', citationType: 'recommendation', sentiment: 'positive', context: '최신 플래그십, A17 Pro 칩' },
-    { brandId: 1, brandName: 'Samsung', citationType: 'recommendation', sentiment: 'positive', context: '훌륭한 디스플레이와 강력한 성능' },
-    { brandId: 4, brandName: 'OnePlus', citationType: 'mention', sentiment: 'positive', context: '가성비, 빠른 충전' },
+    {
+      brandId: 2,
+      brandName: 'Apple',
+      citationType: 'recommendation',
+      sentiment: 'positive',
+      context: 'premium recommendation',
+    },
+    {
+      brandId: 1,
+      brandName: 'Samsung',
+      citationType: 'recommendation',
+      sentiment: 'positive',
+      context: 'android flagship',
+    },
+    {
+      brandId: 4,
+      brandName: 'OnePlus',
+      citationType: 'mention',
+      sentiment: 'positive',
+      context: 'value for money',
+    },
   ],
   sentiment: { overall: 'positive', score: 0.75 },
-  citationShare: { 'Apple': 45, 'Samsung': 35, 'OnePlus': 20 },
+  citationShare: { Apple: 45, Samsung: 35, OnePlus: 20 },
   processingTimeMs: 980,
-};
+}
 
 export const mockQueryResult: QueryLabResult = {
   id: 'mock-result-001',
-  query: '2024년 최고의 스마트폰을 추천해주세요',
+  query: '2024년 스마트폰 추천해줘',
   timestamp: new Date().toISOString(),
-  responses: [mockGeminiResponse, mockGPT4Response],
-};
+  responses: [mockGeminiResponse, mockOpenAIResponse],
+}
 
 export function generateComparisonSummary(result: QueryLabResult) {
-  const allBrands = new Set<string>();
-  const brandsByProvider: Record<string, Set<string>> = {};
+  const allBrands = new Set<string>()
+  const brandsByProvider: Record<string, Set<string>> = {}
 
   for (const response of result.responses) {
-    brandsByProvider[response.provider] = new Set(
-      response.brandMentions.map(m => m.brandName)
-    );
-    response.brandMentions.forEach(m => allBrands.add(m.brandName));
+    brandsByProvider[response.provider] = new Set(response.brandMentions.map((m) => m.brandName))
+    response.brandMentions.forEach((m) => allBrands.add(m.brandName))
   }
 
-  const providers = result.responses.map(r => r.provider);
-  const brandSets = Object.values(brandsByProvider);
+  const providers = result.responses.map((r) => r.provider)
+  const brandSets = Object.values(brandsByProvider)
 
-  const commonBrands = Array.from(allBrands).filter(brand =>
-    brandSets.every(set => set.has(brand))
-  );
-
-  const uniqueBrands = Array.from(allBrands).filter(brand =>
-    brandSets.filter(set => set.has(brand)).length === 1
-  );
+  const commonBrands = Array.from(allBrands).filter((brand) => brandSets.every((set) => set.has(brand)))
+  const uniqueBrands = Array.from(allBrands).filter(
+    (brand) => brandSets.filter((set) => set.has(brand)).length === 1
+  )
 
   return {
     query: result.query,
     providers,
-    citationShareComparison: Array.from(allBrands).map(brandName => ({
+    citationShareComparison: Array.from(allBrands).map((brandName) => ({
       brandName,
-      ...Object.fromEntries(
-        result.responses.map(r => [
-          r.provider,
-          r.citationShare[brandName] || 0
-        ])
-      ),
+      ...Object.fromEntries(result.responses.map((r) => [r.provider, r.citationShare[brandName] || 0])),
     })),
-    sentimentComparison: result.responses.map(r => ({
+    sentimentComparison: result.responses.map((r) => ({
       provider: r.provider,
       sentiment: r.sentiment.overall,
       score: r.sentiment.score,
     })),
     uniqueBrands,
     commonBrands,
-  };
+  }
 }

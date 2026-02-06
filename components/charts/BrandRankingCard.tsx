@@ -21,9 +21,9 @@ export function BrandRankingCard({ rankings }: BrandRankingCardProps) {
   }
 
   const getRankStyle = (rank: number) => {
-    if (rank === 1) return 'bg-gradient-to-br from-yellow-400 to-yellow-600 text-white'
-    if (rank === 2) return 'bg-gradient-to-br from-slate-300 to-slate-500 text-white'
-    if (rank === 3) return 'bg-gradient-to-br from-amber-600 to-amber-800 text-white'
+    if (rank === 1) return 'bg-gradient-to-br from-rank-gold-from to-rank-gold-to text-white'
+    if (rank === 2) return 'bg-gradient-to-br from-rank-silver-from to-rank-silver-to text-white'
+    if (rank === 3) return 'bg-gradient-to-br from-rank-bronze-from to-rank-bronze-to text-white'
     return 'bg-muted text-muted-foreground'
   }
 
@@ -68,13 +68,13 @@ export function BrandRankingCard({ rankings }: BrandRankingCardProps) {
                     <Minus className="h-4 w-4 text-muted-foreground" />
                   ) : positionChange > 0 ? (
                     <>
-                      <TrendingUp className="h-4 w-4 text-green-500" />
-                      <span className="text-sm font-medium text-green-500">+{positionChange}</span>
+                      <TrendingUp className="h-4 w-4 text-trend-up" />
+                      <span className="text-sm font-medium text-trend-up">+{positionChange}</span>
                     </>
                   ) : (
                     <>
-                      <TrendingDown className="h-4 w-4 text-red-500" />
-                      <span className="text-sm font-medium text-red-500">{positionChange}</span>
+                      <TrendingDown className="h-4 w-4 text-trend-down" />
+                      <span className="text-sm font-medium text-trend-down">{positionChange}</span>
                     </>
                   )}
                 </div>

@@ -24,13 +24,13 @@ export function PasswordStrengthIndicator({
             key={rule.key}
             className={cn(
               'flex items-center gap-2 text-xs transition-colors',
-              passed ? 'text-green-600' : 'text-muted-foreground'
+              passed ? 'text-success' : 'text-muted-foreground'
             )}
           >
             {passed ? (
-              <Check className="h-3 w-3 text-green-600" />
+              <Check className="h-3 w-3 text-success" />
             ) : (
-              <X className="h-3 w-3 text-red-500" />
+              <X className="h-3 w-3 text-destructive" />
             )}
             <span>{showKorean ? rule.labelKo : rule.label}</span>
           </div>

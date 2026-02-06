@@ -19,16 +19,16 @@ export interface RiskTimelineProps {
 
 const severityConfig = {
   critical: {
-    dotColor: 'bg-red-500',
-    ringColor: 'ring-red-50'
+    dotColor: 'bg-destructive',
+    ringColor: 'ring-destructive/10'
   },
   warning: {
-    dotColor: 'bg-amber-500',
-    ringColor: 'ring-amber-50'
+    dotColor: 'bg-warning',
+    ringColor: 'ring-warning/10'
   },
   info: {
-    dotColor: 'bg-blue-500',
-    ringColor: 'ring-blue-50'
+    dotColor: 'bg-info',
+    ringColor: 'ring-info/10'
   }
 }
 
@@ -49,9 +49,9 @@ function TimelineEventItem({ event, onClick }: { event: TimelineEvent; onClick: 
         onClick={onClick}
         className="text-left hover:bg-muted/50 rounded p-1 -m-1 transition-colors flex-1"
       >
-        <p className="text-xs font-bold text-slate-900">{event.title}</p>
-        <p className="text-[10px] text-slate-500">{event.description}</p>
-        <time className="text-[9px] text-gray-400" dateTime={event.datetime}>
+        <p className="text-xs font-bold text-foreground">{event.title}</p>
+        <p className="text-[10px] text-muted-foreground">{event.description}</p>
+        <time className="text-[9px] text-muted-foreground/70" dateTime={event.datetime}>
           {event.timestamp}
         </time>
       </button>
@@ -64,12 +64,12 @@ export function RiskTimeline({ events, className }: RiskTimelineProps) {
 
   return (
     <div className={cn("rounded-lg border bg-card shadow-sm overflow-hidden", className)}>
-      <div className="px-4 py-3 border-b border-gray-100 bg-gray-50/50">
-        <h3 className="font-bold text-slate-900 text-sm">Threat Detection Log</h3>
+      <div className="px-4 py-3 border-b border-border/50 bg-muted/50">
+        <h3 className="font-bold text-foreground text-sm">Threat Detection Log</h3>
       </div>
       <div className="p-6 relative">
         {/* Timeline vertical line */}
-        <div className="absolute left-6 top-6 bottom-6 w-px bg-gray-200" aria-hidden="true" />
+        <div className="absolute left-6 top-6 bottom-6 w-px bg-border" aria-hidden="true" />
 
         <ul className="space-y-6 relative" role="list">
           {events.map((event) => (

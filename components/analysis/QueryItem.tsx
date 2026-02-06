@@ -62,7 +62,7 @@ export function QueryItem({ query, onUpdate }: QueryItemProps) {
           </span>
           <CategoryBadge category={query.category} />
           {query.status === 'edited' && (
-            <span className="text-xs text-orange-600">(수정됨)</span>
+            <span className="text-xs text-brand-orange">(수정됨)</span>
           )}
         </div>
 
@@ -75,10 +75,10 @@ export function QueryItem({ query, onUpdate }: QueryItemProps) {
               autoFocus
             />
             <Button size="icon" variant="ghost" onClick={handleSaveEdit}>
-              <Check className="h-4 w-4 text-green-600" />
+              <Check className="h-4 w-4 text-success" />
             </Button>
             <Button size="icon" variant="ghost" onClick={handleCancelEdit}>
-              <X className="h-4 w-4 text-red-600" />
+              <X className="h-4 w-4 text-destructive" />
             </Button>
           </div>
         ) : (

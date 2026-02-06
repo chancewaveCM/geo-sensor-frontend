@@ -9,30 +9,30 @@ export interface RiskMetricCardProps {
 
 const levelConfig = {
   critical: {
-    borderColor: 'border-l-red-500',
-    bgColor: 'bg-red-50/50',
-    badgeBg: 'bg-red-100',
-    badgeText: 'text-red-600',
-    dotColor: 'bg-red-500',
-    ringColor: 'border-red-500/50',
+    borderColor: 'border-l-destructive',
+    bgColor: 'bg-destructive/5',
+    badgeBg: 'bg-destructive/10',
+    badgeText: 'text-destructive',
+    dotColor: 'bg-destructive',
+    ringColor: 'border-destructive/50',
     label: 'CRITICAL'
   },
   warning: {
-    borderColor: 'border-l-amber-500',
-    bgColor: 'bg-amber-50/50',
-    badgeBg: 'bg-amber-100',
-    badgeText: 'text-amber-600',
-    dotColor: 'bg-amber-500',
-    ringColor: 'border-amber-500/50',
+    borderColor: 'border-l-warning',
+    bgColor: 'bg-warning/5',
+    badgeBg: 'bg-warning/10',
+    badgeText: 'text-warning',
+    dotColor: 'bg-warning',
+    ringColor: 'border-warning/50',
     label: 'WARNING'
   },
   safe: {
-    borderColor: 'border-l-emerald-500',
-    bgColor: 'bg-white',
-    badgeBg: 'bg-emerald-100',
-    badgeText: 'text-emerald-600',
-    dotColor: 'bg-emerald-500',
-    ringColor: 'border-emerald-500/50',
+    borderColor: 'border-l-success',
+    bgColor: 'bg-card',
+    badgeBg: 'bg-success/10',
+    badgeText: 'text-success',
+    dotColor: 'bg-success',
+    ringColor: 'border-success/50',
     label: 'SAFE'
   }
 }

@@ -6,9 +6,9 @@ interface CategoryBadgeProps {
 }
 
 const categoryConfig: Record<QueryCategory, { label: string; className: string }> = {
-  introductory: { label: '입문', className: 'bg-blue-100 text-blue-700' },
-  comparative: { label: '비교', className: 'bg-purple-100 text-purple-700' },
-  critical: { label: '비판', className: 'bg-red-100 text-red-700' },
+  introductory: { label: '입문', className: 'bg-category-introductory text-category-introductory-text' },
+  comparative: { label: '비교', className: 'bg-category-comparative text-category-comparative-text' },
+  critical: { label: '비판', className: 'bg-category-critical text-category-critical-text' },
 }
 
 export function CategoryBadge({ category }: CategoryBadgeProps) {

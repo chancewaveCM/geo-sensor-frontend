@@ -26,14 +26,14 @@ export function AnalysisSteps({ currentStep, onStepClick }: AnalysisStepsProps) 
             className={cn(
               'flex items-center gap-2 rounded-lg px-4 py-2 transition-colors',
               step.id === currentStep && 'bg-primary text-primary-foreground',
-              step.id < currentStep && 'bg-green-100 text-green-700 hover:bg-green-200',
+              step.id < currentStep && 'bg-step-completed text-step-completed-text hover:bg-step-completed-hover',
               step.id > currentStep && 'bg-muted text-muted-foreground cursor-not-allowed'
             )}
           >
             <div className={cn(
               'flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold',
               step.id === currentStep && 'bg-primary-foreground text-primary',
-              step.id < currentStep && 'bg-green-600 text-white',
+              step.id < currentStep && 'bg-step-completed-icon text-white',
               step.id > currentStep && 'bg-muted-foreground/30 text-muted-foreground'
             )}>
               {step.id < currentStep ? <Check className="h-4 w-4" /> : step.id}
@@ -46,7 +46,7 @@ export function AnalysisSteps({ currentStep, onStepClick }: AnalysisStepsProps) 
           {index < steps.length - 1 && (
             <div className={cn(
               'mx-2 h-px w-8',
-              step.id < currentStep ? 'bg-green-500' : 'bg-muted'
+              step.id < currentStep ? 'bg-step-completed-line' : 'bg-muted'
             )} />
           )}
         </div>

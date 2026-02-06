@@ -35,7 +35,7 @@ export async function login(credentials: LoginCredentials): Promise<AuthResponse
   formData.append('username', credentials.email)
   formData.append('password', credentials.password)
 
-  const response = await apiClient.post<{ access_token: string; token_type: string }>('/auth/login', formData, {
+  const response = await apiClient.post<{ access_token: string; token_type: string }>('/api/v1/auth/login', formData, {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
   })
 
@@ -63,7 +63,7 @@ export async function register(credentials: RegisterCredentials): Promise<AuthRe
     full_name: credentials.name
   }
 
-  const response = await post<{ id: number; email: string; full_name: string | null }>('/auth/register', registerData)
+  const response = await post<{ id: number; email: string; full_name: string | null }>('/api/v1/auth/register', registerData)
 
   // Auto-login after registration
   return login({ email: credentials.email, password: credentials.password })

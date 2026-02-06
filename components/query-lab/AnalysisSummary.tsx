@@ -91,7 +91,7 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
                     <div className="flex-1 h-2 bg-white/50 rounded-full overflow-hidden">
                       <div
                         className={`h-full transition-all duration-300 ${
-                          item.score > 0 ? 'bg-green-500' : item.score < 0 ? 'bg-red-500' : 'bg-gray-400'
+                          item.score > 0 ? 'bg-trend-up' : item.score < 0 ? 'bg-trend-down' : 'bg-gray-400'
                         }`}
                         style={{ width: `${Math.abs(item.score) * 50 + 50}%` }}
                       />
@@ -110,48 +110,48 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
           <h3 className="text-sm font-medium text-gray-700 mb-3">브랜드 언급 분석</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg">
+            <div className="p-4 bg-info/10 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-blue-800">
+                <span className="text-sm font-medium text-info">
                   공통 브랜드 ({summary.commonBrands.length})
                 </span>
               </div>
-              <p className="text-xs text-blue-600 mb-2">모든 제공자가 언급</p>
+              <p className="text-xs text-info/80 mb-2">모든 제공자가 언급</p>
               <div className="flex flex-wrap gap-1">
                 {summary.commonBrands.length > 0 ? (
                   summary.commonBrands.map((brand) => (
                     <span
                       key={brand}
-                      className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium"
+                      className="px-2 py-1 bg-info/20 text-info rounded text-xs font-medium"
                     >
                       {brand}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-blue-500 italic">공통 브랜드 없음</span>
+                  <span className="text-xs text-info/60 italic">공통 브랜드 없음</span>
                 )}
               </div>
             </div>
 
-            <div className="p-4 bg-amber-50 rounded-lg">
+            <div className="p-4 bg-warning/10 rounded-lg">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-amber-800">
+                <span className="text-sm font-medium text-warning">
                   고유 브랜드 ({summary.uniqueBrands.length})
                 </span>
               </div>
-              <p className="text-xs text-amber-600 mb-2">하나의 제공자만 언급</p>
+              <p className="text-xs text-warning/80 mb-2">하나의 제공자만 언급</p>
               <div className="flex flex-wrap gap-1">
                 {summary.uniqueBrands.length > 0 ? (
                   summary.uniqueBrands.map((brand) => (
                     <span
                       key={brand}
-                      className="px-2 py-1 bg-amber-100 text-amber-700 rounded text-xs font-medium"
+                      className="px-2 py-1 bg-warning/20 text-warning rounded text-xs font-medium"
                     >
                       {brand}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs text-amber-500 italic">고유 브랜드 없음</span>
+                  <span className="text-xs text-warning/60 italic">고유 브랜드 없음</span>
                 )}
               </div>
             </div>
@@ -167,13 +167,13 @@ export function AnalysisSummary({ summary }: AnalysisSummaryProps) {
               <p className="text-xs text-gray-500">전체 브랜드</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-info">
                 {summary.commonBrands.length}
               </p>
-              <p className="text-xs text-gray-500">공통</p>
+              <p className="text-xs text-muted-foreground">공통</p>
             </div>
             <div>
-              <p className="text-2xl font-bold text-amber-600">
+              <p className="text-2xl font-bold text-warning">
                 {summary.uniqueBrands.length}
               </p>
               <p className="text-xs text-gray-500">고유</p>

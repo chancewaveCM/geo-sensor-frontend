@@ -13,8 +13,8 @@ interface QueryResponseDetailProps {
 }
 
 const providerConfig: Record<string, { name: string; color: string }> = {
-  gemini: { name: 'Gemini', color: 'bg-blue-500' },
-  openai: { name: 'OpenAI', color: 'bg-green-500' },
+  gemini: { name: 'Gemini', color: 'bg-chart-4' },
+  openai: { name: 'OpenAI', color: 'bg-chart-3' },
 }
 
 function formatDate(dateStr: string): string {

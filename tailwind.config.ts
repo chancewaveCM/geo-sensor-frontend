@@ -106,6 +106,70 @@ const config: Config = {
           4: 'hsl(var(--chart-4))',
           5: 'hsl(var(--chart-5))',
           6: 'hsl(var(--chart-6))',
+          7: 'hsl(var(--chart-7))',
+          8: 'hsl(var(--chart-8))',
+          grid: 'hsl(var(--chart-grid))',
+          axis: 'hsl(var(--chart-axis-text))',
+        },
+        // Category badge colors
+        category: {
+          introductory: {
+            DEFAULT: 'hsl(var(--category-introductory-bg))',
+            text: 'hsl(var(--category-introductory-text))',
+          },
+          comparative: {
+            DEFAULT: 'hsl(var(--category-comparative-bg))',
+            text: 'hsl(var(--category-comparative-text))',
+          },
+          critical: {
+            DEFAULT: 'hsl(var(--category-critical-bg))',
+            text: 'hsl(var(--category-critical-text))',
+          },
+        },
+        // Rank / medal colors
+        rank: {
+          'gold-from': 'hsl(var(--rank-gold-from))',
+          'gold-to': 'hsl(var(--rank-gold-to))',
+          'silver-from': 'hsl(var(--rank-silver-from))',
+          'silver-to': 'hsl(var(--rank-silver-to))',
+          'bronze-from': 'hsl(var(--rank-bronze-from))',
+          'bronze-to': 'hsl(var(--rank-bronze-to))',
+        },
+        // Grade colors
+        grade: {
+          a: 'hsl(var(--grade-a))',
+          b: 'hsl(var(--grade-b))',
+          c: 'hsl(var(--grade-c))',
+          d: 'hsl(var(--grade-d))',
+          f: 'hsl(var(--grade-f))',
+        },
+        // Sentiment colors
+        sentiment: {
+          positive: 'hsl(var(--sentiment-positive))',
+          neutral: 'hsl(var(--sentiment-neutral))',
+          negative: 'hsl(var(--sentiment-negative))',
+        },
+        // Trend colors
+        trend: {
+          up: 'hsl(var(--trend-up))',
+          down: 'hsl(var(--trend-down))',
+        },
+        // Step / wizard colors
+        step: {
+          completed: {
+            DEFAULT: 'hsl(var(--step-completed-bg))',
+            text: 'hsl(var(--step-completed-text))',
+            hover: 'hsl(var(--step-completed-hover))',
+            icon: 'hsl(var(--step-completed-icon))',
+            line: 'hsl(var(--step-completed-line))',
+          },
+        },
+        // Status colors
+        status: {
+          active: 'hsl(var(--status-active))',
+          inactive: 'hsl(var(--status-inactive))',
+          pending: 'hsl(var(--status-pending))',
+          error: 'hsl(var(--status-error))',
         },
       },
       borderRadius: {

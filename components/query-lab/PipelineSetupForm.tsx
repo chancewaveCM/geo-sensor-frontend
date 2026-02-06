@@ -1,20 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect, useState } from "react"
+import { AlertCircle, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Loader2, AlertCircle } from "lucide-react"
-import { getCompanyProfiles } from "@/lib/api/pipeline"
+import { getCompanyProfiles, type CompanyProfileListResponse } from "@/lib/api/company-profiles"
+import { PROVIDERS } from "@/lib/constants/query-lab-config"
 import type { CompanyProfile } from "@/types/analysis"
+import type { LLMProvider } from "@/types/query-lab"
 import type { PipelineConfig } from "@/types/pipeline"
 
 interface PipelineSetupFormProps {
-  onSubmit: (config: PipelineConfig) => void;
-  isLoading: boolean;
-  disabled?: boolean;
+  onSubmit: (config: PipelineConfig) => void
+  isLoading: boolean
+  disabled?: boolean
 }
 
 export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSetupFormProps) {
@@ -25,20 +26,20 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
     companyProfileId: null,
     categoryCount: 10,
     queriesPerCategory: 10,
-    llmProviders: ['gemini', 'openai'],
+    llmProviders: ["gemini", "openai"],
   })
 
   useEffect(() => {
     let isMounted = true
 
     getCompanyProfiles()
-      .then((data) => {
-        if (isMounted) setProfiles(data)
+      .then((data: CompanyProfileListResponse) => {
+        if (isMounted) setProfiles(data.items)
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         if (isMounted) {
           console.error(error)
-          setProfilesError('기업 프로필을 불러오는데 실패했습니다')
+          setProfilesError("기업 프로필을 불러오는데 실패했습니다")
         }
       })
       .finally(() => {
@@ -50,21 +51,24 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
     }
   }, [])
 
-  const estimatedQueries = config.categoryCount * config.queriesPerCategory * config.llmProviders.length
-
-  const handleProviderToggle = (provider: string) => {
-    setConfig(prev => ({
+  const handleProviderToggle = (provider: LLMProvider) => {
+    setConfig((prev) => ({
       ...prev,
       llmProviders: prev.llmProviders.includes(provider)
-        ? prev.llmProviders.filter(p => p !== provider)
-        : [...prev.llmProviders, provider]
+        ? prev.llmProviders.filter((p) => p !== provider)
+        : [...prev.llmProviders, provider],
     }))
   }
 
-  const isValid = config.companyProfileId !== null &&
-                  config.categoryCount >= 2 && config.categoryCount <= 20 &&
-                  config.queriesPerCategory >= 1 && config.queriesPerCategory <= 20 &&
-                  config.llmProviders.length > 0
+  const estimatedQueries = config.categoryCount * config.queriesPerCategory * config.llmProviders.length
+
+  const isValid =
+    config.companyProfileId !== null &&
+    config.categoryCount >= 1 &&
+    config.categoryCount <= 20 &&
+    config.queriesPerCategory >= 1 &&
+    config.queriesPerCategory <= 20 &&
+    config.llmProviders.length > 0
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -78,7 +82,6 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Error Message */}
           {profilesError && (
             <div className="flex items-center gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive">
               <AlertCircle className="h-4 w-4" />
@@ -86,43 +89,47 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
             </div>
           )}
 
-          {/* Company Profile Select */}
           <div className="space-y-2">
             <Label htmlFor="company">기업 프로필</Label>
             <select
               id="company"
               className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={config.companyProfileId ?? ''}
-              onChange={(e) => setConfig(prev => ({ ...prev, companyProfileId: e.target.value ? Number(e.target.value) : null }))}
+              value={config.companyProfileId ?? ""}
+              onChange={(e) =>
+                setConfig((prev) => ({
+                  ...prev,
+                  companyProfileId: e.target.value ? Number(e.target.value) : null,
+                }))
+              }
               disabled={disabled || profilesLoading}
             >
               <option value="">기업을 선택하세요</option>
-              {profiles.map(p => (
-                <option key={p.id} value={p.id}>{p.name}</option>
+              {profiles.map((profile) => (
+                <option key={profile.id} value={profile.id}>
+                  {profile.name}
+                </option>
               ))}
             </select>
           </div>
 
-          {/* Category Count */}
           <div className="space-y-2">
-            <Label htmlFor="categories">카테고리 수 (2-20)</Label>
+            <Label htmlFor="categories">카테고리 수 (1-20)</Label>
             <Input
               id="categories"
               type="number"
-              min={2}
+              min={1}
               max={20}
               value={config.categoryCount}
               onChange={(e) => {
                 const value = Number(e.target.value)
-                if (!isNaN(value)) {
-                  setConfig(prev => ({ ...prev, categoryCount: value }))
+                if (!Number.isNaN(value)) {
+                  setConfig((prev) => ({ ...prev, categoryCount: value }))
                 }
               }}
               disabled={disabled}
             />
           </div>
 
-          {/* Queries per Category */}
           <div className="space-y-2">
             <Label htmlFor="queries">카테고리당 쿼리 수 (1-20)</Label>
             <Input
@@ -133,46 +140,56 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
               value={config.queriesPerCategory}
               onChange={(e) => {
                 const value = Number(e.target.value)
-                if (!isNaN(value)) {
-                  setConfig(prev => ({ ...prev, queriesPerCategory: value }))
+                if (!Number.isNaN(value)) {
+                  setConfig((prev) => ({ ...prev, queriesPerCategory: value }))
                 }
               }}
               disabled={disabled}
             />
           </div>
 
-          {/* LLM Providers */}
           <div className="space-y-2">
             <Label>LLM 제공자</Label>
-            <div className="flex gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="gemini"
-                  checked={config.llmProviders.includes('gemini')}
-                  onCheckedChange={() => handleProviderToggle('gemini')}
-                  disabled={disabled}
-                />
-                <Label htmlFor="gemini" className="font-normal">Gemini</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="openai"
-                  checked={config.llmProviders.includes('openai')}
-                  onCheckedChange={() => handleProviderToggle('openai')}
-                  disabled={disabled}
-                />
-                <Label htmlFor="openai" className="font-normal">OpenAI</Label>
-              </div>
+            <div className="flex flex-wrap gap-3">
+              {PROVIDERS.map((provider) => {
+                const selected = config.llmProviders.includes(provider.id)
+                return (
+                  <button
+                    key={provider.id}
+                    type="button"
+                    onClick={() => handleProviderToggle(provider.id)}
+                    disabled={disabled}
+                    className={`flex items-center gap-2 rounded-lg border-2 px-4 py-2 transition-all ${
+                      selected
+                        ? "border-brand-orange bg-brand-orange/10 text-foreground"
+                        : "border-border bg-card text-muted-foreground hover:border-brand-orange/50"
+                    } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+                  >
+                    <span className="text-lg">{provider.icon}</span>
+                    <span className="font-medium">{provider.name}</span>
+                    {selected && (
+                      <svg className="h-5 w-5 text-brand-orange" fill="currentColor" viewBox="0 0 20 20">
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    )}
+                  </button>
+                )
+              })}
             </div>
           </div>
 
-          {/* Estimated Queries */}
           <div className="rounded-md bg-muted p-3 text-sm">
-            예상 쿼리 수: <strong>{estimatedQueries}</strong>개
-            <span className="text-muted-foreground"> ({config.categoryCount} × {config.queriesPerCategory} × {config.llmProviders.length})</span>
+            예상 쿼리 수 <strong>{estimatedQueries}</strong>개
+            <span className="text-muted-foreground">
+              {" "}
+              ({config.categoryCount} x {config.queriesPerCategory} x {config.llmProviders.length})
+            </span>
           </div>
 
-          {/* Submit Button */}
           <Button type="submit" className="w-full" disabled={!isValid || isLoading || disabled}>
             {isLoading ? (
               <>
@@ -180,7 +197,7 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
                 파이프라인 시작 중...
               </>
             ) : (
-              '파이프라인 시작'
+              "파이프라인 시작"
             )}
           </Button>
         </form>

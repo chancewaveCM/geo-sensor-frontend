@@ -60,23 +60,23 @@ export default function StrategicAnalysisPage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Hero Section - PAWC Score Card */}
-      <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-brand-navy via-blue-600 to-blue-500 text-white p-8 shadow-sm">
+      <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-brand-navy via-brand-navy-light to-chart-4 text-white p-8 shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-4 w-full md:w-auto">
             <div>
-              <h3 className="text-blue-100 font-medium tracking-wide text-sm uppercase">
+              <h3 className="text-white/70 font-medium tracking-wide text-sm uppercase">
                 Overall Performance Index
               </h3>
               <div className="flex items-baseline gap-4 mt-1">
                 <span className="text-7xl font-bold">78.5</span>
-                <div className="flex items-center bg-green-500/20 text-green-300 px-2 py-1 rounded-full text-sm font-bold border border-green-500/30">
+                <div className="flex items-center bg-success/20 text-success px-2 py-1 rounded-full text-sm font-bold border border-success/30">
                   <TrendingUp className="h-4 w-4 mr-1" />
                   +5.2
                 </div>
               </div>
               <h2 className="text-2xl font-bold mt-2">PAWC Score Card</h2>
             </div>
-            <p className="text-blue-100 max-w-md">
+            <p className="text-white/70 max-w-md">
               Your citations in AI search engines have increased by 14% compared to the previous period.
               Focus on technical specs for further gains.
             </p>
@@ -112,7 +112,7 @@ export default function StrategicAnalysisPage() {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="text-4xl font-bold">78.5%</span>
-              <span className="text-xs text-blue-100 uppercase font-bold tracking-widest">
+              <span className="text-xs text-white/70 uppercase font-bold tracking-widest">
                 Efficiency
               </span>
             </div>

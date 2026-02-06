@@ -136,7 +136,7 @@ export function QueryDiffViewer({ original, edited, fileName = 'query.txt' }: Qu
                       line.type === 'added' && 'border-r-success/30 bg-success/10',
                       line.type === 'removed' && 'border-r-error/30 bg-error/10',
                       line.type === 'unchanged' &&
-                        'border-r-border bg-muted/30 dark:bg-slate-900'
+                        'border-r-border bg-muted/30 dark:bg-background'
                     )}
                   >
                     {line.type === 'added'
@@ -149,8 +149,8 @@ export function QueryDiffViewer({ original, edited, fileName = 'query.txt' }: Qu
                     className={cn(
                       'whitespace-pre px-4 py-0.5',
                       line.type === 'removed' &&
-                        'text-error line-through dark:text-red-400',
-                      line.type === 'added' && 'text-success dark:text-green-400'
+                        'text-error line-through',
+                      line.type === 'added' && 'text-success'
                     )}
                   >
                     {line.content}

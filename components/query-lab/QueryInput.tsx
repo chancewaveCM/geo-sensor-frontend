@@ -89,7 +89,7 @@ export function QueryInput({
             ))}
           </div>
           {selectedProviders.length === 0 && (
-            <p className="mt-2 text-sm text-amber-600">
+            <p className="mt-2 text-sm text-warning">
               최소 1개의 제공자를 선택하세요
             </p>
           )}

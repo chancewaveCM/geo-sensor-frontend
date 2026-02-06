@@ -127,16 +127,16 @@ export default function PipelinePage() {
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Hero Section */}
-      <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-brand-navy via-blue-600 to-blue-500 text-white p-8 shadow-sm">
+      <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-brand-navy via-brand-navy-light to-chart-4 text-white p-8 shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div className="space-y-4 w-full md:w-auto">
             <div>
-              <h3 className="text-blue-100 font-medium tracking-wide text-sm uppercase">
+              <h3 className="text-white/70 font-medium tracking-wide text-sm uppercase">
                 Global Query Management
               </h3>
               <h2 className="text-3xl font-bold mt-2">Pipeline & Approval Workflow</h2>
             </div>
-            <p className="text-blue-100 max-w-md">
+            <p className="text-white/70 max-w-md">
               Manage query submissions across regions. Review, approve, or reject queries before
               they are deployed to production.
             </p>

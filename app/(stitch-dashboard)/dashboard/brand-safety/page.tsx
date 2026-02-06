@@ -85,10 +85,10 @@ export default function BrandSafetyPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Alert Summary Bar */}
-      <div className="bg-slate-dark text-white px-6 py-4" role="status" aria-live="polite">
+      <div className="bg-gray-900 text-white px-6 py-4" role="status" aria-live="polite">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-4 items-center flex-wrap">
-            <span className="text-xs font-bold uppercase tracking-wider text-gray-400 mr-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
               System Status:
             </span>
             <RiskMetricCard level="critical" count={12} description="critical incidents" />
@@ -128,22 +128,22 @@ export default function BrandSafetyPage() {
         {/* Left Panel: Live Monitor (70%) */}
         <section className="flex-[0.7] flex flex-col gap-4">
           <div className="flex items-center justify-between px-2">
-            <h2 className="text-xl font-bold text-slate-900">Live AI Response Monitor</h2>
+            <h2 className="text-xl font-bold text-foreground">Live AI Response Monitor</h2>
             <div className="flex gap-2">
-              <span className="text-xs font-medium text-slate-500 bg-white px-2 py-1 rounded border border-gray-200">
+              <span className="text-xs font-medium text-muted-foreground bg-card px-2 py-1 rounded border border-border">
                 Active Filters: All Risk Levels
               </span>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg flex flex-col overflow-hidden">
+          <div className="bg-card border border-border rounded-lg flex flex-col overflow-hidden">
             {/* Monitor Tabs */}
-            <div className="flex border-b border-gray-200 px-4" role="tablist">
+            <div className="flex border-b border-border px-4" role="tablist">
               <button
                 className={`px-4 py-3 text-sm font-bold transition-colors ${
                   activeTab === 'realtime'
                     ? 'border-b-2 border-primary text-primary'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
                 role="tab"
                 aria-selected={activeTab === 'realtime'}
@@ -155,7 +155,7 @@ export default function BrandSafetyPage() {
                 className={`px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === 'flagged'
                     ? 'border-b-2 border-primary text-primary'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
                 role="tab"
                 aria-selected={activeTab === 'flagged'}
@@ -167,7 +167,7 @@ export default function BrandSafetyPage() {
                 className={`px-4 py-3 text-sm font-medium transition-colors ${
                   activeTab === 'history'
                     ? 'border-b-2 border-primary text-primary'
-                    : 'text-slate-500 hover:text-slate-700'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
                 role="tab"
                 aria-selected={activeTab === 'history'}
@@ -190,57 +190,57 @@ export default function BrandSafetyPage() {
           <SentimentGauge positive={856} neutral={384} negative={57} />
 
           {/* Official Source Status Card */}
-          <section className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-            <div className="px-4 py-3 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-              <h3 className="font-bold text-slate-900 text-sm">Official Source Status</h3>
-              <button className="p-1 hover:bg-gray-100 rounded transition-colors">
-                <span className="text-slate-400 text-sm">ⓘ</span>
+          <section className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+            <div className="px-4 py-3 border-b border-border/50 flex justify-between items-center bg-muted/50">
+              <h3 className="font-bold text-foreground text-sm">Official Source Status</h3>
+              <button className="p-1 hover:bg-accent rounded transition-colors">
+                <span className="text-muted-foreground text-sm">ⓘ</span>
               </button>
             </div>
             <div className="p-6 space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="size-8 rounded bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0">
+                  <div className="size-8 rounded bg-info/10 text-info flex items-center justify-center flex-shrink-0">
                     🌐
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">Corporate Website</p>
-                    <p className="text-[10px] text-slate-500">Sync: 12 min ago</p>
+                    <p className="text-xs font-bold text-foreground">Corporate Website</p>
+                    <p className="text-[10px] text-muted-foreground">Sync: 12 min ago</p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded">
+                <span className="px-2 py-0.5 bg-success/10 text-success text-[10px] font-bold rounded">
                   SYNCED
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="size-8 rounded bg-gray-100 text-gray-600 flex items-center justify-center flex-shrink-0">
+                  <div className="size-8 rounded bg-muted text-muted-foreground flex items-center justify-center flex-shrink-0">
                     📄
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">SEC Filings Feed</p>
-                    <p className="text-[10px] text-slate-500">Sync: 1 day ago</p>
+                    <p className="text-xs font-bold text-foreground">SEC Filings Feed</p>
+                    <p className="text-[10px] text-muted-foreground">Sync: 1 day ago</p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 bg-amber-100 text-amber-700 text-[10px] font-bold rounded">
+                <span className="px-2 py-0.5 bg-warning/10 text-warning text-[10px] font-bold rounded">
                   OUTDATED
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="size-8 rounded bg-red-100 text-red-600 flex items-center justify-center flex-shrink-0">
+                  <div className="size-8 rounded bg-destructive/10 text-destructive flex items-center justify-center flex-shrink-0">
                     🔗
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-900">PR Newswire API</p>
-                    <p className="text-[10px] text-slate-500">Last attempt: Failed</p>
+                    <p className="text-xs font-bold text-foreground">PR Newswire API</p>
+                    <p className="text-[10px] text-muted-foreground">Last attempt: Failed</p>
                   </div>
                 </div>
-                <span className="px-2 py-0.5 bg-red-100 text-red-700 text-[10px] font-bold rounded">
+                <span className="px-2 py-0.5 bg-destructive/10 text-destructive text-[10px] font-bold rounded">
                   ERROR
                 </span>
               </div>
-              <button className="w-full py-2 border-2 border-dashed border-gray-200 rounded-lg text-xs font-bold text-slate-500 hover:border-primary hover:text-primary transition-all">
+              <button className="w-full py-2 border-2 border-dashed border-border rounded-lg text-xs font-bold text-muted-foreground hover:border-primary hover:text-primary transition-all">
                 + Add Source
               </button>
             </div>

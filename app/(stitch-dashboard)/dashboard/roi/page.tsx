@@ -117,7 +117,7 @@ export default function RoiPage() {
                 <p className="text-3xl font-bold tracking-tight text-foreground mb-2">
                   ${mockROIData.returns.toLocaleString()}
                 </p>
-                <div className="flex items-center gap-1 text-emerald-600 text-sm font-semibold">
+                <div className="flex items-center gap-1 text-success text-sm font-semibold">
                   <TrendingUp className="h-4 w-4" aria-hidden="true" />
                   <span>+12.4%</span>
                 </div>
@@ -140,7 +140,7 @@ export default function RoiPage() {
                 <p className="text-3xl font-bold tracking-tight text-foreground mb-2">
                   34.8%
                 </p>
-                <div className="flex items-center gap-1 text-emerald-600 text-sm font-semibold">
+                <div className="flex items-center gap-1 text-success text-sm font-semibold">
                   <TrendingUp className="h-4 w-4" aria-hidden="true" />
                   <span>+5.2%</span>
                 </div>

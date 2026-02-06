@@ -37,8 +37,3 @@ export async function getJobQueries(jobId: number, categoryId?: number): Promise
 export async function getQueryResponses(queryId: number): Promise<ResponsesListResponse> {
   return get<ResponsesListResponse>(`${API_PREFIX}/pipeline/queries/${queryId}/responses`);
 }
-
-export async function getCompanyProfiles(): Promise<CompanyProfile[]> {
-  const response = await get<{ items: CompanyProfile[]; total: number }>(`${API_PREFIX}/company-profiles/`);
-  return response.items;
-}

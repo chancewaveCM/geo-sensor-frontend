@@ -2,6 +2,7 @@
 
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from 'recharts'
 import { cn } from "@/lib/utils"
+import { getTokenColor } from '@/lib/design-tokens'
 
 export interface SentimentGaugeProps {
   positive: number
@@ -11,9 +12,9 @@ export interface SentimentGaugeProps {
 }
 
 const COLORS = {
-  positive: '#22c55e', // emerald-500
-  neutral: '#f59e0b',  // amber-500
-  negative: '#ef4444'  // red-500
+  positive: getTokenColor('--sentiment-positive'),
+  neutral: getTokenColor('--sentiment-neutral'),
+  negative: getTokenColor('--sentiment-negative'),
 }
 
 export function SentimentGauge({ positive, neutral, negative, className }: SentimentGaugeProps) {
@@ -68,7 +69,7 @@ export function SentimentGauge({ positive, neutral, negative, className }: Senti
       <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t">
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <div className="size-3 rounded-full bg-emerald-500" aria-hidden="true" />
+            <div className="size-3 rounded-full bg-sentiment-positive" aria-hidden="true" />
             <span className="text-xs font-medium text-muted-foreground">Positive</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{getPercentage(positive)}%</p>
@@ -76,7 +77,7 @@ export function SentimentGauge({ positive, neutral, negative, className }: Senti
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <div className="size-3 rounded-full bg-amber-500" aria-hidden="true" />
+            <div className="size-3 rounded-full bg-sentiment-neutral" aria-hidden="true" />
             <span className="text-xs font-medium text-muted-foreground">Neutral</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{getPercentage(neutral)}%</p>
@@ -84,7 +85,7 @@ export function SentimentGauge({ positive, neutral, negative, className }: Senti
         </div>
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <div className="size-3 rounded-full bg-red-500" aria-hidden="true" />
+            <div className="size-3 rounded-full bg-sentiment-negative" aria-hidden="true" />
             <span className="text-xs font-medium text-muted-foreground">Negative</span>
           </div>
           <p className="text-2xl font-bold text-foreground">{getPercentage(negative)}%</p>

@@ -29,24 +29,24 @@ export interface IncidentListProps {
 
 const severityConfig = {
   critical: {
-    borderColor: 'border-l-red-500',
-    bgColor: 'bg-red-50/50',
-    badgeBg: 'bg-red-100',
-    badgeText: 'text-red-600',
+    borderColor: 'border-l-destructive',
+    bgColor: 'bg-destructive/5',
+    badgeBg: 'bg-destructive/10',
+    badgeText: 'text-destructive',
     label: 'CRITICAL'
   },
   warning: {
-    borderColor: 'border-l-amber-500',
-    bgColor: 'bg-amber-50/50',
-    badgeBg: 'bg-amber-100',
-    badgeText: 'text-amber-600',
+    borderColor: 'border-l-warning',
+    bgColor: 'bg-warning/5',
+    badgeBg: 'bg-warning/10',
+    badgeText: 'text-warning',
     label: 'WARNING'
   },
   safe: {
-    borderColor: 'border-l-emerald-500',
-    bgColor: 'bg-white',
-    badgeBg: 'bg-emerald-100',
-    badgeText: 'text-emerald-600',
+    borderColor: 'border-l-success',
+    bgColor: 'bg-card',
+    badgeBg: 'bg-success/10',
+    badgeText: 'text-success',
     label: 'SAFE'
   }
 }
@@ -84,36 +84,36 @@ function IncidentCard({ incident }: { incident: Incident }) {
           >
             {config.label}
           </span>
-          <div className="flex items-center gap-2 text-slate-500 text-xs font-medium">
+          <div className="flex items-center gap-2 text-muted-foreground text-xs font-medium">
             {sourceIcons[incident.source] || <Bot className="h-4 w-4" />}
             <span>{incident.source}</span>
           </div>
-          <div className="w-1 h-1 bg-gray-300 rounded-full" aria-hidden="true" />
-          <time className="text-xs text-gray-400" dateTime={incident.timestamp}>
+          <div className="w-1 h-1 bg-border rounded-full" aria-hidden="true" />
+          <time className="text-xs text-muted-foreground/70" dateTime={incident.timestamp}>
             {incident.timestamp}
           </time>
         </div>
-        <span className="text-xs text-slate-400">ID: {incident.id}</span>
+        <span className="text-xs text-muted-foreground/70">ID: {incident.id}</span>
       </div>
 
       <div className="space-y-2 mt-3">
-        <h3 id={`incident-${incident.id}-title`} className="font-bold text-slate-900">
+        <h3 id={`incident-${incident.id}-title`} className="font-bold text-foreground">
           {incident.title}
         </h3>
         {incident.quote ? (
-          <blockquote className="text-sm text-slate-600 leading-relaxed italic border-l-2 border-gray-200 pl-3 line-clamp-2">
+          <blockquote className="text-sm text-muted-foreground leading-relaxed italic border-l-2 border-border pl-3 line-clamp-2">
             {incident.quote}
           </blockquote>
         ) : (
-          <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
             {incident.description}
           </p>
         )}
       </div>
 
       {expanded && (
-        <div className="mt-4 pt-4 border-t border-gray-200 animate-in fade-in duration-200">
-          <p className="text-sm text-slate-600 leading-relaxed">
+        <div className="mt-4 pt-4 border-t border-border animate-in fade-in duration-200">
+          <p className="text-sm text-muted-foreground leading-relaxed">
             {incident.description}
           </p>
         </div>

@@ -59,7 +59,7 @@ export function CitationShareChart({ data, title = 'Citation Share Distribution'
                 labelLine={false}
                 label={renderCustomizedLabel}
                 outerRadius={80}
-                fill="#8884d8"
+                fill="hsl(var(--chart-5))"
                 dataKey="share"
               >
                 {data.map((entry, index) => (

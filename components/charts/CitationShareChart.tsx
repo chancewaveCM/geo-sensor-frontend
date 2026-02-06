@@ -14,6 +14,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { getTokenColor } from '@/lib/design-tokens'
 
 interface CitationData {
   brand: string
@@ -68,7 +69,7 @@ export function CitationShareChart({ data }: CitationShareChartProps) {
                 animationDuration={800}
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color || '#3B82F6'} />
+                  <Cell key={`cell-${index}`} fill={entry.color || getTokenColor('--chart-4')} />
                 ))}
               </Bar>
             </BarChart>
@@ -95,7 +96,7 @@ export function CitationShareChart({ data }: CitationShareChartProps) {
                 animationDuration={800}
               >
                 {data.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color || '#3B82F6'} />
+                  <Cell key={`cell-${index}`} fill={entry.color || getTokenColor('--chart-4')} />
                 ))}
               </Pie>
               <Tooltip content={<CustomTooltip />} />

@@ -50,7 +50,7 @@ export function QueryGenerationPanel({
     <div className="flex flex-col items-center justify-center py-12 space-y-4">
       <div className="relative">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
-        <Sparkles className="h-6 w-6 text-yellow-500 absolute -top-1 -right-1 animate-pulse" />
+        <Sparkles className="h-6 w-6 text-warning absolute -top-1 -right-1 animate-pulse" />
       </div>
       <div className="text-center space-y-2">
         <h3 className="text-lg font-semibold">AI가 질문을 생성하고 있습니다</h3>
