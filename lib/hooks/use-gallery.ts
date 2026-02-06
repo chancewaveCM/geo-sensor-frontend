@@ -124,23 +124,23 @@ export function useVerifyCitation(workspaceId: number) {
 
 // --- Comparisons ---
 
-export function useCompareLLMs(workspaceId: number) {
+export function useCompareLLMs(workspaceId: number | undefined) {
   return useMutation({
-    mutationFn: (data: { response_ids: number[] }) => compareLLMs(workspaceId, data),
+    mutationFn: (data: { response_ids: number[] }) => compareLLMs(workspaceId!, data),
   })
 }
 
-export function useCompareDates(workspaceId: number) {
+export function useCompareDates(workspaceId: number | undefined) {
   return useMutation({
     mutationFn: (data: { query_definition_id: number; run_ids: number[] }) =>
-      compareDates(workspaceId, data),
+      compareDates(workspaceId!, data),
   })
 }
 
-export function useCompareVersions(workspaceId: number) {
+export function useCompareVersions(workspaceId: number | undefined) {
   return useMutation({
     mutationFn: (data: { query_definition_id: number; version_ids: number[] }) =>
-      compareVersions(workspaceId, data),
+      compareVersions(workspaceId!, data),
   })
 }
 
@@ -152,11 +152,11 @@ export function useComparisons(workspaceId: number | undefined) {
   })
 }
 
-export function useCreateComparison(workspaceId: number) {
+export function useCreateComparison(workspaceId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: (data: ComparisonSnapshotCreate) =>
-      createComparison(workspaceId, data),
+      createComparison(workspaceId!, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['comparisons', workspaceId],

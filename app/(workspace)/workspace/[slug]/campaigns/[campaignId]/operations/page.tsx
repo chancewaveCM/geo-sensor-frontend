@@ -20,23 +20,23 @@ export default function OperationsPage() {
   const workspaceId = workspace?.id
 
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
-  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined)
+  const [statusFilter, setStatusFilter] = useState<string>('all')
 
-  const { data: operationsData, isLoading } = useOperations(workspaceId, {
-    status: statusFilter,
-  })
+  const { data: operationsData, isLoading } = useOperations(workspaceId)
 
   const operations = operationsData?.items || []
 
+  // Stats from ALL operations (unfiltered)
   const stats = {
     pending: operations.filter((op) => op.status === 'pending').length,
     approved: operations.filter((op) => op.status === 'approved').length,
     rejected: operations.filter((op) => op.status === 'rejected').length,
   }
 
-  const filteredOperations = statusFilter
-    ? operations.filter((op) => op.status === statusFilter)
-    : operations
+  // Filter for display only
+  const filteredOperations = statusFilter === 'all'
+    ? operations
+    : operations.filter((op) => op.status === statusFilter)
 
   if (!workspaceId) {
     return (
@@ -71,7 +71,7 @@ export default function OperationsPage() {
         </Card>
       </div>
 
-      <Tabs value={statusFilter || 'all'} onValueChange={(v) => setStatusFilter(v === 'all' ? undefined : v)}>
+      <Tabs value={statusFilter} onValueChange={setStatusFilter}>
         <TabsList>
           <TabsTrigger value="all">All</TabsTrigger>
           <TabsTrigger value="pending">Pending</TabsTrigger>
@@ -79,7 +79,7 @@ export default function OperationsPage() {
           <TabsTrigger value="rejected">Rejected</TabsTrigger>
         </TabsList>
 
-        <TabsContent value={statusFilter || 'all'} className="mt-4">
+        <TabsContent value={statusFilter} className="mt-4">
           {isLoading ? (
             <div className="rounded-lg border p-8 text-center">
               <p className="text-sm text-muted-foreground">Loading operations...</p>
@@ -88,7 +88,7 @@ export default function OperationsPage() {
             <OperationsLog
               operations={filteredOperations}
               workspaceId={workspaceId}
-              isAdmin={false}
+              isAdmin={workspace?.user_role === 'admin'}
             />
           )}
         </TabsContent>

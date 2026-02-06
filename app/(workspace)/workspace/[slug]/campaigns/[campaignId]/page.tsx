@@ -57,14 +57,14 @@ export default function CampaignDashboardPage() {
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
-  const workspaceId = workspace?.id ?? 0
+  const workspaceId = workspace?.id
 
   const { data: campaign, isLoading: campaignLoading } = useCampaign(workspaceId, campaignId)
   const { data: runs, isLoading: runsLoading } = useCampaignRuns(workspaceId, campaignId)
   const { mutate: triggerRun, isPending: triggering } = useTriggerRun(workspaceId, campaignId)
 
   const handleTriggerRun = () => {
-    triggerRun({} as any, {
+    triggerRun({ trigger_type: 'manual', llm_providers: ['openai', 'gemini'] }, {
       onSuccess: () => {
         toast.success('Campaign run triggered successfully!')
       },

@@ -3,6 +3,7 @@ export interface Workspace {
   name: string
   slug: string
   description: string | null
+  user_role?: string
   created_at: string
   updated_at: string
 }

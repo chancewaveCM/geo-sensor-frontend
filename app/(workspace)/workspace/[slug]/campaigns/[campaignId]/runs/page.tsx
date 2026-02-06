@@ -59,7 +59,7 @@ export default function RunsPage() {
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
-  const workspaceId = workspace?.id ?? 0
+  const workspaceId = workspace?.id
 
   const { data: runs, isLoading } = useCampaignRuns(workspaceId, campaignId)
   const { mutate: triggerRun, isPending: triggering } = useTriggerRun(workspaceId, campaignId)
@@ -69,7 +69,7 @@ export default function RunsPage() {
   const [selectedProviders, setSelectedProviders] = useState<string[]>(['openai', 'gemini'])
 
   const handleTriggerRun = () => {
-    triggerRun({} as any, {
+    triggerRun({ trigger_type: 'manual', llm_providers: selectedProviders }, {
       onSuccess: () => {
         toast.success('Campaign run triggered successfully!')
         setDialogOpen(false)
@@ -231,15 +231,18 @@ export default function RunsPage() {
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-wrap gap-1">
-                          {run.llm_providers && Array.isArray(run.llm_providers) ? (
-                            run.llm_providers.map((provider: string) => (
-                              <Badge key={provider} variant="outline" className="text-xs">
-                                {provider}
-                              </Badge>
-                            ))
-                          ) : (
-                            <span className="text-sm text-muted-foreground">-</span>
-                          )}
+                          {(() => {
+                            try {
+                              const providers = JSON.parse(run.llm_providers) as string[]
+                              return providers.map((provider: string) => (
+                                <Badge key={provider} variant="outline" className="text-xs">
+                                  {provider}
+                                </Badge>
+                              ))
+                            } catch {
+                              return <span className="text-sm text-muted-foreground">-</span>
+                            }
+                          })()}
                         </div>
                       </TableCell>
                       <TableCell>

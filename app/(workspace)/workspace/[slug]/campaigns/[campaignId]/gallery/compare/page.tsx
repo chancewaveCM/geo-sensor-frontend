@@ -46,10 +46,10 @@ export default function ComparePage() {
   const workspace = workspaces?.find((w) => w.slug === slug)
   const workspaceId = workspace?.id
 
-  const compareLLMsMutation = useCompareLLMs(workspaceId!)
-  const compareDatesMutation = useCompareDates(workspaceId!)
-  const compareVersionsMutation = useCompareVersions(workspaceId!)
-  const createComparisonMutation = useCreateComparison(workspaceId!)
+  const compareLLMsMutation = useCompareLLMs(workspaceId)
+  const compareDatesMutation = useCompareDates(workspaceId)
+  const compareVersionsMutation = useCompareVersions(workspaceId)
+  const createComparisonMutation = useCreateComparison(workspaceId)
 
   const [activeTab, setActiveTab] = useState<'llm' | 'date' | 'version'>('llm')
   const [result, setResult] = useState<ComparisonResult | null>(null)
