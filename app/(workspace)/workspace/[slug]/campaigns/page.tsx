@@ -22,7 +22,7 @@ export default function CampaignsPage() {
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
-  const workspaceId = workspace?.id ?? 0
+  const workspaceId = workspace?.id
 
   const { data: campaigns, isLoading } = useCampaigns(workspaceId)
   const { mutate: createCampaign, isPending } = useCreateCampaign(workspaceId)
@@ -50,8 +50,8 @@ export default function CampaignsPage() {
           schedule_interval_hours: 24
         })
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to create campaign')
+      onError: () => {
+        toast.error('Failed to create campaign')
       }
     })
   }

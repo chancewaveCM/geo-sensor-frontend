@@ -59,7 +59,7 @@ export async function triggerCampaignRun(
   data: CampaignRunCreate
 ): Promise<CampaignRun> {
   return post<CampaignRun>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/runs`,
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/run`,
     data
   )
 }

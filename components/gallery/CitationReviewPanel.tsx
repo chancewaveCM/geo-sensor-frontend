@@ -14,6 +14,7 @@ import {
 } from '@/components/ui/table'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, XCircle, AlertCircle, Check } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface CitationReviewPanelProps {
   citations: RunCitation[]
@@ -23,7 +24,7 @@ interface CitationReviewPanelProps {
 const reviewColors: Record<string, string> = {
   false_positive: 'bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/20',
   false_negative: 'bg-orange-500/10 text-orange-700 dark:text-orange-400 border-orange-500/20',
-  confirmed: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20',
+  correct: 'bg-green-500/10 text-green-700 dark:text-green-400 border-green-500/20',
 }
 
 export function CitationReviewPanel({ citations, workspaceId }: CitationReviewPanelProps) {
@@ -31,14 +32,25 @@ export function CitationReviewPanel({ citations, workspaceId }: CitationReviewPa
   const verifyCitation = useVerifyCitation(workspaceId)
 
   const handleReview = (citationId: number, reviewType: string) => {
-    createReview.mutate({
-      run_citation_id: citationId,
-      review_type: reviewType,
-    })
+    createReview.mutate(
+      {
+        run_citation_id: citationId,
+        review_type: reviewType,
+      },
+      {
+        onError: () => {
+          toast.error('Failed to submit citation review')
+        },
+      }
+    )
   }
 
   const handleVerify = (citationId: number) => {
-    verifyCitation.mutate(citationId)
+    verifyCitation.mutate(citationId, {
+      onError: () => {
+        toast.error('Failed to verify citation')
+      },
+    })
   }
 
   return (
@@ -54,7 +66,7 @@ export function CitationReviewPanel({ citations, workspaceId }: CitationReviewPa
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
                 <TableHead>Brand</TableHead>
-                <TableHead>Domain</TableHead>
+                <TableHead>Target</TableHead>
                 <TableHead className="w-20 text-center">Conf.</TableHead>
                 <TableHead className="w-32">Status</TableHead>
                 <TableHead className="w-40 text-right">Actions</TableHead>
@@ -64,13 +76,13 @@ export function CitationReviewPanel({ citations, workspaceId }: CitationReviewPa
               {citations.map((citation) => (
                 <TableRow key={citation.id}>
                   <TableCell className="font-medium text-muted-foreground">
-                    {citation.position}
+                    {citation.position_in_response}
                   </TableCell>
                   <TableCell className="font-medium text-orange-500">
-                    {citation.brand_name}
+                    {citation.cited_brand}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {citation.domain || 'N/A'}
+                    {citation.is_target_brand ? 'Yes' : 'No'}
                   </TableCell>
                   <TableCell className="text-center">
                     <span className="text-xs font-medium">
@@ -116,7 +128,7 @@ export function CitationReviewPanel({ citations, workspaceId }: CitationReviewPa
                         size="sm"
                         variant="ghost"
                         className="h-7 px-2 text-xs"
-                        onClick={() => handleReview(citation.id, 'confirmed')}
+                        onClick={() => handleReview(citation.id, 'correct')}
                         disabled={createReview.isPending}
                         title="Confirm"
                       >

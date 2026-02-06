@@ -62,6 +62,9 @@ export function OperationsLog({ operations, workspaceId, isAdmin = false }: Oper
       promote_to_anchor: { color: 'bg-purple-100 text-purple-800', label: 'Promote' },
       anchor_change_request: { color: 'bg-blue-100 text-blue-800', label: 'Change Request' },
       parser_issue: { color: 'bg-orange-100 text-orange-800', label: 'Parser Issue' },
+      archive: { color: 'bg-gray-100 text-gray-800', label: 'Archive' },
+      export: { color: 'bg-teal-100 text-teal-800', label: 'Export' },
+      label_action: { color: 'bg-yellow-100 text-yellow-800', label: 'Label Action' },
     }
     const variant = variants[type] || { color: 'bg-gray-100 text-gray-800', label: type }
     return <Badge className={variant.color}>{variant.label}</Badge>
@@ -76,6 +79,16 @@ export function OperationsLog({ operations, workspaceId, isAdmin = false }: Oper
     }
     const variant = variants[status] || { color: 'bg-gray-100 text-gray-800', label: status }
     return <Badge className={variant.color}>{variant.label}</Badge>
+  }
+
+  const formatPayload = (payload: string | null): string => {
+    if (!payload) return 'N/A'
+    try {
+      const parsed = JSON.parse(payload)
+      return typeof parsed === 'object' ? JSON.stringify(parsed, null, 0) : String(parsed)
+    } catch {
+      return payload
+    }
   }
 
   if (operations.length === 0) {
@@ -94,7 +107,7 @@ export function OperationsLog({ operations, workspaceId, isAdmin = false }: Oper
             <TableRow>
               <TableHead>Type</TableHead>
               <TableHead>Target</TableHead>
-              <TableHead>Description</TableHead>
+              <TableHead>Payload</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Date</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -106,12 +119,19 @@ export function OperationsLog({ operations, workspaceId, isAdmin = false }: Oper
                 <TableCell>{getTypeBadge(op.operation_type)}</TableCell>
                 <TableCell>
                   <div className="text-sm">
-                    <div className="font-medium">{op.target_type}</div>
-                    <div className="text-muted-foreground">ID: {op.target_id}</div>
+                    {op.target_type && (
+                      <div className="font-medium">{op.target_type}</div>
+                    )}
+                    {op.target_id != null && (
+                      <div className="text-muted-foreground">ID: {op.target_id}</div>
+                    )}
+                    {!op.target_type && op.target_id == null && (
+                      <span className="text-muted-foreground">N/A</span>
+                    )}
                   </div>
                 </TableCell>
                 <TableCell>
-                  <p className="max-w-md truncate text-sm">{op.description}</p>
+                  <p className="max-w-md truncate text-sm">{formatPayload(op.payload)}</p>
                 </TableCell>
                 <TableCell>{getStatusBadge(op.status)}</TableCell>
                 <TableCell>

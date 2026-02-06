@@ -1,6 +1,7 @@
-import { get, post, del } from '@/lib/api-client'
+import { get, post, patch, del } from '@/lib/api-client'
 import type {
   RunResponse,
+  GalleryDetailResponse,
   RunCitation,
   ResponseLabel,
   ResponseLabelCreate,
@@ -11,6 +12,12 @@ import type {
   OperationLog,
   OperationLogCreate,
   GalleryFilters,
+  LLMCompareParams,
+  LLMCompareResponse,
+  DateCompareParams,
+  DateCompareResponse,
+  VersionCompareParams,
+  VersionCompareResponse,
 } from '@/lib/types'
 
 const API_PREFIX = '/api/v1'
@@ -20,7 +27,7 @@ const API_PREFIX = '/api/v1'
 export async function fetchGalleryResponses(
   workspaceId: number,
   params?: GalleryFilters
-): Promise<{ items: RunResponse[]; total: number }> {
+): Promise<RunResponse[]> {
   const searchParams = new URLSearchParams()
   if (params?.campaign_id != null) searchParams.set('campaign_id', String(params.campaign_id))
   if (params?.run_id != null) searchParams.set('run_id', String(params.run_id))
@@ -30,7 +37,7 @@ export async function fetchGalleryResponses(
   if (params?.page != null) searchParams.set('page', String(params.page))
   if (params?.page_size != null) searchParams.set('page_size', String(params.page_size))
   const qs = searchParams.toString()
-  return get<{ items: RunResponse[]; total: number }>(
+  return get<RunResponse[]>(
     `${API_PREFIX}/workspaces/${workspaceId}/gallery/responses${qs ? `?${qs}` : ''}`
   )
 }
@@ -38,8 +45,8 @@ export async function fetchGalleryResponses(
 export async function fetchGalleryResponse(
   workspaceId: number,
   responseId: number
-): Promise<RunResponse & { citations: RunCitation[] }> {
-  return get<RunResponse & { citations: RunCitation[] }>(
+): Promise<GalleryDetailResponse> {
+  return get<GalleryDetailResponse>(
     `${API_PREFIX}/workspaces/${workspaceId}/gallery/responses/${responseId}`
   )
 }
@@ -118,7 +125,7 @@ export async function verifyCitation(
   workspaceId: number,
   citationId: number
 ): Promise<RunCitation> {
-  return post<RunCitation>(
+  return patch<RunCitation>(
     `${API_PREFIX}/workspaces/${workspaceId}/gallery/citations/${citationId}/verify`
   )
 }
@@ -127,31 +134,28 @@ export async function verifyCitation(
 
 export async function compareLLMs(
   workspaceId: number,
-  data: { response_ids: number[] }
-): Promise<Record<string, unknown>> {
-  return post<Record<string, unknown>>(
-    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/llm`,
-    data
+  params: LLMCompareParams
+): Promise<LLMCompareResponse> {
+  return get<LLMCompareResponse>(
+    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/llm?run_id=${params.run_id}&query_version_id=${params.query_version_id}`
   )
 }
 
 export async function compareDates(
   workspaceId: number,
-  data: { query_definition_id: number; run_ids: number[] }
-): Promise<Record<string, unknown>> {
-  return post<Record<string, unknown>>(
-    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/date`,
-    data
+  params: DateCompareParams
+): Promise<DateCompareResponse> {
+  return get<DateCompareResponse>(
+    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/date?campaign_id=${params.campaign_id}&query_version_id=${params.query_version_id}&llm_provider=${encodeURIComponent(params.llm_provider)}&run_id_a=${params.run_id_a}&run_id_b=${params.run_id_b}`
   )
 }
 
 export async function compareVersions(
   workspaceId: number,
-  data: { query_definition_id: number; version_ids: number[] }
-): Promise<Record<string, unknown>> {
-  return post<Record<string, unknown>>(
-    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/version`,
-    data
+  params: VersionCompareParams
+): Promise<VersionCompareResponse> {
+  return get<VersionCompareResponse>(
+    `${API_PREFIX}/workspaces/${workspaceId}/gallery/compare/version?run_id=${params.run_id}&llm_provider=${encodeURIComponent(params.llm_provider)}&query_version_id_a=${params.query_version_id_a}&query_version_id_b=${params.query_version_id_b}`
   )
 }
 
@@ -187,14 +191,14 @@ export async function deleteComparison(
 export async function fetchOperations(
   workspaceId: number,
   params?: { operation_type?: string; status?: string; page?: number; page_size?: number }
-): Promise<{ items: OperationLog[]; total: number }> {
+): Promise<OperationLog[]> {
   const searchParams = new URLSearchParams()
   if (params?.operation_type) searchParams.set('operation_type', params.operation_type)
   if (params?.status) searchParams.set('status', params.status)
   if (params?.page != null) searchParams.set('page', String(params.page))
   if (params?.page_size != null) searchParams.set('page_size', String(params.page_size))
   const qs = searchParams.toString()
-  return get<{ items: OperationLog[]; total: number }>(
+  return get<OperationLog[]>(
     `${API_PREFIX}/workspaces/${workspaceId}/operations${qs ? `?${qs}` : ''}`
   )
 }
@@ -232,8 +236,8 @@ export async function reviewOperation(
 export async function cancelOperation(
   workspaceId: number,
   operationId: number
-): Promise<OperationLog> {
-  return post<OperationLog>(
-    `${API_PREFIX}/workspaces/${workspaceId}/operations/${operationId}/cancel`
+): Promise<void> {
+  return del<void>(
+    `${API_PREFIX}/workspaces/${workspaceId}/operations/${operationId}`
   )
 }

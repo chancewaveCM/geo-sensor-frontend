@@ -4,16 +4,9 @@ import { useState } from 'react'
 import { useParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
-import { ComparisonView } from '@/components/gallery/ComparisonView'
 import { SavedComparisons } from '@/components/gallery/SavedComparisons'
 import {
   useCompareLLMs,
@@ -22,25 +15,23 @@ import {
   useCreateComparison,
 } from '@/lib/hooks/use-gallery'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
+import type {
+  LLMCompareResponse,
+  DateCompareResponse,
+  VersionCompareResponse,
+  VersionCompareResponseItem,
+  ComparisonDiff,
+} from '@/lib/types'
 
-interface ComparisonResult {
-  left: {
-    response_text: string
-    llm_provider: string
-    model_name: string
-    citations: Array<{ brand_name: string; domain?: string; position: number }>
-  }
-  right: {
-    response_text: string
-    llm_provider: string
-    model_name: string
-    citations: Array<{ brand_name: string; domain?: string; position: number }>
-  }
-}
+type CompareResult =
+  | { type: 'llm'; data: LLMCompareResponse }
+  | { type: 'date'; data: DateCompareResponse }
+  | { type: 'version'; data: VersionCompareResponse }
 
 export default function ComparePage() {
   const params = useParams()
   const slug = params.slug as string
+  const campaignId = Number(params.campaignId)
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
@@ -52,73 +43,87 @@ export default function ComparePage() {
   const createComparisonMutation = useCreateComparison(workspaceId)
 
   const [activeTab, setActiveTab] = useState<'llm' | 'date' | 'version'>('llm')
-  const [result, setResult] = useState<ComparisonResult | null>(null)
+  const [result, setResult] = useState<CompareResult | null>(null)
 
   // LLM comparison state
-  const [llmResponseIds, setLlmResponseIds] = useState({ left: '', right: '' })
+  const [llmParams, setLlmParams] = useState({ runId: '', queryVersionId: '' })
 
   // Date comparison state
   const [dateParams, setDateParams] = useState({
-    queryDefinitionId: '',
-    runIds: { left: '', right: '' },
+    campaignId: campaignId.toString(),
+    queryVersionId: '',
+    llmProvider: '',
+    runIdA: '',
+    runIdB: '',
   })
 
   // Version comparison state
   const [versionParams, setVersionParams] = useState({
-    queryDefinitionId: '',
-    versionIds: { left: '', right: '' },
+    runId: '',
+    llmProvider: '',
+    queryVersionIdA: '',
+    queryVersionIdB: '',
   })
 
   const [comparisonName, setComparisonName] = useState('')
 
   const handleCompareLLMs = async () => {
-    if (!llmResponseIds.left || !llmResponseIds.right) return
+    if (!llmParams.runId || !llmParams.queryVersionId) return
     const data = await compareLLMsMutation.mutateAsync({
-      response_ids: [parseInt(llmResponseIds.left), parseInt(llmResponseIds.right)],
+      run_id: parseInt(llmParams.runId),
+      query_version_id: parseInt(llmParams.queryVersionId),
     })
-    setResult(data as unknown as ComparisonResult)
+    setResult({ type: 'llm', data })
   }
 
   const handleCompareDates = async () => {
-    if (!dateParams.queryDefinitionId || !dateParams.runIds.left || !dateParams.runIds.right) return
+    if (!dateParams.queryVersionId || !dateParams.llmProvider || !dateParams.runIdA || !dateParams.runIdB) return
     const data = await compareDatesMutation.mutateAsync({
-      query_definition_id: parseInt(dateParams.queryDefinitionId),
-      run_ids: [parseInt(dateParams.runIds.left), parseInt(dateParams.runIds.right)],
+      campaign_id: parseInt(dateParams.campaignId),
+      query_version_id: parseInt(dateParams.queryVersionId),
+      llm_provider: dateParams.llmProvider,
+      run_id_a: parseInt(dateParams.runIdA),
+      run_id_b: parseInt(dateParams.runIdB),
     })
-    setResult(data as unknown as ComparisonResult)
+    setResult({ type: 'date', data })
   }
 
   const handleCompareVersions = async () => {
     if (
-      !versionParams.queryDefinitionId ||
-      !versionParams.versionIds.left ||
-      !versionParams.versionIds.right
+      !versionParams.runId ||
+      !versionParams.llmProvider ||
+      !versionParams.queryVersionIdA ||
+      !versionParams.queryVersionIdB
     )
       return
     const data = await compareVersionsMutation.mutateAsync({
-      query_definition_id: parseInt(versionParams.queryDefinitionId),
-      version_ids: [parseInt(versionParams.versionIds.left), parseInt(versionParams.versionIds.right)],
+      run_id: parseInt(versionParams.runId),
+      llm_provider: versionParams.llmProvider,
+      query_version_id_a: parseInt(versionParams.queryVersionIdA),
+      query_version_id_b: parseInt(versionParams.queryVersionIdB),
     })
-    setResult(data as unknown as ComparisonResult)
+    setResult({ type: 'version', data })
   }
 
   const handleSaveComparison = () => {
     if (!result || !comparisonName) return
+    const configRecord: Record<string, unknown> =
+      result.type === 'llm'
+        ? { run_id: llmParams.runId, query_version_id: llmParams.queryVersionId }
+        : result.type === 'date'
+        ? { ...dateParams }
+        : { ...versionParams }
+
     createComparisonMutation.mutate({
       name: comparisonName,
-      comparison_type: activeTab,
-      config: JSON.stringify(
-        activeTab === 'llm'
-          ? llmResponseIds
-          : activeTab === 'date'
-          ? dateParams
-          : versionParams
-      ),
-      result_summary: `Shared: ${
-        Array.from(new Set(result.left.citations.map((c) => c.brand_name))).filter((b) =>
-          result.right.citations.some((c) => c.brand_name === b)
-        ).length
-      } brands`,
+      comparison_type:
+        result.type === 'llm'
+          ? 'llm_vs_llm'
+          : result.type === 'date'
+          ? 'date_vs_date'
+          : 'version_vs_version',
+      config: configRecord,
+      notes: getSummaryText(result),
     })
   }
 
@@ -136,7 +141,7 @@ export default function ComparePage() {
         <h1 className="text-2xl font-bold">Compare Responses</h1>
       </div>
 
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'llm' | 'date' | 'version')}>
         <TabsList>
           <TabsTrigger value="llm">LLM vs LLM</TabsTrigger>
           <TabsTrigger value="date">Date vs Date</TabsTrigger>
@@ -148,31 +153,31 @@ export default function ComparePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Left Response ID</label>
+                  <label className="mb-2 block text-sm font-medium">Run ID</label>
                   <Input
                     type="number"
-                    value={llmResponseIds.left}
+                    value={llmParams.runId}
                     onChange={(e) =>
-                      setLlmResponseIds((prev) => ({ ...prev, left: e.target.value }))
+                      setLlmParams((prev) => ({ ...prev, runId: e.target.value }))
                     }
-                    placeholder="Enter response ID"
+                    placeholder="Enter run ID"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Right Response ID</label>
+                  <label className="mb-2 block text-sm font-medium">Query Version ID</label>
                   <Input
                     type="number"
-                    value={llmResponseIds.right}
+                    value={llmParams.queryVersionId}
                     onChange={(e) =>
-                      setLlmResponseIds((prev) => ({ ...prev, right: e.target.value }))
+                      setLlmParams((prev) => ({ ...prev, queryVersionId: e.target.value }))
                     }
-                    placeholder="Enter response ID"
+                    placeholder="Enter query version ID"
                   />
                 </div>
               </div>
               <Button
                 onClick={handleCompareLLMs}
-                disabled={compareLLMsMutation.isPending || !llmResponseIds.left || !llmResponseIds.right}
+                disabled={compareLLMsMutation.isPending || !llmParams.runId || !llmParams.queryVersionId}
               >
                 Compare
               </Button>
@@ -183,42 +188,48 @@ export default function ComparePage() {
         <TabsContent value="date" className="space-y-4">
           <Card className="p-4">
             <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium">Query Definition ID</label>
-                <Input
-                  type="number"
-                  value={dateParams.queryDefinitionId}
-                  onChange={(e) =>
-                    setDateParams((prev) => ({ ...prev, queryDefinitionId: e.target.value }))
-                  }
-                  placeholder="Enter query definition ID"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium">Query Version ID</label>
+                  <Input
+                    type="number"
+                    value={dateParams.queryVersionId}
+                    onChange={(e) =>
+                      setDateParams((prev) => ({ ...prev, queryVersionId: e.target.value }))
+                    }
+                    placeholder="Enter query version ID"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium">LLM Provider</label>
+                  <Input
+                    value={dateParams.llmProvider}
+                    onChange={(e) =>
+                      setDateParams((prev) => ({ ...prev, llmProvider: e.target.value }))
+                    }
+                    placeholder="e.g. openai, anthropic"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Left Run ID</label>
+                  <label className="mb-2 block text-sm font-medium">Run ID A</label>
                   <Input
                     type="number"
-                    value={dateParams.runIds.left}
+                    value={dateParams.runIdA}
                     onChange={(e) =>
-                      setDateParams((prev) => ({
-                        ...prev,
-                        runIds: { ...prev.runIds, left: e.target.value },
-                      }))
+                      setDateParams((prev) => ({ ...prev, runIdA: e.target.value }))
                     }
                     placeholder="Enter run ID"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Right Run ID</label>
+                  <label className="mb-2 block text-sm font-medium">Run ID B</label>
                   <Input
                     type="number"
-                    value={dateParams.runIds.right}
+                    value={dateParams.runIdB}
                     onChange={(e) =>
-                      setDateParams((prev) => ({
-                        ...prev,
-                        runIds: { ...prev.runIds, right: e.target.value },
-                      }))
+                      setDateParams((prev) => ({ ...prev, runIdB: e.target.value }))
                     }
                     placeholder="Enter run ID"
                   />
@@ -228,9 +239,10 @@ export default function ComparePage() {
                 onClick={handleCompareDates}
                 disabled={
                   compareDatesMutation.isPending ||
-                  !dateParams.queryDefinitionId ||
-                  !dateParams.runIds.left ||
-                  !dateParams.runIds.right
+                  !dateParams.queryVersionId ||
+                  !dateParams.llmProvider ||
+                  !dateParams.runIdA ||
+                  !dateParams.runIdB
                 }
               >
                 Compare
@@ -242,42 +254,48 @@ export default function ComparePage() {
         <TabsContent value="version" className="space-y-4">
           <Card className="p-4">
             <div className="space-y-4">
-              <div>
-                <label className="mb-2 block text-sm font-medium">Query Definition ID</label>
-                <Input
-                  type="number"
-                  value={versionParams.queryDefinitionId}
-                  onChange={(e) =>
-                    setVersionParams((prev) => ({ ...prev, queryDefinitionId: e.target.value }))
-                  }
-                  placeholder="Enter query definition ID"
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="mb-2 block text-sm font-medium">Run ID</label>
+                  <Input
+                    type="number"
+                    value={versionParams.runId}
+                    onChange={(e) =>
+                      setVersionParams((prev) => ({ ...prev, runId: e.target.value }))
+                    }
+                    placeholder="Enter run ID"
+                  />
+                </div>
+                <div>
+                  <label className="mb-2 block text-sm font-medium">LLM Provider</label>
+                  <Input
+                    value={versionParams.llmProvider}
+                    onChange={(e) =>
+                      setVersionParams((prev) => ({ ...prev, llmProvider: e.target.value }))
+                    }
+                    placeholder="e.g. openai, anthropic"
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Left Version ID</label>
+                  <label className="mb-2 block text-sm font-medium">Query Version ID A</label>
                   <Input
                     type="number"
-                    value={versionParams.versionIds.left}
+                    value={versionParams.queryVersionIdA}
                     onChange={(e) =>
-                      setVersionParams((prev) => ({
-                        ...prev,
-                        versionIds: { ...prev.versionIds, left: e.target.value },
-                      }))
+                      setVersionParams((prev) => ({ ...prev, queryVersionIdA: e.target.value }))
                     }
                     placeholder="Enter version ID"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Right Version ID</label>
+                  <label className="mb-2 block text-sm font-medium">Query Version ID B</label>
                   <Input
                     type="number"
-                    value={versionParams.versionIds.right}
+                    value={versionParams.queryVersionIdB}
                     onChange={(e) =>
-                      setVersionParams((prev) => ({
-                        ...prev,
-                        versionIds: { ...prev.versionIds, right: e.target.value },
-                      }))
+                      setVersionParams((prev) => ({ ...prev, queryVersionIdB: e.target.value }))
                     }
                     placeholder="Enter version ID"
                   />
@@ -287,9 +305,10 @@ export default function ComparePage() {
                 onClick={handleCompareVersions}
                 disabled={
                   compareVersionsMutation.isPending ||
-                  !versionParams.queryDefinitionId ||
-                  !versionParams.versionIds.left ||
-                  !versionParams.versionIds.right
+                  !versionParams.runId ||
+                  !versionParams.llmProvider ||
+                  !versionParams.queryVersionIdA ||
+                  !versionParams.queryVersionIdB
                 }
               >
                 Compare
@@ -301,11 +320,7 @@ export default function ComparePage() {
 
       {result && (
         <div className="space-y-4">
-          <ComparisonView
-            leftResponse={result.left}
-            rightResponse={result.right}
-            comparisonType={activeTab}
-          />
+          <CompareResultView result={result} />
 
           <Card className="p-4">
             <div className="flex gap-4">
@@ -332,3 +347,187 @@ export default function ComparePage() {
     </div>
   )
 }
+
+function getSummaryText(result: CompareResult): string {
+  if (result.type === 'llm') {
+    const d = result.data
+    return `${d.responses.length} responses compared, ${d.comparisons.length} pairs`
+  }
+  const diff = result.data.diff
+  return `Similarity: ${(diff.similarity * 100).toFixed(0)}%, Shared: ${diff.shared_brands.length} brands`
+}
+
+function CompareResultView({ result }: { result: CompareResult }) {
+  if (result.type === 'llm') {
+    return <LLMCompareResultView data={result.data} />
+  }
+  return <DiffCompareResultView data={result.data} type={result.type} />
+}
+
+function LLMCompareResultView({ data }: { data: LLMCompareResponse }) {
+  return (
+    <div className="space-y-4">
+      {/* Responses grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {data.responses.map((resp) => (
+          <Card key={resp.id} className="p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Badge variant="outline">{resp.llm_provider}</Badge>
+              <span className="text-sm text-muted-foreground">{resp.llm_model}</span>
+            </div>
+            <div className="max-h-64 overflow-y-auto rounded border p-3 text-sm leading-relaxed">
+              {resp.content}
+            </div>
+            <p className="mt-2 text-xs text-muted-foreground">
+              {resp.citation_count} citations - {resp.word_count} words
+            </p>
+          </Card>
+        ))}
+      </div>
+
+      {/* Pairwise comparisons */}
+      {data.comparisons.map((comp, idx) => (
+        <Card key={idx} className="p-4">
+          <h3 className="mb-3 text-sm font-semibold">
+            {comp.response_a.llm_provider} vs {comp.response_b.llm_provider}
+          </h3>
+          <div className="grid grid-cols-3 gap-4 text-sm">
+            <div>
+              <span className="text-muted-foreground">Similarity:</span>{' '}
+              <span className="font-medium">{(comp.similarity * 100).toFixed(0)}%</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Brand Overlap:</span>{' '}
+              <span className="font-medium">{(comp.brand_overlap * 100).toFixed(0)}%</span>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Shared:</span>{' '}
+              <span className="font-medium">{comp.shared_brands.length} brands</span>
+            </div>
+          </div>
+          <div className="mt-3 space-y-2">
+            {comp.shared_brands.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-medium text-muted-foreground">Shared:</span>
+                {comp.shared_brands.map((b) => (
+                  <Badge key={b} className="bg-green-100 text-green-800">{b}</Badge>
+                ))}
+              </div>
+            )}
+            {comp.unique_a.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-medium text-muted-foreground">
+                  {comp.response_a.llm_provider} only:
+                </span>
+                {comp.unique_a.map((b) => (
+                  <Badge key={b} className="bg-blue-100 text-blue-800">{b}</Badge>
+                ))}
+              </div>
+            )}
+            {comp.unique_b.length > 0 && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-medium text-muted-foreground">
+                  {comp.response_b.llm_provider} only:
+                </span>
+                {comp.unique_b.map((b) => (
+                  <Badge key={b} className="bg-orange-100 text-orange-800">{b}</Badge>
+                ))}
+              </div>
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
+function DiffCompareResultView({
+  data,
+  type,
+}: {
+  data: DateCompareResponse | VersionCompareResponse
+  type: 'date' | 'version'
+}) {
+  const diff: ComparisonDiff = data.diff
+  const labelA = type === 'date' ? `Run ${data.response_a.id}` : `Version ${(data.response_a as VersionCompareResponseItem).query_version_id}`
+  const labelB = type === 'date' ? `Run ${data.response_b.id}` : `Version ${(data.response_b as VersionCompareResponseItem).query_version_id}`
+
+  return (
+    <div className="space-y-4">
+      {/* Side by side panels */}
+      <div className="grid grid-cols-2 gap-4">
+        <Card className="p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <Badge variant="outline">{data.llm_provider}</Badge>
+            <span className="text-sm text-muted-foreground">{labelA}</span>
+          </div>
+          <div className="max-h-96 overflow-y-auto rounded border p-3 text-sm leading-relaxed">
+            {data.response_a.content}
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {data.response_a.citation_count} citations - {data.response_a.word_count} words
+          </p>
+        </Card>
+
+        <Card className="p-4">
+          <div className="mb-3 flex items-center gap-2">
+            <Badge variant="outline">{data.llm_provider}</Badge>
+            <span className="text-sm text-muted-foreground">{labelB}</span>
+          </div>
+          <div className="max-h-96 overflow-y-auto rounded border p-3 text-sm leading-relaxed">
+            {data.response_b.content}
+          </div>
+          <p className="mt-2 text-xs text-muted-foreground">
+            {data.response_b.citation_count} citations - {data.response_b.word_count} words
+          </p>
+        </Card>
+      </div>
+
+      {/* Diff summary */}
+      <Card className="p-4">
+        <h3 className="mb-3 text-sm font-semibold">Comparison Diff</h3>
+        <div className="grid grid-cols-3 gap-4 text-sm mb-3">
+          <div>
+            <span className="text-muted-foreground">Similarity:</span>{' '}
+            <span className="font-medium">{(diff.similarity * 100).toFixed(0)}%</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Brand Overlap:</span>{' '}
+            <span className="font-medium">{(diff.brand_overlap * 100).toFixed(0)}%</span>
+          </div>
+          <div>
+            <span className="text-muted-foreground">Content Changed:</span>{' '}
+            <span className="font-medium">{diff.content_changed ? 'Yes' : 'No'}</span>
+          </div>
+        </div>
+        <div className="space-y-2">
+          {diff.shared_brands.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">Shared:</span>
+              {diff.shared_brands.map((b) => (
+                <Badge key={b} className="bg-green-100 text-green-800">{b}</Badge>
+              ))}
+            </div>
+          )}
+          {diff.unique_a.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">{labelA} only:</span>
+              {diff.unique_a.map((b) => (
+                <Badge key={b} className="bg-blue-100 text-blue-800">{b}</Badge>
+              ))}
+            </div>
+          )}
+          {diff.unique_b.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-xs font-medium text-muted-foreground">{labelB} only:</span>
+              {diff.unique_b.map((b) => (
+                <Badge key={b} className="bg-orange-100 text-orange-800">{b}</Badge>
+              ))}
+            </div>
+          )}
+        </div>
+      </Card>
+    </div>
+  )
+}
+

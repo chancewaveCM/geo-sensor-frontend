@@ -64,9 +64,9 @@ export function SavedComparisons({ workspaceId }: SavedComparisonsProps) {
                   <Badge
                     variant="outline"
                     className={
-                      comparison.comparison_type === 'llm'
+                      comparison.comparison_type === 'llm_vs_llm'
                         ? 'border-blue-500 text-blue-700'
-                        : comparison.comparison_type === 'date'
+                        : comparison.comparison_type === 'date_vs_date'
                         ? 'border-purple-500 text-purple-700'
                         : 'border-orange-500 text-orange-700'
                     }
@@ -74,9 +74,11 @@ export function SavedComparisons({ workspaceId }: SavedComparisonsProps) {
                     {comparison.comparison_type}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {comparison.result_summary}
-                </p>
+                {comparison.notes && (
+                  <p className="text-sm text-muted-foreground line-clamp-2">
+                    {comparison.notes}
+                  </p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   {new Date(comparison.created_at).toLocaleDateString('en-US', {
                     month: 'short',

@@ -40,22 +40,37 @@ export function CreateOperationDialog({
     operation_type: defaultValues?.operation_type || 'promote_to_anchor',
     target_type: defaultValues?.target_type || 'query',
     target_id: defaultValues?.target_id || 0,
-    description: defaultValues?.description || '',
+    payload: defaultValues?.payload || {},
   })
+  const [payloadText, setPayloadText] = useState(
+    defaultValues?.payload ? JSON.stringify(defaultValues.payload, null, 2) : ''
+  )
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    createMutation.mutate(formData, {
-      onSuccess: () => {
-        onOpenChange(false)
-        setFormData({
-          operation_type: 'promote_to_anchor',
-          target_type: 'query',
-          target_id: 0,
-          description: '',
-        })
-      },
-    })
+    let parsedPayload: Record<string, unknown> = {}
+    if (payloadText.trim()) {
+      try {
+        parsedPayload = JSON.parse(payloadText)
+      } catch {
+        parsedPayload = { description: payloadText }
+      }
+    }
+    createMutation.mutate(
+      { ...formData, payload: parsedPayload },
+      {
+        onSuccess: () => {
+          onOpenChange(false)
+          setFormData({
+            operation_type: 'promote_to_anchor',
+            target_type: 'query',
+            target_id: 0,
+            payload: {},
+          })
+          setPayloadText('')
+        },
+      }
+    )
   }
 
   return (
@@ -85,20 +100,23 @@ export function CreateOperationDialog({
                   <SelectItem value="promote_to_anchor">Promote to Anchor</SelectItem>
                   <SelectItem value="anchor_change_request">Anchor Change Request</SelectItem>
                   <SelectItem value="parser_issue">Parser Issue</SelectItem>
+                  <SelectItem value="archive">Archive</SelectItem>
+                  <SelectItem value="export">Export</SelectItem>
+                  <SelectItem value="label_action">Label Action</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Target Type</label>
+              <label className="text-sm font-medium">Target Type (optional)</label>
               <Select
-                value={formData.target_type}
+                value={formData.target_type || ''}
                 onValueChange={(value) =>
-                  setFormData((prev) => ({ ...prev, target_type: value }))
+                  setFormData((prev) => ({ ...prev, target_type: value || undefined }))
                 }
               >
                 <SelectTrigger>
-                  <SelectValue />
+                  <SelectValue placeholder="Select target type" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="query">Query</SelectItem>
@@ -109,28 +127,27 @@ export function CreateOperationDialog({
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Target ID</label>
+              <label className="text-sm font-medium">Target ID (optional)</label>
               <Input
                 type="number"
-                value={formData.target_id}
+                value={formData.target_id ?? ''}
                 onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, target_id: parseInt(e.target.value) || 0 }))
+                  setFormData((prev) => ({
+                    ...prev,
+                    target_id: e.target.value ? parseInt(e.target.value) : undefined,
+                  }))
                 }
                 placeholder="Enter target ID"
-                required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium">Description</label>
+              <label className="text-sm font-medium">Details</label>
               <Textarea
-                value={formData.description}
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, description: e.target.value }))
-                }
-                placeholder="Describe the operation..."
+                value={payloadText}
+                onChange={(e) => setPayloadText(e.target.value)}
+                placeholder="Describe the operation or enter JSON payload..."
                 rows={4}
-                required
               />
             </div>
           </div>

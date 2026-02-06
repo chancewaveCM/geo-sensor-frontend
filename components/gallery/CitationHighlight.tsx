@@ -19,14 +19,14 @@ interface HighlightSegment {
 export function CitationHighlight({ text, citations, onCitationClick }: CitationHighlightProps) {
   const segments: HighlightSegment[] = []
 
-  const citationsWithSnippets = citations
-    .filter((c) => c.context_snippet && c.context_snippet.trim().length > 0)
-    .sort((a, b) => a.position - b.position)
+  const citationsWithSpans = citations
+    .filter((c) => c.citation_span && c.citation_span.trim().length > 0)
+    .sort((a, b) => a.position_in_response - b.position_in_response)
 
   const matches: Array<{ start: number; end: number; citation: RunCitation }> = []
 
-  for (const citation of citationsWithSnippets) {
-    const snippet = citation.context_snippet!.trim()
+  for (const citation of citationsWithSpans) {
+    const snippet = citation.citation_span!.trim()
     const index = text.toLowerCase().indexOf(snippet.toLowerCase())
     if (index !== -1) {
       matches.push({
@@ -85,15 +85,15 @@ export function CitationHighlight({ text, citations, onCitationClick }: Citation
                 <TooltipContent side="top" className="max-w-xs">
                   <div className="space-y-1">
                     <div className="font-semibold text-orange-500">
-                      {segment.citation.brand_name}
+                      {segment.citation.cited_brand}
                     </div>
-                    {segment.citation.domain && (
+                    {segment.citation.is_target_brand && (
                       <div className="text-xs text-muted-foreground">
-                        {segment.citation.domain}
+                        Target Brand
                       </div>
                     )}
                     <div className="text-xs">
-                      Position: #{segment.citation.position} | Confidence:{' '}
+                      Position: #{segment.citation.position_in_response} | Confidence:{' '}
                       {(segment.citation.confidence_score * 100).toFixed(0)}%
                     </div>
                   </div>

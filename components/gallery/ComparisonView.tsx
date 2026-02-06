@@ -4,10 +4,10 @@ import { Badge } from '@/components/ui/badge'
 import { Card } from '@/components/ui/card'
 
 interface ComparisonResponse {
-  response_text: string
+  content: string
   llm_provider: string
-  model_name: string
-  citations: Array<{ brand_name: string; domain?: string; position: number }>
+  llm_model: string
+  citations: Array<{ cited_brand: string; is_target_brand?: boolean; position_in_response: number }>
 }
 
 interface ComparisonViewProps {
@@ -18,8 +18,8 @@ interface ComparisonViewProps {
 
 export function ComparisonView({ leftResponse, rightResponse, comparisonType }: ComparisonViewProps) {
   // Extract brand sets for diff
-  const leftBrands = new Set(leftResponse.citations.map(c => c.brand_name))
-  const rightBrands = new Set(rightResponse.citations.map(c => c.brand_name))
+  const leftBrands = new Set(leftResponse.citations.map(c => c.cited_brand))
+  const rightBrands = new Set(rightResponse.citations.map(c => c.cited_brand))
   const sharedBrands = Array.from(leftBrands).filter(b => rightBrands.has(b))
   const uniqueLeft = Array.from(leftBrands).filter(b => !rightBrands.has(b))
   const uniqueRight = Array.from(rightBrands).filter(b => !leftBrands.has(b))
@@ -32,13 +32,13 @@ export function ComparisonView({ leftResponse, rightResponse, comparisonType }: 
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Badge variant="outline">{leftResponse.llm_provider}</Badge>
-            <span className="text-sm text-muted-foreground">{leftResponse.model_name}</span>
+            <span className="text-sm text-muted-foreground">{leftResponse.llm_model}</span>
           </div>
           <div className="max-h-96 overflow-y-auto rounded border p-3 text-sm leading-relaxed">
-            {leftResponse.response_text}
+            {leftResponse.content}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {leftResponse.citations.length} citations · {leftResponse.response_text.split(/\s+/).length} words
+            {leftResponse.citations.length} citations - {leftResponse.content.split(/\s+/).length} words
           </p>
         </Card>
 
@@ -46,13 +46,13 @@ export function ComparisonView({ leftResponse, rightResponse, comparisonType }: 
         <Card className="p-4">
           <div className="mb-3 flex items-center gap-2">
             <Badge variant="outline">{rightResponse.llm_provider}</Badge>
-            <span className="text-sm text-muted-foreground">{rightResponse.model_name}</span>
+            <span className="text-sm text-muted-foreground">{rightResponse.llm_model}</span>
           </div>
           <div className="max-h-96 overflow-y-auto rounded border p-3 text-sm leading-relaxed">
-            {rightResponse.response_text}
+            {rightResponse.content}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {rightResponse.citations.length} citations · {rightResponse.response_text.split(/\s+/).length} words
+            {rightResponse.citations.length} citations - {rightResponse.content.split(/\s+/).length} words
           </p>
         </Card>
       </div>

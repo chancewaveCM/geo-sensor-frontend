@@ -24,7 +24,7 @@ import {
   useIntentClusters
 } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
-import type { QueryDefinitionCreate, QueryVersionCreate } from '@/lib/types'
+import type { QueryDefinitionCreate, QueryVersionCreate, QueryDefinition } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
@@ -42,11 +42,11 @@ function getQueryTypeVariant(type: string) {
 export default function QueriesPage() {
   const params = useParams()
   const slug = params?.slug as string
-  const campaignId = parseInt(params?.campaignId as string)
+  const campaignId = parseInt(params?.campaignId as string, 10)
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
-  const workspaceId = workspace?.id ?? 0
+  const workspaceId = workspace?.id
 
   const [activeTab, setActiveTab] = useState('all')
   const [addDialogOpen, setAddDialogOpen] = useState(false)
@@ -91,8 +91,8 @@ export default function QueriesPage() {
           persona_type: 'default'
         })
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to create query')
+      onError: () => {
+        toast.error('Failed to create query')
       }
     })
   }
@@ -111,8 +111,8 @@ export default function QueriesPage() {
           change_reason: ''
         })
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to create version')
+      onError: () => {
+        toast.error('Failed to create version')
       }
     })
   }
@@ -126,8 +126,8 @@ export default function QueriesPage() {
         setRetireDialogOpen(false)
         setSelectedQuery(null)
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to retire query')
+      onError: () => {
+        toast.error('Failed to retire query')
       }
     })
   }
@@ -137,6 +137,14 @@ export default function QueriesPage() {
     if (selectedCluster !== 'all' && query.intent_cluster_id !== parseInt(selectedCluster)) return false
     return true
   })
+
+  if (!workspaceId) {
+    return (
+      <div className="p-8">
+        <p className="text-muted-foreground">Loading workspace...</p>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
@@ -405,7 +413,7 @@ export default function QueriesPage() {
 }
 
 interface QueryCardProps {
-  query: any
+  query: QueryDefinition & { intent_cluster_name?: string; initial_text?: string }
   workspaceId: number
   campaignId: number
   onNewVersion: (queryId: number) => void

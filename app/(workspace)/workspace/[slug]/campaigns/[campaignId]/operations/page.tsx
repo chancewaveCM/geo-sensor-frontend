@@ -24,7 +24,7 @@ export default function OperationsPage() {
 
   const { data: operationsData, isLoading } = useOperations(workspaceId)
 
-  const operations = operationsData?.items || []
+  const operations = operationsData ?? []
 
   // Stats from ALL operations (unfiltered)
   const stats = {

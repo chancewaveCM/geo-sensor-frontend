@@ -53,7 +53,7 @@ export default function CampaignDashboardPage() {
   const params = useParams()
   const router = useRouter()
   const slug = params?.slug as string
-  const campaignId = parseInt(params?.campaignId as string)
+  const campaignId = parseInt(params?.campaignId as string, 10)
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
@@ -68,8 +68,8 @@ export default function CampaignDashboardPage() {
       onSuccess: () => {
         toast.success('Campaign run triggered successfully!')
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to trigger run')
+      onError: () => {
+        toast.error('Failed to trigger run')
       }
     })
   }

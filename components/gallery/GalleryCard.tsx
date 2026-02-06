@@ -23,10 +23,11 @@ export function GalleryCard({ response, workspaceSlug, campaignId }: GalleryCard
     providerColors[response.llm_provider.toLowerCase()] ||
     'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20'
 
+  const contentText = response.content ?? ''
   const queryPreview =
-    response.response_text.length > 120
-      ? response.response_text.slice(0, 120) + '...'
-      : response.response_text
+    contentText.length > 120
+      ? contentText.slice(0, 120) + '...'
+      : contentText
 
   return (
     <Link
@@ -39,7 +40,7 @@ export function GalleryCard({ response, workspaceSlug, campaignId }: GalleryCard
             <Badge className={cn('text-xs font-medium border', providerColor)}>
               {response.llm_provider}
             </Badge>
-            <span className="text-xs text-muted-foreground">{response.model_name}</span>
+            <span className="text-xs text-muted-foreground">{response.llm_model}</span>
           </div>
           <p className="text-sm text-foreground line-clamp-2 leading-relaxed">
             {queryPreview}
@@ -47,7 +48,7 @@ export function GalleryCard({ response, workspaceSlug, campaignId }: GalleryCard
         </CardHeader>
 
         <CardContent className="pb-3">
-          <div className="grid grid-cols-3 gap-3 text-center">
+          <div className="grid grid-cols-2 gap-3 text-center">
             <div>
               <div className="text-lg font-semibold text-orange-500">
                 {response.citation_count}
@@ -57,12 +58,6 @@ export function GalleryCard({ response, workspaceSlug, campaignId }: GalleryCard
             <div>
               <div className="text-lg font-semibold">{response.word_count}</div>
               <div className="text-xs text-muted-foreground">Words</div>
-            </div>
-            <div>
-              <div className="text-lg font-semibold">
-                {response.response_time_ms ? `${response.response_time_ms}ms` : 'N/A'}
-              </div>
-              <div className="text-xs text-muted-foreground">Time</div>
             </div>
           </div>
         </CardContent>

@@ -29,7 +29,7 @@ export default function GalleryDetailPage() {
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
-  const workspaceId = workspace?.id || 0
+  const workspaceId = workspace?.id
 
   const { data, isLoading } = useGalleryResponse(workspaceId, responseId)
 
@@ -113,7 +113,7 @@ export default function GalleryDetailPage() {
               <CardTitle className="text-lg">Response Text</CardTitle>
             </CardHeader>
             <CardContent>
-              <CitationHighlight text={data.response_text} citations={citations} />
+              <CitationHighlight text={data.content ?? ''} citations={citations} />
             </CardContent>
           </Card>
         </div>
@@ -135,21 +135,13 @@ export default function GalleryDetailPage() {
 
               <div>
                 <div className="text-sm text-muted-foreground mb-1">Model</div>
-                <div className="text-sm font-medium">{data.model_name}</div>
+                <div className="text-sm font-medium">{data.llm_model}</div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-sm text-muted-foreground mb-1">Response Time</div>
-                  <div className="text-sm font-medium">
-                    {data.response_time_ms ? `${data.response_time_ms}ms` : 'N/A'}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-sm text-muted-foreground mb-1">Token Count</div>
-                  <div className="text-sm font-medium">
-                    {data.token_count || 'N/A'}
-                  </div>
+              <div>
+                <div className="text-sm text-muted-foreground mb-1">Latency</div>
+                <div className="text-sm font-medium">
+                  {data.latency_ms != null ? `${data.latency_ms}ms` : 'N/A'}
                 </div>
               </div>
 

@@ -45,7 +45,10 @@ export function useCampaign(
 export function useCreateCampaign(workspaceId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CampaignCreate) => createCampaign(workspaceId!, data),
+    mutationFn: (data: CampaignCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return createCampaign(workspaceId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['campaigns', workspaceId] })
     },
@@ -76,8 +79,11 @@ export function useCampaignRuns(
 export function useTriggerRun(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: CampaignRunCreate) =>
-      triggerCampaignRun(workspaceId!, campaignId!, data),
+    mutationFn: (data: CampaignRunCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return triggerCampaignRun(workspaceId, campaignId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['campaigns', workspaceId, campaignId, 'runs'],
@@ -125,8 +131,11 @@ export function useQueryDefinitions(
 export function useCreateQueryDefinition(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: QueryDefinitionCreate) =>
-      createQueryDefinition(workspaceId!, campaignId!, data),
+    mutationFn: (data: QueryDefinitionCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return createQueryDefinition(workspaceId, campaignId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['queries', workspaceId, campaignId],
@@ -154,8 +163,12 @@ export function useCreateQueryVersion(
 ) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: QueryVersionCreate) =>
-      createQueryVersion(workspaceId!, campaignId!, queryId!, data),
+    mutationFn: (data: QueryVersionCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      if (queryId == null) throw new Error('queryId is required')
+      return createQueryVersion(workspaceId, campaignId, queryId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['queryVersions', workspaceId, campaignId, queryId],
@@ -170,7 +183,11 @@ export function useCreateQueryVersion(
 export function useRetireQuery(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (queryId: number) => retireQuery(workspaceId!, campaignId!, queryId),
+    mutationFn: (queryId: number) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return retireQuery(workspaceId, campaignId, queryId)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['queries', workspaceId, campaignId],

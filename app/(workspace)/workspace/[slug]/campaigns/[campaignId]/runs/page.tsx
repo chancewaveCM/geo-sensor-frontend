@@ -22,6 +22,7 @@ import {
 import { Play, Filter } from 'lucide-react'
 import { useCampaignRuns, useTriggerRun } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
+import type { CampaignRun } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
@@ -55,7 +56,7 @@ function getTriggerVariant(trigger: string) {
 export default function RunsPage() {
   const params = useParams()
   const slug = params?.slug as string
-  const campaignId = parseInt(params?.campaignId as string)
+  const campaignId = parseInt(params?.campaignId as string, 10)
 
   const { data: workspaces } = useWorkspaces()
   const workspace = workspaces?.find((w) => w.slug === slug)
@@ -74,8 +75,8 @@ export default function RunsPage() {
         toast.success('Campaign run triggered successfully!')
         setDialogOpen(false)
       },
-      onError: (error: any) => {
-        toast.error(error?.response?.data?.detail || 'Failed to trigger run')
+      onError: () => {
+        toast.error('Failed to trigger run')
       }
     })
   }
@@ -85,7 +86,7 @@ export default function RunsPage() {
     return run.status === statusFilter
   })
 
-  const getDuration = (run: any) => {
+  const getDuration = (run: CampaignRun) => {
     if (!run.completed_at) return '-'
     const start = new Date(run.created_at).getTime()
     const end = new Date(run.completed_at).getTime()

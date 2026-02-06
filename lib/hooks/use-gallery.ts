@@ -24,6 +24,9 @@ import type {
   CitationReviewCreate,
   ComparisonSnapshotCreate,
   OperationLogCreate,
+  LLMCompareParams,
+  DateCompareParams,
+  VersionCompareParams,
 } from '@/lib/types'
 
 // --- Responses ---
@@ -45,15 +48,7 @@ export function useGalleryResponse(
 ) {
   return useQuery({
     queryKey: ['gallery', workspaceId, 'responses', responseId],
-    queryFn: async () => {
-      const responseData = await fetchGalleryResponse(workspaceId!, responseId!)
-      const { fetchResponseLabels } = await import('@/lib/api/gallery')
-      const labels = await fetchResponseLabels(workspaceId!, { run_response_id: responseId })
-      return {
-        ...responseData,
-        labels,
-      }
-    },
+    queryFn: () => fetchGalleryResponse(workspaceId!, responseId!),
     enabled: workspaceId != null && responseId != null,
   })
 }
@@ -126,21 +121,28 @@ export function useVerifyCitation(workspaceId: number) {
 
 export function useCompareLLMs(workspaceId: number | undefined) {
   return useMutation({
-    mutationFn: (data: { response_ids: number[] }) => compareLLMs(workspaceId!, data),
+    mutationFn: (params: LLMCompareParams) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return compareLLMs(workspaceId, params)
+    },
   })
 }
 
 export function useCompareDates(workspaceId: number | undefined) {
   return useMutation({
-    mutationFn: (data: { query_definition_id: number; run_ids: number[] }) =>
-      compareDates(workspaceId!, data),
+    mutationFn: (params: DateCompareParams) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return compareDates(workspaceId, params)
+    },
   })
 }
 
 export function useCompareVersions(workspaceId: number | undefined) {
   return useMutation({
-    mutationFn: (data: { query_definition_id: number; version_ids: number[] }) =>
-      compareVersions(workspaceId!, data),
+    mutationFn: (params: VersionCompareParams) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return compareVersions(workspaceId, params)
+    },
   })
 }
 
@@ -155,8 +157,10 @@ export function useComparisons(workspaceId: number | undefined) {
 export function useCreateComparison(workspaceId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: ComparisonSnapshotCreate) =>
-      createComparison(workspaceId!, data),
+    mutationFn: (data: ComparisonSnapshotCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return createComparison(workspaceId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['comparisons', workspaceId],
