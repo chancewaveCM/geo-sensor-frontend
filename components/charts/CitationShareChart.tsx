@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export function CitationShareChart({ data }: CitationShareChartProps) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div data-testid="citation-share-chart" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Bar Chart */}
       <Card className="transition-all duration-300 hover:shadow-lg">
         <CardHeader>

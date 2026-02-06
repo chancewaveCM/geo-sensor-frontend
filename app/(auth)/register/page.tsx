@@ -120,9 +120,11 @@ export default function RegisterPage() {
       // Navigation handled by useAuth hook
     } catch (error) {
       console.error('Registration error:', error)
+      // Extract server detail message if available, otherwise show Korean fallback
+      const axiosDetail = (error as any)?.response?.data?.detail
       setErrorMessage(
-        error instanceof Error
-          ? error.message
+        typeof axiosDetail === 'string'
+          ? axiosDetail
           : '회원가입에 실패했습니다. 다시 시도해주세요.'
       )
     } finally {
@@ -149,7 +151,7 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="space-y-4">
               {errorMessage && (
                 <div className="rounded-md bg-destructive/15 p-3 text-sm text-destructive">
                   {errorMessage}

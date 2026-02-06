@@ -53,7 +53,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export function GeoScoreChart({ data }: GeoScoreChartProps) {
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg">
+    <Card data-testid="geo-score-chart" className="transition-all duration-300 hover:shadow-lg">
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <Award className="h-5 w-5 text-primary" />

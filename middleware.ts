@@ -1,9 +1,10 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// ⚠️ TEMPORARY: Disable auth for UX testing
-// Set to false to re-enable authentication
-const DISABLE_AUTH_FOR_TESTING = true
+// Auth protection: disabled in development by default, enabled in production
+// Set SKIP_AUTH=false to enable auth in development/testing
+const DISABLE_AUTH_FOR_TESTING = process.env.NODE_ENV === 'development' &&
+                                  process.env.SKIP_AUTH !== 'false'
 
 export function middleware(request: NextRequest) {
   // Skip all auth checks when testing flag is enabled
@@ -14,8 +15,14 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get('access_token')?.value ||
                 request.headers.get('authorization')?.replace('Bearer ', '')
 
+  const protectedPaths = ['/dashboard', '/settings', '/analysis', '/query-lab']
+
   // Check if accessing protected routes
-  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+  const isProtectedRoute = protectedPaths.some(path =>
+    request.nextUrl.pathname.startsWith(path)
+  )
+
+  if (isProtectedRoute) {
     // If no token, redirect to login
     if (!token) {
       const loginUrl = new URL('/login', request.url)
@@ -35,5 +42,12 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/register'],
+  matcher: [
+    '/dashboard/:path*',
+    '/settings/:path*',
+    '/analysis/:path*',
+    '/query-lab/:path*',
+    '/login',
+    '/register'
+  ],
 }

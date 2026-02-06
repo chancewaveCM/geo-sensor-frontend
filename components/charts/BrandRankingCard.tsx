@@ -28,7 +28,7 @@ export function BrandRankingCard({ rankings }: BrandRankingCardProps) {
   }
 
   return (
-    <Card className="transition-all duration-300 hover:shadow-lg">
+    <Card data-testid="brand-ranking" className="transition-all duration-300 hover:shadow-lg">
       <CardHeader>
         <CardTitle className="text-lg flex items-center gap-2">
           <Medal className="h-5 w-5 text-primary" />
@@ -42,6 +42,7 @@ export function BrandRankingCard({ rankings }: BrandRankingCardProps) {
             return (
               <div
                 key={ranking.rank}
+                data-testid={`brand-entry-${ranking.rank}`}
                 className="flex items-center gap-4 rounded-lg border bg-card p-4 transition-all duration-200 hover:bg-accent/50 hover:shadow-md"
               >
                 {/* Rank Badge */}

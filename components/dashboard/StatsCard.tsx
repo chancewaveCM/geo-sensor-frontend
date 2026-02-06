@@ -12,7 +12,7 @@ interface StatsCardProps {
 
 export function StatsCard({ title, value, trend, icon }: StatsCardProps) {
   return (
-    <Card className="relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
+    <Card data-testid={`stat-card-${title.toLowerCase().replace(/\s+/g, '-')}`} className="relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
           <div className="space-y-2">
