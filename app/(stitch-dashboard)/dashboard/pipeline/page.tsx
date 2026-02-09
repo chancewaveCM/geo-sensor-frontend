@@ -96,14 +96,12 @@ export default function PipelinePage() {
     : approvalItems.filter((item) => item.region === activeRegion)
 
   const handleApprove = (ids: string[]) => {
-    console.log('Approving items:', ids)
     setApprovalItems((prev) =>
       prev.map((item) => (ids.includes(item.id) ? { ...item, status: 'approved' as const } : item))
     )
   }
 
   const handleReject = (ids: string[]) => {
-    console.log('Rejecting items:', ids)
     setApprovalItems((prev) =>
       prev.map((item) => (ids.includes(item.id) ? { ...item, status: 'rejected' as const } : item))
     )

@@ -125,7 +125,17 @@ export interface ProfileStatsListResponse {
 export interface PipelineJobSummary {
   id: number;
   status: string;
+  company_profile_id: number;
+  company_name: string | null;
+  query_set_id: number | null;
+  query_set_name: string | null;
+  llm_providers: string[];
+  total_queries: number;
+  completed_queries: number;
+  failed_queries: number;
   progress_percentage: number;
+  started_at: string | null;
+  completed_at: string | null;
   created_at: string;
 }
 
@@ -226,4 +236,11 @@ export interface UpdateScheduleRequest {
   interval_minutes?: number;
   is_active?: boolean;
   llm_providers?: string[];
+}
+
+// === Job List ===
+
+export interface PipelineJobListResponse {
+  jobs: PipelineJobSummary[];
+  total: number;
 }

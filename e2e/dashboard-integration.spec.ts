@@ -331,10 +331,7 @@ test.describe('Dashboard Integration', () => {
         !err.includes('Unauthorized')
       );
 
-      // Log warnings for debugging but don't fail
-      if (warnings.length > 0) {
-        console.log('Console warnings:', warnings);
-      }
+      // Warnings logged internally but don't fail the test
 
       expect(criticalErrors).toHaveLength(0);
     });

@@ -19,12 +19,22 @@ import type {
   ScheduleConfig,
   CreateScheduleRequest,
   UpdateScheduleRequest,
+  PipelineJobListResponse,
 } from '@/types/pipeline';
 
 const API_PREFIX = '/api/v1';
 
 export async function startPipeline(request: StartPipelineRequest): Promise<StartPipelineResponse> {
   return post<StartPipelineResponse>(`${API_PREFIX}/pipeline/start`, request);
+}
+
+export async function getJobs(companyProfileId?: number, limit = 20, offset = 0): Promise<PipelineJobListResponse> {
+  const params = new URLSearchParams();
+  if (companyProfileId) params.set('company_profile_id', String(companyProfileId));
+  params.set('limit', String(limit));
+  params.set('offset', String(offset));
+  const query = params.toString();
+  return get<PipelineJobListResponse>(`${API_PREFIX}/pipeline/jobs${query ? `?${query}` : ''}`);
 }
 
 export async function getJobStatus(jobId: number): Promise<PipelineJobStatus> {
