@@ -105,14 +105,16 @@ export interface PipelineConfig {
 export interface CompanyProfilePipelineStats {
   company_profile_id: number;
   company_name: string;
-  industry: string | null;
-  query_set_count: number;
+  total_query_sets: number;
   total_jobs: number;
   completed_jobs: number;
   failed_jobs: number;
+  success_rate_30d: number;
+  last_run_status: string | null;
   last_run_at: string | null;
-  total_responses: number;
-  success_rate: number;
+  avg_processing_time_seconds: number | null;
+  data_freshness_hours: number | null;
+  health_grade: 'green' | 'yellow' | 'red';
 }
 
 export interface ProfileStatsListResponse {
@@ -129,6 +131,17 @@ export interface PipelineJobSummary {
   created_at: string;
 }
 
+export interface QuerySetDetailJobItem {
+  id: number;
+  status: string;
+  llm_providers: string[];
+  total_queries: number;
+  completed_queries: number;
+  failed_queries: number;
+  started_at: string | null;
+  completed_at: string | null;
+}
+
 export interface QuerySetDetail {
   id: number;
   name: string;
@@ -138,9 +151,9 @@ export interface QuerySetDetail {
   company_profile_id: number;
   created_at: string;
   categories: PipelineCategory[];
-  last_job: PipelineJobSummary | null;
+  last_job: QuerySetDetailJobItem | null;
+  total_jobs: number;
   total_responses: number;
-  total_queries: number;
 }
 
 export interface QuerySetListItem {

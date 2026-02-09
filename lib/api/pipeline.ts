@@ -94,9 +94,19 @@ export async function deleteCategory(categoryId: number): Promise<void> {
 
 // === Schedule Management ===
 
-export async function getSchedules(querySetId?: number): Promise<ScheduleListResponse> {
-  const params = querySetId ? `?query_set_id=${querySetId}` : '';
-  return get<ScheduleListResponse>(`${API_PREFIX}/pipeline/schedules${params}`);
+export async function getSchedules(
+  querySetId?: number,
+  companyProfileId?: number,
+): Promise<ScheduleListResponse> {
+  const searchParams = new URLSearchParams();
+  if (querySetId !== undefined) {
+    searchParams.set('query_set_id', String(querySetId));
+  }
+  if (companyProfileId !== undefined) {
+    searchParams.set('company_profile_id', String(companyProfileId));
+  }
+  const query = searchParams.toString();
+  return get<ScheduleListResponse>(`${API_PREFIX}/pipeline/schedules${query ? `?${query}` : ''}`);
 }
 
 export async function createSchedule(data: CreateScheduleRequest): Promise<ScheduleConfig> {
