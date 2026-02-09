@@ -13,6 +13,12 @@ import {
   fetchQueryVersions,
   createQueryVersion,
   retireQuery,
+  fetchCampaignSummary,
+  fetchCitationShare,
+  fetchBrandRanking,
+  fetchProviderComparison,
+  fetchGeoScoreSummary,
+  fetchTimeseries,
 } from '@/lib/api/campaigns'
 import type {
   CampaignCreate,
@@ -193,5 +199,72 @@ export function useRetireQuery(workspaceId: number | undefined, campaignId: numb
         queryKey: ['queries', workspaceId, campaignId],
       })
     },
+  })
+}
+
+export function useCampaignSummary(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'summary'],
+    queryFn: () => fetchCampaignSummary(workspaceId!, campaignId!),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCitationShare(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'citation-share'],
+    queryFn: () => fetchCitationShare(workspaceId!, campaignId!),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useBrandRanking(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'brand-ranking'],
+    queryFn: () => fetchBrandRanking(workspaceId!, campaignId!),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useProviderComparison(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'provider-comparison'],
+    queryFn: () => fetchProviderComparison(workspaceId!, campaignId!),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useGeoScoreSummary(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'geo-score-summary'],
+    queryFn: () => fetchGeoScoreSummary(workspaceId!, campaignId!),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useTimeseries(
+  workspaceId: number | undefined,
+  campaignId: number | undefined,
+  brandName?: string
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'timeseries', brandName],
+    queryFn: () => fetchTimeseries(workspaceId!, campaignId!, brandName),
+    enabled: workspaceId != null && campaignId != null,
   })
 }

@@ -1,4 +1,4 @@
-import { get, post, put } from '@/lib/api-client'
+import { get, post, put, apiClient } from '@/lib/api-client'
 import type {
   Campaign,
   CampaignCreate,
@@ -11,6 +11,12 @@ import type {
   QueryDefinitionCreate,
   QueryVersion,
   QueryVersionCreate,
+  CitationShareData,
+  BrandRankingData,
+  ProviderComparisonData,
+  GEOScoreSummary,
+  CampaignSummary,
+  TimeseriesData,
 } from '@/lib/types'
 
 const API_PREFIX = '/api/v1'
@@ -140,4 +146,37 @@ export async function retireQuery(
   return post<QueryDefinition>(
     `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/queries/${queryId}/retire`
   )
+}
+
+export async function fetchCampaignSummary(workspaceId: number, campaignId: number): Promise<CampaignSummary> {
+  return get<CampaignSummary>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/summary`)
+}
+
+export async function fetchCitationShare(workspaceId: number, campaignId: number): Promise<CitationShareData> {
+  return get<CitationShareData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/citation-share`)
+}
+
+export async function fetchBrandRanking(workspaceId: number, campaignId: number): Promise<BrandRankingData> {
+  return get<BrandRankingData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/brand-ranking`)
+}
+
+export async function fetchProviderComparison(workspaceId: number, campaignId: number): Promise<ProviderComparisonData> {
+  return get<ProviderComparisonData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/provider-comparison`)
+}
+
+export async function fetchGeoScoreSummary(workspaceId: number, campaignId: number): Promise<GEOScoreSummary> {
+  return get<GEOScoreSummary>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/geo-score-summary`)
+}
+
+export async function fetchTimeseries(workspaceId: number, campaignId: number, brandName?: string): Promise<TimeseriesData> {
+  const params = brandName ? `?brand_name=${encodeURIComponent(brandName)}` : ''
+  return get<TimeseriesData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/timeseries${params}`)
+}
+
+export async function exportCampaignCSV(workspaceId: number, campaignId: number): Promise<Blob> {
+  const response = await apiClient.get(
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/export/csv`,
+    { responseType: 'blob' }
+  )
+  return response.data
 }

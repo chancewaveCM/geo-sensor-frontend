@@ -81,7 +81,7 @@ export async function cleanupTestData(token: string) {
       await deleteProfileViaApi(token, profile.id)
     }
   } catch (error) {
-    console.warn('Cleanup error:', error)
+    // Cleanup error handled silently
   }
 }
 

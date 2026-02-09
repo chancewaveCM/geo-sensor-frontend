@@ -82,12 +82,10 @@ const mockSettlementRecords: SettlementRecord[] = [
 
 export default function RoiPage() {
   const handleExportRecords = () => {
-    console.log('Exporting settlement records...')
     // TODO: Implement export functionality
   }
 
   const handleGenerateReport = async (reportType: string, format: string) => {
-    console.log('Generating report:', reportType, format)
     // TODO: Implement report generation with backend
     await new Promise((resolve) => setTimeout(resolve, 2000))
   }

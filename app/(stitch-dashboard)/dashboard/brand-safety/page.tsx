@@ -71,15 +71,15 @@ export default function BrandSafetyPage() {
   const [safetySettings, setSafetySettings] = useState({ shieldActive: true })
 
   const handleAction = (action: 'refresh' | 'config') => {
-    console.log(`Action triggered: ${action}`)
+    // Action handled
   }
 
   const handleRefresh = () => {
-    console.log('Refreshing data...')
+    // Refresh data
   }
 
   const handleConfig = () => {
-    console.log('Opening configuration...')
+    // Open configuration
   }
 
   return (

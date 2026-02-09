@@ -27,9 +27,9 @@ async function globalSetup(config: FullConfig) {
       console.warn('[E2E Setup] Backend not running - backend-dependent tests will be skipped');
       return;
     }
-    console.log('[E2E Setup] Backend is available');
+    // Backend is available
   } catch {
-    console.warn('[E2E Setup] Backend not reachable - backend-dependent tests will be skipped');
+    // Backend not reachable - backend-dependent tests will be skipped
     return;
   }
 
@@ -44,13 +44,9 @@ async function globalSetup(config: FullConfig) {
         full_name: E2E_TEST_USER.name
       })
     });
-    if (response.ok) {
-      console.log('[E2E Setup] Test user created successfully');
-    } else {
-      console.log('[E2E Setup] Test user already exists or registration failed (expected)');
-    }
+    // Test user created or already exists
   } catch {
-    console.log('[E2E Setup] Could not create test user - may already exist');
+    // Could not create test user - may already exist
   }
 
   // Cache one access token for all workers to reduce auth rate-limit failures.

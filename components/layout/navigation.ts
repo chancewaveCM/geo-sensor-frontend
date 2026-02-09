@@ -7,6 +7,7 @@ import {
   DollarSign,
   LineChart,
   FlaskConical,
+  History,
   Settings,
 } from 'lucide-react'
 import type { NavSection, BreadcrumbItem } from './types'
@@ -33,6 +34,7 @@ export const navigationSections: NavSection[] = [
     items: [
       { title: '분석', href: '/analysis', icon: LineChart },
       { title: '쿼리 랩', href: '/query-lab', icon: FlaskConical },
+      { title: '히스토리', href: '/query-lab/history', icon: History },
     ],
   },
   {
@@ -72,6 +74,10 @@ export const routeConfig: Record<string, { title: string; breadcrumbs: Breadcrum
   '/query-lab': {
     title: '쿼리 랩',
     breadcrumbs: [{ label: 'Tools' }, { label: '쿼리 랩' }],
+  },
+  '/query-lab/history': {
+    title: '파이프라인 히스토리',
+    breadcrumbs: [{ label: 'Tools' }, { label: '쿼리 랩' }, { label: '히스토리' }],
   },
   '/settings': {
     title: '설정',

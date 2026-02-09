@@ -24,13 +24,15 @@ export interface GalleryDetailResponse extends RunResponse {
 
 export interface RunCitation {
   id: number
+  run_response_id: number
   cited_brand: string
-  citation_span: string | null
+  citation_span: string
   context_before: string | null
   context_after: string | null
   position_in_response: number
   is_target_brand: boolean
   confidence_score: number
+  extraction_method: string
   is_verified: boolean
 }
 

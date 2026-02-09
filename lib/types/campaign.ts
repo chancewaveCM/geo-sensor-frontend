@@ -105,3 +105,72 @@ export interface CampaignRunCreate {
   trigger_type?: string
   llm_providers?: string[]
 }
+
+export interface CitationShareData {
+  campaign_id: number
+  overall_citation_share: number
+  total_citations: number
+  target_brand_citations: number
+  by_provider: Record<string, number>
+  by_brand: Array<{ brand: string; share: number; count: number; is_target_brand?: boolean }>
+}
+
+export interface BrandRankingItem {
+  rank: number
+  brand: string
+  citation_count: number
+  citation_share: number
+  is_target_brand: boolean
+}
+
+export interface BrandRankingData {
+  campaign_id: number
+  rankings: BrandRankingItem[]
+  total_citations: number
+}
+
+export interface ProviderMetrics {
+  provider: string
+  total_responses: number
+  avg_word_count: number
+  avg_citation_count: number
+  avg_latency_ms: number
+  citation_share: number
+}
+
+export interface ProviderComparisonData {
+  campaign_id: number
+  providers: ProviderMetrics[]
+}
+
+export interface GEOScoreSummary {
+  campaign_id: number
+  avg_geo_score: number
+  total_runs_analyzed: number
+  by_provider: Record<string, number>
+}
+
+export interface CampaignSummary {
+  campaign_id: number
+  total_runs: number
+  total_responses: number
+  total_citations: number
+  latest_run: CampaignRun | null
+  citation_share_by_brand: Record<string, number>
+}
+
+export interface TimeseriesDataPoint {
+  run_id: number
+  timestamp: string
+  citation_share_overall: number
+  citation_share_by_provider: Record<string, number> | null
+  total_citations: number
+  brand_citations: number
+}
+
+export interface TimeseriesData {
+  campaign_id: number
+  brand_name: string
+  time_series: TimeseriesDataPoint[]
+  annotations: Array<Record<string, unknown>>
+}
