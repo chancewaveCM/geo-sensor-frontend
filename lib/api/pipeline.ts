@@ -1,6 +1,6 @@
 // lib/api/pipeline.ts
 
-import { get, post } from '@/lib/api-client';
+import { get, post, put, del } from '@/lib/api-client';
 import type {
   StartPipelineRequest,
   StartPipelineResponse,
@@ -8,8 +8,18 @@ import type {
   CategoriesListResponse,
   QueriesListResponse,
   ResponsesListResponse,
+  ProfileStatsListResponse,
+  QuerySetDetail,
+  QuerySetListResponse,
+  QuerySetHistoryResponse,
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+  PipelineCategory,
+  ScheduleListResponse,
+  ScheduleConfig,
+  CreateScheduleRequest,
+  UpdateScheduleRequest,
 } from '@/types/pipeline';
-import type { CompanyProfile } from '@/types/analysis';
 
 const API_PREFIX = '/api/v1';
 
@@ -36,4 +46,67 @@ export async function getJobQueries(jobId: number, categoryId?: number): Promise
 
 export async function getQueryResponses(queryId: number): Promise<ResponsesListResponse> {
   return get<ResponsesListResponse>(`${API_PREFIX}/pipeline/queries/${queryId}/responses`);
+}
+
+// === Profile Stats ===
+
+export async function getProfilePipelineStats(): Promise<ProfileStatsListResponse> {
+  return get<ProfileStatsListResponse>(`${API_PREFIX}/pipeline/profiles/stats`);
+}
+
+// === Enhanced QuerySet ===
+
+export async function getQuerySetDetail(querySetId: number): Promise<QuerySetDetail> {
+  return get<QuerySetDetail>(`${API_PREFIX}/pipeline/queryset/${querySetId}/detail`);
+}
+
+export async function getQuerySets(companyProfileId?: number): Promise<QuerySetListResponse> {
+  const params = companyProfileId ? `?company_profile_id=${companyProfileId}` : '';
+  return get<QuerySetListResponse>(`${API_PREFIX}/pipeline/queryset${params}`);
+}
+
+export async function rerunQuerySet(querySetId: number, providers?: string[]): Promise<StartPipelineResponse> {
+  const body = providers ? { llm_providers: providers } : undefined;
+  return post<StartPipelineResponse>(`${API_PREFIX}/pipeline/queryset/${querySetId}/rerun`, body);
+}
+
+export async function getQuerySetHistory(querySetId: number): Promise<QuerySetHistoryResponse> {
+  return get<QuerySetHistoryResponse>(`${API_PREFIX}/pipeline/queryset/${querySetId}/history`);
+}
+
+// === Category Queries + CRUD ===
+
+export async function getCategoryQueries(categoryId: number): Promise<QueriesListResponse> {
+  return get<QueriesListResponse>(`${API_PREFIX}/pipeline/categories/${categoryId}/queries`);
+}
+
+export async function createCategory(querySetId: number, data: CreateCategoryRequest): Promise<PipelineCategory> {
+  return post<PipelineCategory>(`${API_PREFIX}/pipeline/queryset/${querySetId}/categories`, data);
+}
+
+export async function updateCategory(categoryId: number, data: UpdateCategoryRequest): Promise<PipelineCategory> {
+  return put<PipelineCategory>(`${API_PREFIX}/pipeline/categories/${categoryId}`, data);
+}
+
+export async function deleteCategory(categoryId: number): Promise<void> {
+  return del(`${API_PREFIX}/pipeline/categories/${categoryId}`);
+}
+
+// === Schedule Management ===
+
+export async function getSchedules(querySetId?: number): Promise<ScheduleListResponse> {
+  const params = querySetId ? `?query_set_id=${querySetId}` : '';
+  return get<ScheduleListResponse>(`${API_PREFIX}/pipeline/schedules${params}`);
+}
+
+export async function createSchedule(data: CreateScheduleRequest): Promise<ScheduleConfig> {
+  return post<ScheduleConfig>(`${API_PREFIX}/pipeline/schedules`, data);
+}
+
+export async function updateSchedule(id: number, data: UpdateScheduleRequest): Promise<ScheduleConfig> {
+  return put<ScheduleConfig>(`${API_PREFIX}/pipeline/schedules/${id}`, data);
+}
+
+export async function deleteSchedule(id: number): Promise<void> {
+  return del(`${API_PREFIX}/pipeline/schedules/${id}`);
 }

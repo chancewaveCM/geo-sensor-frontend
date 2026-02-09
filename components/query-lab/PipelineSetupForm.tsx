@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { getCompanyProfiles, type CompanyProfileListResponse } from "@/lib/api/company-profiles"
 import { PROVIDERS } from "@/lib/constants/query-lab-config"
 import type { CompanyProfile } from "@/types/analysis"
-import type { LLMProvider } from "@/types/query-lab"
+import type { LLMProvider } from "@/types/pipeline"
 import type { PipelineConfig } from "@/types/pipeline"
 
 interface PipelineSetupFormProps {

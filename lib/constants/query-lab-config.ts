@@ -1,4 +1,5 @@
-import type { LLMProvider, SentimentType } from "@/types/query-lab"
+import type { LLMProvider } from "@/types/pipeline"
+import type { SentimentType } from "@/types/query-lab"
 
 export const PROVIDER_CONFIG: Record<
   LLMProvider,
