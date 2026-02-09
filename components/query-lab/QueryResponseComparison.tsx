@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -24,7 +24,7 @@ export function QueryResponseComparison({
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchResponses = async () => {
+  const fetchResponses = useCallback(async () => {
     setIsLoading(true)
     setError(null)
     try {
@@ -35,11 +35,11 @@ export function QueryResponseComparison({
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [queryId])
 
   useEffect(() => {
     fetchResponses()
-  }, [queryId])
+  }, [fetchResponses])
 
   if (isLoading) {
     return <LoadingSkeleton />

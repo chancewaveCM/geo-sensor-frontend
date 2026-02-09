@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { History, ChevronDown, ChevronUp, Loader2 } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -45,11 +45,7 @@ export default function HistoryPage() {
     };
   }>({});
 
-  useEffect(() => {
-    loadJobs();
-  }, [statusFilter]);
-
-  const loadJobs = async () => {
+  const loadJobs = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -75,7 +71,11 @@ export default function HistoryPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    loadJobs();
+  }, [loadJobs]);
 
   const handleRowClick = async (jobId: number) => {
     if (expandedJobId === jobId) {
