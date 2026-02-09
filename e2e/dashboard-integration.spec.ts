@@ -1,9 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { loginAsTestUser } from './utils/test-helpers';
 
 const FRONTEND_URL = 'http://localhost:3765';
 
 test.describe('Dashboard Integration', () => {
   test.beforeEach(async ({ page }) => {
+    await loginAsTestUser(page);
     await page.goto(`${FRONTEND_URL}/dashboard`);
     await page.waitForLoadState('domcontentloaded');
   });
@@ -188,9 +190,11 @@ test.describe('Dashboard Integration', () => {
       await expect(page.locator('text=총 프로젝트')).toBeVisible();
       await expect(page.locator('[data-testid^="stat-card-"]').first()).toBeVisible();
 
-      // Verify at least one chart or chart container is visible
-      const charts = page.locator('canvas, svg, [data-testid*="chart"], [data-testid="brand-ranking"]');
-      await expect(charts.first()).toBeVisible();
+      // Verify at least one primary chart/ranking container is visible.
+      const chartContainers = page.locator(
+        '[data-testid="citation-share-chart"], [data-testid="geo-score-chart"], [data-testid="brand-ranking"]'
+      );
+      await expect(chartContainers.first()).toBeVisible();
     });
 
     test('should work with mock data', async ({ page }) => {

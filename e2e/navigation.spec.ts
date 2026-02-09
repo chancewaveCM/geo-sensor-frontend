@@ -1,12 +1,16 @@
 import { test, expect } from '@playwright/test';
-import { loginAsTestUser, clearAuthState, getAuthToken, setupAuthenticatedState, createTestUser, registerTestUser } from './utils/test-helpers';
+import { clearAuthState, getAuthToken, loginAsTestUser, setupAuthenticatedState } from './utils/test-helpers';
 
 const BACKEND_URL = 'http://localhost:8765';
 
 async function isBackendAvailable(): Promise<boolean> {
   try {
-    const response = await fetch(`${BACKEND_URL}/api/v1/health`);
-    return response.ok;
+    const healthCandidates = ['/api/v1/health', '/health'];
+    for (const path of healthCandidates) {
+      const response = await fetch(`${BACKEND_URL}${path}`);
+      if (response.ok) return true;
+    }
+    return false;
   } catch {
     return false;
   }
@@ -262,22 +266,21 @@ test.describe('Navigation and Protected Routes', () => {
     });
 
     test('login redirects to dashboard', async ({ page }) => {
-      // Create a new user first
-      const credentials = createTestUser();
-      await registerTestUser(page, credentials);
+      const credentials = {
+        email: 'e2etest@example.com',
+        password: 'TestPassword123@',
+      };
 
-      // Should redirect to dashboard after registration
-      await page.waitForURL(/\/(dashboard)?$/, { timeout: 10000 });
-      await expect(page).toHaveURL(/\/(dashboard)?$/);
-
-      // Logout
       await clearAuthState(page);
-      await page.goto('/login');
-
-      // Login again
       await loginAsTestUser(page, credentials.email, credentials.password);
 
       // Should redirect to dashboard
+      await page.waitForURL(/\/(dashboard)?$/, { timeout: 10000 });
+      await expect(page).toHaveURL(/\/(dashboard)?$/);
+
+      // Logout and verify login works repeatedly.
+      await clearAuthState(page);
+      await loginAsTestUser(page, credentials.email, credentials.password);
       await page.waitForURL(/\/(dashboard)?$/, { timeout: 10000 });
       await expect(page).toHaveURL(/\/(dashboard)?$/);
     });

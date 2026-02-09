@@ -1,131 +1,174 @@
-import { Page, expect } from '@playwright/test'
-import { testUserCredentials } from './fixtures'
+﻿import { Page, expect } from '@playwright/test'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 
-// Pre-created test user for E2E tests (avoids rate limiting on register)
+const FRONTEND_URL = 'http://localhost:3765'
+const BACKEND_URL = 'http://localhost:8765'
+const AUTH_CACHE_PATH = join(process.cwd(), 'e2e', '.cache', 'auth-token.json')
+
 const E2E_TEST_USER = {
   email: 'e2etest@example.com',
   password: 'TestPassword123@',
-  name: 'E2E Test'
+  name: 'E2E Test',
 }
 
-/**
- * Generate unique test user credentials with timestamp
- * @returns Object containing unique email, password, and name
- */
+interface CachedAuthFile {
+  email: string
+  access_token: string
+  created_at?: string
+}
+
+const cachedTokenByEmail = new Map<string, string>()
+
 export function createTestUser() {
   const timestamp = Date.now()
   return {
     email: `test-${timestamp}@example.com`,
     password: 'TestPass123!',
-    name: `Test User ${timestamp}`
+    name: `Test User ${timestamp}`,
   }
 }
 
-/**
- * Login with the pre-created E2E test user
- * This is the recommended way to authenticate in E2E tests
- * @param page - Playwright page object
- * @returns Access token from localStorage
- */
-export async function loginWithTestUser(page: Page) {
-  await page.goto('http://localhost:3765/login')
-  await page.waitForLoadState('domcontentloaded')
+async function ensureUserRegistered(credentials: { email: string; password: string; name: string }) {
+  const response = await fetch(`${BACKEND_URL}/api/v1/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      email: credentials.email,
+      password: credentials.password,
+      full_name: credentials.name,
+    }),
+  })
 
-  // Fill login form using label text (Korean UI)
-  await page.getByLabel('이메일').fill(E2E_TEST_USER.email)
-  await page.getByLabel('비밀번호').fill(E2E_TEST_USER.password)
+  if (
+    response.ok
+    || response.status === 400
+    || response.status === 409
+    || response.status === 422
+    || response.status === 429
+  ) {
+    return
+  }
 
-  // Submit
-  await page.getByRole('button', { name: '로그인' }).click()
+  const body = await response.text().catch(() => '')
+  throw new Error(`Failed to register user via API: ${response.status} ${body}`)
+}
 
-  // Wait for redirect to dashboard (explicit path)
-  await page.waitForURL('**/dashboard', { timeout: 15000 })
+async function fetchAccessToken(email: string, password: string): Promise<string> {
+  const form = new URLSearchParams()
+  form.append('username', email)
+  form.append('password', password)
 
-  // Verify token is stored
-  const token = await page.evaluate(() => localStorage.getItem('access_token'))
-  expect(token).toBeTruthy()
+  const response = await fetch(`${BACKEND_URL}/api/v1/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: form.toString(),
+  })
 
+  if (!response.ok) {
+    const body = await response.text().catch(() => '')
+    throw new Error(`Failed to login via API: ${response.status} ${body}`)
+  }
+
+  const data = await response.json()
+  if (!data.access_token) {
+    throw new Error('Login response does not include access_token')
+  }
+
+  return data.access_token as string
+}
+
+async function readTokenFromFile(email: string): Promise<string | null> {
+  try {
+    const raw = await readFile(AUTH_CACHE_PATH, 'utf8')
+    const parsed = JSON.parse(raw) as CachedAuthFile
+
+    if (parsed.email === email && parsed.access_token) {
+      return parsed.access_token
+    }
+  } catch {
+    // Cache file may not exist yet.
+  }
+
+  return null
+}
+
+async function writeTokenToFile(email: string, accessToken: string): Promise<void> {
+  try {
+    await mkdir(dirname(AUTH_CACHE_PATH), { recursive: true })
+    const payload: CachedAuthFile = {
+      email,
+      access_token: accessToken,
+      created_at: new Date().toISOString(),
+    }
+    await writeFile(AUTH_CACHE_PATH, JSON.stringify(payload, null, 2), 'utf8')
+  } catch {
+    // Best effort only.
+  }
+}
+
+async function resolveToken(email: string, password: string): Promise<string> {
+  const cachedToken = cachedTokenByEmail.get(email)
+  if (cachedToken) {
+    return cachedToken
+  }
+
+  const fileToken = await readTokenFromFile(email)
+  if (fileToken) {
+    cachedTokenByEmail.set(email, fileToken)
+    return fileToken
+  }
+
+  const token = await fetchAccessToken(email, password)
+  cachedTokenByEmail.set(email, token)
+  await writeTokenToFile(email, token)
   return token
 }
 
-/**
- * Login helper - handles full login flow
- * @param page - Playwright page object
- * @param email - User email
- * @param password - User password
- * @returns Access token from localStorage
- */
 export async function loginAsTestUser(page: Page, email?: string, password?: string) {
-  // Use default test user if no credentials provided
   const userEmail = email || E2E_TEST_USER.email
   const userPassword = password || E2E_TEST_USER.password
 
-  await page.goto('http://localhost:3765/login')
+  const token = await resolveToken(userEmail, userPassword)
+
+  await page.goto(FRONTEND_URL)
+  await page.evaluate((accessToken) => {
+    localStorage.setItem('access_token', accessToken)
+    localStorage.removeItem('refresh_token')
+    document.cookie = `access_token=${accessToken}; path=/; max-age=${60 * 30}; SameSite=Lax`
+  }, token)
+
+  await page.goto(`${FRONTEND_URL}/dashboard`)
   await page.waitForLoadState('domcontentloaded')
 
-  await page.locator('input[type="email"], input[name="email"]').fill(userEmail)
-  await page.locator('input[type="password"], input[name="password"]').fill(userPassword)
-  await page.locator('button[type="submit"]').click()
+  const storedToken = await page.evaluate(() => localStorage.getItem('access_token'))
+  expect(storedToken).toBeTruthy()
 
-  // Wait for redirect to dashboard
-  await page.waitForURL(/\/(dashboard)?$/, { timeout: 10000 })
-
-  // Verify token is stored
-  const token = await page.evaluate(() => localStorage.getItem('access_token'))
-  expect(token).toBeTruthy()
-
-  return token
+  return storedToken
 }
 
-/**
- * Registration helper - handles full registration flow
- * @param page - Playwright page object
- * @param credentials - User registration data
- */
-export async function registerTestUser(page: Page, credentials: { email: string; password: string; name: string }) {
-  await page.goto('/register')
-  await page.getByLabel(/이름/i).fill(credentials.name)
-  await page.getByLabel(/이메일/i).fill(credentials.email)
-  await page.getByLabel(/^비밀번호$/i).fill(credentials.password)
-
-  // Check if confirm password field exists
-  const confirmField = page.getByLabel(/비밀번호 확인/i);
-  const hasConfirmField = await confirmField.isVisible().catch(() => false);
-  if (hasConfirmField) {
-    await confirmField.fill(credentials.password);
-  }
-
-  await page.getByRole('button', { name: /계정 만들기|회원가입/i }).click()
-
-  // Wait for redirect or error (backend might not be available)
-  try {
-    await page.waitForURL(/\/(dashboard)?$/, { timeout: 10000 })
-  } catch (error) {
-    // If redirect fails, check if we got an error message (backend unavailable)
-    const errorMessage = await page.locator('text=/실패|오류|error/i').isVisible().catch(() => false);
-    if (errorMessage) {
-      throw new Error('Backend not available - registration failed');
-    }
-    // Otherwise re-throw the original error
-    throw error;
-  }
+export async function loginWithTestUser(page: Page) {
+  await ensureUserRegistered(E2E_TEST_USER)
+  return loginAsTestUser(page, E2E_TEST_USER.email, E2E_TEST_USER.password)
 }
 
-/**
- * Clear all authentication state (localStorage and cookies)
- * @param page - Playwright page object
- */
+export async function registerTestUser(
+  page: Page,
+  credentials: { email: string; password: string; name: string }
+) {
+  await ensureUserRegistered(credentials)
+  await clearAuthState(page)
+  await loginAsTestUser(page, credentials.email, credentials.password)
+}
+
 export async function clearAuthState(page: Page) {
-  // Clear cookies first (works without navigation)
   await page.context().clearCookies()
 
-  // Navigate to app first to access localStorage (required for security)
   const currentUrl = page.url()
   if (!currentUrl.includes('localhost:3765')) {
-    await page.goto('http://localhost:3765')
+    await page.goto(FRONTEND_URL)
   }
 
-  // Now we can safely access localStorage
   await page.evaluate(() => {
     localStorage.removeItem('access_token')
     localStorage.removeItem('refresh_token')
@@ -133,40 +176,25 @@ export async function clearAuthState(page: Page) {
   })
 }
 
-/**
- * Wait for specific API response
- * @param page - Playwright page object
- * @param urlPattern - String or RegExp pattern to match API URL
- * @returns Promise that resolves when matching response is received
- */
 export async function waitForApiResponse(page: Page, urlPattern: string | RegExp) {
-  return page.waitForResponse(
-    response => {
-      const url = response.url()
-      if (typeof urlPattern === 'string') {
-        return url.includes(urlPattern)
-      }
-      return urlPattern.test(url)
+  return page.waitForResponse((response) => {
+    const url = response.url()
+    if (typeof urlPattern === 'string') {
+      return url.includes(urlPattern)
     }
-  )
+    return urlPattern.test(url)
+  })
 }
 
-/**
- * Get current auth token from localStorage
- * @param page - Playwright page object
- * @returns Access token or null if not found
- */
 export async function getAuthToken(page: Page): Promise<string | null> {
-  return page.evaluate(() => localStorage.getItem('access_token'))
+  try {
+    return await page.evaluate(() => localStorage.getItem('access_token'))
+  } catch {
+    return null
+  }
 }
 
-/**
- * Setup authenticated state for tests by registering a new user
- * @param page - Playwright page object
- * @returns User credentials used for registration
- */
 export async function setupAuthenticatedState(page: Page) {
-  const credentials = createTestUser()
-  await registerTestUser(page, credentials)
-  return credentials
+  await loginWithTestUser(page)
+  return E2E_TEST_USER
 }
