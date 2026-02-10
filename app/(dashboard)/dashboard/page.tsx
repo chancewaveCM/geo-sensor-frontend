@@ -16,6 +16,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { EmptyState } from '@/components/ui/empty-state'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
 import { useCampaigns } from '@/lib/hooks/use-campaigns'
 import {
@@ -148,14 +149,13 @@ export default function DashboardPage() {
   if (!campaigns || campaigns.length === 0) {
     return (
       <Card>
-        <CardContent className="flex flex-col items-center justify-center py-12">
-          <Megaphone className="h-12 w-12 text-muted-foreground mb-4" />
-          <p className="text-lg font-medium text-foreground mb-2">
-            아직 캠페인 데이터가 없습니다
-          </p>
-          <p className="text-sm text-muted-foreground mb-4">
-            첫 번째 캠페인을 생성하고 분석을 시작하세요
-          </p>
+        <CardContent className="py-12">
+          <EmptyState
+            variant="featured"
+            icon={<Megaphone className="h-6 w-6" />}
+            title="아직 캠페인 데이터가 없습니다"
+            description="첫 번째 캠페인을 생성하고 분석을 시작하세요"
+          />
         </CardContent>
       </Card>
     )
@@ -185,14 +185,13 @@ export default function DashboardPage() {
 
       {!selectedCampaignId ? (
         <Card>
-          <CardContent className="flex flex-col items-center justify-center py-12">
-            <FolderKanban className="h-12 w-12 text-muted-foreground mb-4" />
-            <p className="text-lg font-medium text-foreground mb-2">
-              캠페인을 선택해주세요
-            </p>
-            <p className="text-sm text-muted-foreground">
-              위에서 캠페인을 선택하면 데이터가 표시됩니다
-            </p>
+          <CardContent className="py-12">
+            <EmptyState
+              variant="featured"
+              icon={<FolderKanban className="h-6 w-6" />}
+              title="캠페인을 선택해주세요"
+              description="위에서 캠페인을 선택하면 데이터가 표시됩니다"
+            />
           </CardContent>
         </Card>
       ) : (

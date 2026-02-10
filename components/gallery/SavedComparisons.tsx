@@ -5,6 +5,7 @@ import { Trash2 } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { LoadingCard } from '@/components/ui/loading-card'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -36,12 +37,7 @@ export function SavedComparisons({ workspaceId }: SavedComparisonsProps) {
   }
 
   if (isLoading) {
-    return (
-      <div className="space-y-2">
-        <div className="h-24 animate-pulse rounded-lg bg-muted" />
-        <div className="h-24 animate-pulse rounded-lg bg-muted" />
-      </div>
-    )
+    return <LoadingCard type="list-item" count={2} />
   }
 
   if (!comparisons || comparisons.length === 0) {

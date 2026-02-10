@@ -20,6 +20,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Skeleton } from '@/components/ui/skeleton'
+import { EmptyState } from '@/components/ui/empty-state'
 import { getTokenColor } from '@/lib/design-tokens'
 import { Activity } from 'lucide-react'
 
@@ -75,16 +76,6 @@ function LoadingSkeleton() {
   )
 }
 
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center h-[300px] text-muted-foreground">
-      <Activity className="h-12 w-12 mb-4 opacity-50" />
-      <p>Provider 비교 데이터가 없습니다</p>
-      <p className="text-sm">캠페인 실행 후 비교 결과가 표시됩니다</p>
-    </div>
-  )
-}
-
 export function ProviderComparisonChart({
   data,
   isLoading = false,
@@ -115,7 +106,12 @@ export function ProviderComparisonChart({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <EmptyState />
+          <EmptyState
+            variant="minimal"
+            icon={<Activity className="h-6 w-6" />}
+            title="Provider 비교 데이터가 없습니다"
+            description="캠페인 실행 후 비교 결과가 표시됩니다"
+          />
         </CardContent>
       </Card>
     )
