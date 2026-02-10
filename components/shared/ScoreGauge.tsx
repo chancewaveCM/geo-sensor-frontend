@@ -42,7 +42,7 @@ export function ScoreGauge({
   className,
   ...props
 }: ScoreGaugeProps) {
-  const clampedScore = Math.max(0, Math.min(100, score))
+  const clampedScore = Math.max(0, Math.min(100, Number.isFinite(score) ? score : 0))
   const { grade, colorClass } = getGrade(clampedScore)
   const strokeColor = getStrokeColor(clampedScore)
   const config = sizeConfig[size]

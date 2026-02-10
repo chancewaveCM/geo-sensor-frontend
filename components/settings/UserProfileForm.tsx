@@ -26,13 +26,22 @@ export function UserProfileForm() {
 
   // Fetch profile on mount
   useEffect(() => {
+    let cancelled = false
     get<UserProfile>('/api/v1/auth/me')
       .then((data) => {
+        if (cancelled) return
         setProfile(data)
         setFullName(data.full_name || '')
       })
-      .catch(() => setMessage({ type: 'error', text: '프로필을 불러올 수 없습니다.' }))
-      .finally(() => setLoading(false))
+      .catch(() => {
+        if (cancelled) return
+        setMessage({ type: 'error', text: '프로필을 불러올 수 없습니다.' })
+      })
+      .finally(() => {
+        if (cancelled) return
+        setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [])
 
   const handleSave = async () => {

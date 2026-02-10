@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 export interface BreadcrumbItem {
@@ -29,9 +30,9 @@ export function PageHeader({
             <React.Fragment key={index}>
               {index > 0 && <span className="text-border">/</span>}
               {crumb.href ? (
-                <a href={crumb.href} className="hover:text-foreground transition-colors">
+                <Link href={crumb.href as never} className="hover:text-foreground transition-colors">
                   {crumb.label}
-                </a>
+                </Link>
               ) : (
                 <span>{crumb.label}</span>
               )}

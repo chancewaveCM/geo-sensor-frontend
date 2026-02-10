@@ -17,9 +17,14 @@ export function PasswordChangeForm() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
+  const hasUppercase = /[A-Z]/.test(newPassword)
+  const hasNumber = /[0-9]/.test(newPassword)
+  const hasSpecial = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(newPassword)
+
   const isValid =
     currentPassword.length > 0 &&
     newPassword.length >= 8 &&
+    hasUppercase && hasNumber && hasSpecial &&
     newPassword === confirmPassword
 
   const handleSubmit = async (e: React.FormEvent) => {

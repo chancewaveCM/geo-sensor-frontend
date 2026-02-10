@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { get } from '@/lib/api-client'
+import { getCompanyProfiles } from '@/lib/api/company-profiles'
 import type { CompanyProfile } from '@/types/analysis'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -17,7 +17,10 @@ export function CompanyProfileSettings() {
 
   const { data: profiles = [], isLoading, refetch } = useQuery<CompanyProfile[]>({
     queryKey: ['company-profiles', showInactive],
-    queryFn: () => get('/api/v1/company-profiles/'),
+    queryFn: async () => {
+      const response = await getCompanyProfiles(showInactive)
+      return response.items
+    },
   })
 
   const filteredProfiles = showInactive

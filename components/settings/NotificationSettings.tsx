@@ -36,29 +36,41 @@ export function NotificationSettings() {
   const [prefs, setPrefs] = useState<NotificationPrefs>(defaultPrefs)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let cancelled = false
     get<UserMeResponse>('/api/v1/auth/me')
       .then((data) => {
+        if (cancelled) return
         if (data.notification_preferences) {
           setPrefs({ ...defaultPrefs, ...data.notification_preferences })
         }
       })
-      .catch(() => {})
-      .finally(() => setLoading(false))
+      .catch(() => {
+        if (cancelled) return
+        setError('알림 설정을 불러올 수 없습니다.')
+      })
+      .finally(() => {
+        if (cancelled) return
+        setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [])
 
   const handleToggle = async (key: keyof NotificationPrefs) => {
+    const previousValue = prefs[key]
     const newPrefs = { ...prefs, [key]: !prefs[key] }
     setPrefs(newPrefs)
     setSaving(true)
+
     try {
       await patch('/api/v1/auth/me', {
         notification_preferences: JSON.stringify(newPrefs),
       })
     } catch {
-      // Revert on error
-      setPrefs(prefs)
+      // Rollback using captured previous value
+      setPrefs((current) => ({ ...current, [key]: previousValue }))
     } finally {
       setSaving(false)
     }
@@ -81,6 +93,9 @@ export function NotificationSettings() {
         <CardDescription>알림 및 이메일 수신 설정을 관리합니다.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {error && (
+          <p className="text-sm text-destructive text-center py-4">{error}</p>
+        )}
         {notificationOptions.map(({ key, label, description }) => (
           <div key={key} className="flex items-center justify-between">
             <div className="space-y-0.5">

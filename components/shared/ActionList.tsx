@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { useMemo } from 'react'
 import { cn } from '@/lib/utils'
 import { AlertTriangle, ArrowRight, CheckCircle2, Info } from 'lucide-react'
 
@@ -24,10 +25,21 @@ const priorityConfig: Record<Priority, { icon: React.ElementType; colorClass: st
 }
 
 export function ActionList({ items, onItemClick, className, ...props }: ActionListProps) {
-  const sorted = [...items].sort((a, b) => {
-    const order: Record<Priority, number> = { high: 0, medium: 1, low: 2 }
-    return order[a.priority] - order[b.priority]
-  })
+  if (items.length === 0) {
+    return (
+      <div className={cn('text-sm text-muted-foreground text-center py-4', className)}>
+        조치 항목이 없습니다
+      </div>
+    )
+  }
+
+  const sorted = useMemo(
+    () => [...items].sort((a, b) => {
+      const order: Record<string, number> = { high: 0, medium: 1, low: 2 }
+      return (order[a.priority] ?? 1) - (order[b.priority] ?? 1)
+    }),
+    [items]
+  )
 
   return (
     <div className={cn('space-y-2', className)} {...props}>

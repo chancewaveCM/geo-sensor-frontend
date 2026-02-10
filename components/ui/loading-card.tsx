@@ -37,7 +37,7 @@ function ListItemSkeleton() {
 
 function ChartSkeleton() {
   return (
-    <div className="rounded-lg border bg-card p-6 space-y-4">
+    <div className="rounded-lg border bg-card p-6 space-y-4" role="status" aria-label="콘텐츠 로딩 중">
       <div className="flex items-center justify-between">
         <PulseLine className="h-5 w-32" />
         <PulseLine className="h-8 w-24" />
@@ -47,7 +47,7 @@ function ChartSkeleton() {
           <PulseLine
             key={i}
             className="flex-1 rounded-t-md"
-            style={{ height: `${30 + Math.random() * 70}%` }}
+            style={{ height: `${30 + (i * 10) % 70}%` }}
           />
         ))}
       </div>

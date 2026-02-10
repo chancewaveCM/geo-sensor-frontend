@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { get, del } from '@/lib/api-client'
 import { Loader2, UserX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -23,18 +22,43 @@ interface Member {
 export function MemberList() {
   const [members, setMembers] = useState<Member[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const wsId = localStorage.getItem('current_workspace_id') || '1'
+    let cancelled = false
+    const wsId = typeof window !== 'undefined'
+      ? localStorage.getItem('current_workspace_id')
+      : null
+
+    if (!wsId) {
+      setLoading(false)
+      return
+    }
+
     get<Member[]>(`/api/v1/workspaces/${wsId}/members`)
-      .then(setMembers)
-      .catch(() => {})
-      .finally(() => setLoading(false))
+      .then((data) => {
+        if (cancelled) return
+        setMembers(data)
+      })
+      .catch(() => {
+        if (cancelled) return
+        setError('멤버 목록을 불러올 수 없습니다.')
+      })
+      .finally(() => {
+        if (cancelled) return
+        setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [])
 
   const handleRemove = async (memberId: number) => {
     if (!confirm('정말 이 멤버를 제거하시겠습니까?')) return
-    const wsId = localStorage.getItem('current_workspace_id') || '1'
+    const wsId = typeof window !== 'undefined'
+      ? localStorage.getItem('current_workspace_id')
+      : null
+
+    if (!wsId) return
+
     try {
       await del(`/api/v1/workspaces/${wsId}/members/${memberId}`)
       setMembers((prev) => prev.filter((m) => m.id !== memberId))
@@ -46,6 +70,20 @@ export function MemberList() {
   const handleRoleChanged = (memberId: number, newRole: string) => {
     setMembers((prev) =>
       prev.map((m) => (m.id === memberId ? { ...m, role: newRole } : m))
+    )
+  }
+
+  const wsId = typeof window !== 'undefined'
+    ? localStorage.getItem('current_workspace_id')
+    : null
+
+  if (!wsId) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-muted-foreground">
+          워크스페이스를 선택해주세요.
+        </CardContent>
+      </Card>
     )
   }
 
@@ -66,6 +104,9 @@ export function MemberList() {
         <CardDescription>워크스페이스 멤버와 권한을 관리합니다.</CardDescription>
       </CardHeader>
       <CardContent>
+        {error && (
+          <p className="text-sm text-destructive text-center py-4">{error}</p>
+        )}
         <div className="space-y-3">
           {members.map((member) => (
             <div

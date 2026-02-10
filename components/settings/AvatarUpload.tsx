@@ -25,21 +25,22 @@ export function AvatarUpload({ currentUrl, onUploaded }: AvatarUploadProps) {
 
     setUploading(true)
     try {
-      const reader = new FileReader()
-      reader.onload = async () => {
-        const base64 = (reader.result as string).split(',')[1]
-        const contentType = file.type || 'image/png'
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve((reader.result as string).split(',')[1])
+        reader.onerror = reject
+        reader.readAsDataURL(file)
+      })
 
-        const result = await post<{ avatar_url: string }>('/api/v1/auth/me/avatar', {
-          avatar_data: base64,
-          content_type: contentType,
-        })
-        onUploaded(result.avatar_url)
-        setUploading(false)
-      }
-      reader.readAsDataURL(file)
+      const contentType = file.type || 'image/png'
+      const result = await post<{ avatar_url: string }>('/api/v1/auth/me/avatar', {
+        avatar_data: base64,
+        content_type: contentType,
+      })
+      onUploaded(result.avatar_url)
     } catch {
       alert('업로드에 실패했습니다.')
+    } finally {
       setUploading(false)
     }
   }

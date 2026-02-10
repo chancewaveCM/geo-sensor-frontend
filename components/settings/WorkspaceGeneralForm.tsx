@@ -22,15 +22,31 @@ export function WorkspaceGeneralForm() {
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   useEffect(() => {
-    // Get workspace ID from localStorage or first workspace
-    const wsId = localStorage.getItem('current_workspace_id') || '1'
+    let cancelled = false
+    const wsId = typeof window !== 'undefined'
+      ? localStorage.getItem('current_workspace_id')
+      : null
+
+    if (!wsId) {
+      setLoading(false)
+      return
+    }
+
     get<Workspace>(`/api/v1/workspaces/${wsId}`)
       .then((data) => {
+        if (cancelled) return
         setWorkspace(data)
         setName(data.name)
       })
-      .catch(() => setMessage({ type: 'error', text: '워크스페이스 정보를 불러올 수 없습니다.' }))
-      .finally(() => setLoading(false))
+      .catch(() => {
+        if (cancelled) return
+        setMessage({ type: 'error', text: '워크스페이스 정보를 불러올 수 없습니다.' })
+      })
+      .finally(() => {
+        if (cancelled) return
+        setLoading(false)
+      })
+    return () => { cancelled = true }
   }, [])
 
   const handleSave = async () => {
@@ -46,6 +62,20 @@ export function WorkspaceGeneralForm() {
     } finally {
       setSaving(false)
     }
+  }
+
+  const wsId = typeof window !== 'undefined'
+    ? localStorage.getItem('current_workspace_id')
+    : null
+
+  if (!wsId) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-muted-foreground">
+          워크스페이스를 선택해주세요.
+        </CardContent>
+      </Card>
+    )
   }
 
   if (loading) {
