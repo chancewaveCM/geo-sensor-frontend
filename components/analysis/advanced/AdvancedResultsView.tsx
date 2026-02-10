@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { ResultsBrowser } from '@/components/analysis/shared/ResultsBrowser'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, Play, Loader2 } from 'lucide-react'
-import { getJobCategories } from '@/lib/api/pipeline'
+import { getJobCategories } from '@/lib/api/analysis'
 import type { PipelineCategory } from '@/types/pipeline'
 import { cn } from '@/lib/utils'
 

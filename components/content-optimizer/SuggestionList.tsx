@@ -13,12 +13,12 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Lightbulb, ArrowUp } from 'lucide-react'
 
 interface Suggestion {
-  id: string
+  id?: string
   title: string
   description: string
   priority: 'high' | 'medium' | 'low'
   category: string
-  impact: string
+  impact?: string
 }
 
 interface SuggestionListProps {
@@ -107,10 +107,11 @@ export function SuggestionList({
       </CardHeader>
       <CardContent className="space-y-4">
         {sortedSuggestions.map((suggestion) => {
-          const isCompleted = completedIds.has(suggestion.id)
+          const suggestionId = suggestion.id ?? `${suggestion.category}:${suggestion.title}`
+          const isCompleted = completedIds.has(suggestionId)
           return (
             <div
-              key={suggestion.id}
+              key={suggestionId}
               className={cn(
                 'border rounded-lg p-4 space-y-3 transition-opacity',
                 isCompleted && 'opacity-50'
@@ -137,7 +138,7 @@ export function SuggestionList({
                 {onToggle && (
                   <Checkbox
                     checked={isCompleted}
-                    onCheckedChange={() => handleToggle(suggestion.id)}
+                    onCheckedChange={() => handleToggle(suggestionId)}
                     className="mt-1"
                   />
                 )}
@@ -149,12 +150,14 @@ export function SuggestionList({
               </p>
 
               {/* Impact */}
-              <div className="flex items-center gap-2 text-sm">
-                <ArrowUp className="h-4 w-4 text-emerald-600" />
-                <span className="font-medium text-emerald-600">
-                  {suggestion.impact}
-                </span>
-              </div>
+              {suggestion.impact && (
+                <div className="flex items-center gap-2 text-sm">
+                  <ArrowUp className="h-4 w-4 text-emerald-600" />
+                  <span className="font-medium text-emerald-600">
+                    {suggestion.impact}
+                  </span>
+                </div>
+              )}
             </div>
           )
         })}

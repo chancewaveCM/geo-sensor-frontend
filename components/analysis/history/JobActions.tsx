@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { rerunQuerySet, cancelJob } from '@/lib/api/pipeline'
+import { rerunQuerySet, cancelJob } from '@/lib/api/analysis'
 import type { PipelineJobSummary } from '@/types/pipeline'
 import { Button } from '@/components/ui/button'
 import {

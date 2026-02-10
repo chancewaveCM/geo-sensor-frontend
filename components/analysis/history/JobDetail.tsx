@@ -1,7 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getJobStatus, getJobCategories, getJobQueries, getQueryResponses } from '@/lib/api/pipeline'
+import {
+  getJobStatus,
+  getJobCategories,
+  getJobQueries,
+  getQueryResponses,
+} from '@/lib/api/analysis'
 import type { PipelineJobStatus, PipelineCategory, ExpandedQuery, RawLLMResponse } from '@/types/pipeline'
 import {
   Card,

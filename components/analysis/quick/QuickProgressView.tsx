@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { ProgressTracker } from '@/components/analysis/shared/ProgressTracker'
-import { getJobStatus, getJobCategories, cancelJob } from '@/lib/api/pipeline'
+import { getJobStatus, getJobCategories, cancelJob } from '@/lib/api/analysis'
 import type { PipelineJobStatus, PipelineCategory } from '@/types/pipeline'
 import { ACTIVE_PIPELINE_STATUSES } from '@/types/pipeline'
 import { Card, CardContent } from '@/components/ui/card'

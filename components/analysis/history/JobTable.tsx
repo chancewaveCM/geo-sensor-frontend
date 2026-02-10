@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { getJobs } from '@/lib/api/pipeline'
+import { getJobs } from '@/lib/api/analysis'
 import type { PipelineJobSummary, PipelineJobListResponse } from '@/types/pipeline'
 import {
   Table,

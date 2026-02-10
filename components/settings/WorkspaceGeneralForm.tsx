@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { get, put } from '@/lib/api-client'
 import { Loader2 } from 'lucide-react'
+import { getSelectedWorkspaceId } from '@/lib/utils/workspace-selection'
 
 interface Workspace {
   id: number
@@ -23,9 +24,7 @@ export function WorkspaceGeneralForm() {
 
   useEffect(() => {
     let cancelled = false
-    const wsId = typeof window !== 'undefined'
-      ? localStorage.getItem('current_workspace_id')
-      : null
+    const wsId = getSelectedWorkspaceId()
 
     if (!wsId) {
       setLoading(false)
@@ -64,9 +63,7 @@ export function WorkspaceGeneralForm() {
     }
   }
 
-  const wsId = typeof window !== 'undefined'
-    ? localStorage.getItem('current_workspace_id')
-    : null
+  const wsId = getSelectedWorkspaceId()
 
   if (!wsId) {
     return (

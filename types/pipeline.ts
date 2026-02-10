@@ -38,7 +38,7 @@ export interface PipelineJobStatus {
   id: number;
   status: PipelineStatus;
   company_profile_id: number;
-  query_set_id: number;
+  query_set_id: number | null;
   llm_providers: string[];
   total_queries: number;
   completed_queries: number;

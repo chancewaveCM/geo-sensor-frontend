@@ -14,7 +14,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { ArrowLeft, Loader2 } from 'lucide-react'
-import { getJobStatus, getJobCategories, cancelJob } from '@/lib/api/pipeline'
+import { getJobStatus, getJobCategories, cancelJob } from '@/lib/api/analysis'
 import { ACTIVE_PIPELINE_STATUSES } from '@/types/pipeline'
 import type { PipelineJobStatus, PipelineCategory } from '@/types/pipeline'
 import { cn } from '@/lib/utils'

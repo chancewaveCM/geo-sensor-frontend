@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { Settings2, Play, Loader2 } from 'lucide-react'
-import { startPipeline } from '@/lib/api/pipeline'
+import { startAdvancedAnalysis } from '@/lib/api/analysis'
 import { cn } from '@/lib/utils'
 
 interface AdvancedSetupFormProps {
@@ -64,11 +64,11 @@ export function AdvancedSetupForm({ onStart, className }: AdvancedSetupFormProps
       if (providers.gemini) llmProviders.push('gemini')
       if (providers.openai) llmProviders.push('openai')
 
-      const response = await startPipeline({
-        company_profile_id: companyId,
-        category_count: categoryCount,
-        queries_per_category: queriesPerCategory,
-        llm_providers: llmProviders,
+      const response = await startAdvancedAnalysis({
+        companyProfileId: companyId,
+        categoryCount,
+        queriesPerCategory,
+        llmProviders,
       })
 
       onStart(response.job_id)

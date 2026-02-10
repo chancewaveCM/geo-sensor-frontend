@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { ResultsBrowser } from '@/components/analysis/shared/ResultsBrowser'
-import { getJobStatus, getJobCategories } from '@/lib/api/pipeline'
+import { getJobStatus, getJobCategories } from '@/lib/api/analysis'
 import type { PipelineJobStatus, PipelineCategory } from '@/types/pipeline'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'

@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { cn } from '@/lib/utils'
-import { getQueryResponses } from '@/lib/api/pipeline'
+import { getQueryResponses } from '@/lib/api/analysis'
 import type { RawLLMResponse } from '@/types/pipeline'
 
 interface ResponseComparisonProps {

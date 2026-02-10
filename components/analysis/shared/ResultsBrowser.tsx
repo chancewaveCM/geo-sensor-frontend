@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { getJobQueries } from '@/lib/api/pipeline'
+import { getJobQueries } from '@/lib/api/analysis'
 import type { PipelineCategory, ExpandedQuery } from '@/types/pipeline'
 
 interface ResultsBrowserProps {

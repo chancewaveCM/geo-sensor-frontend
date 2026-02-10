@@ -6,18 +6,10 @@ import { get, del } from '@/lib/api-client'
 import { Loader2, UserX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MemberRoleSelect } from './MemberRoleSelect'
+import type { WorkspaceMember } from '@/lib/types'
+import { getSelectedWorkspaceId } from '@/lib/utils/workspace-selection'
 
-interface Member {
-  id: number
-  user_id: number
-  workspace_id: number
-  role: string
-  user: {
-    id: number
-    email: string
-    full_name: string | null
-  }
-}
+type Member = WorkspaceMember
 
 export function MemberList() {
   const [members, setMembers] = useState<Member[]>([])
@@ -26,9 +18,7 @@ export function MemberList() {
 
   useEffect(() => {
     let cancelled = false
-    const wsId = typeof window !== 'undefined'
-      ? localStorage.getItem('current_workspace_id')
-      : null
+    const wsId = getSelectedWorkspaceId()
 
     if (!wsId) {
       setLoading(false)
@@ -51,17 +41,15 @@ export function MemberList() {
     return () => { cancelled = true }
   }, [])
 
-  const handleRemove = async (memberId: number) => {
+  const handleRemove = async (userId: number) => {
     if (!confirm('정말 이 멤버를 제거하시겠습니까?')) return
-    const wsId = typeof window !== 'undefined'
-      ? localStorage.getItem('current_workspace_id')
-      : null
+    const wsId = getSelectedWorkspaceId()
 
     if (!wsId) return
 
     try {
-      await del(`/api/v1/workspaces/${wsId}/members/${memberId}`)
-      setMembers((prev) => prev.filter((m) => m.id !== memberId))
+      await del(`/api/v1/workspaces/${wsId}/members/${userId}`)
+      setMembers((prev) => prev.filter((m) => m.user_id !== userId))
     } catch (err: unknown) {
       const status = (err as { response?: { status?: number } })?.response?.status
       if (status === 403) {
@@ -72,15 +60,13 @@ export function MemberList() {
     }
   }
 
-  const handleRoleChanged = (memberId: number, newRole: string) => {
+  const handleRoleChanged = (userId: number, newRole: Member['role']) => {
     setMembers((prev) =>
-      prev.map((m) => (m.id === memberId ? { ...m, role: newRole } : m))
+      prev.map((m) => (m.user_id === userId ? { ...m, role: newRole } : m))
     )
   }
 
-  const wsId = typeof window !== 'undefined'
-    ? localStorage.getItem('current_workspace_id')
-    : null
+  const wsId = getSelectedWorkspaceId()
 
   if (!wsId) {
     return (
@@ -115,28 +101,28 @@ export function MemberList() {
         <div className="space-y-3">
           {members.map((member) => (
             <div
-              key={member.id}
+              key={member.user_id}
               className="flex items-center justify-between rounded-lg border p-4"
             >
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-sm font-medium">
-                  {(member.user.full_name || member.user.email)[0].toUpperCase()}
+                  {(member.full_name || member.email || '?')[0].toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">{member.user.full_name || member.user.email}</p>
-                  <p className="text-xs text-muted-foreground">{member.user.email}</p>
+                  <p className="text-sm font-medium">{member.full_name || member.email}</p>
+                  <p className="text-xs text-muted-foreground">{member.email}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
                 <MemberRoleSelect
-                  memberId={member.id}
+                  userId={member.user_id}
                   currentRole={member.role}
-                  onRoleChanged={(role) => handleRoleChanged(member.id, role)}
+                  onRoleChanged={(role) => handleRoleChanged(member.user_id, role)}
                 />
                 <Button
                   variant="ghost"
                   size="icon"
-                  onClick={() => handleRemove(member.id)}
+                  onClick={() => handleRemove(member.user_id)}
                   className="text-muted-foreground hover:text-destructive"
                 >
                   <UserX className="h-4 w-4" />

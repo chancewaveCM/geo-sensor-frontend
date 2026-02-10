@@ -88,7 +88,7 @@ export default function OperationsPage() {
             <OperationsLog
               operations={filteredOperations}
               workspaceId={workspaceId}
-              isAdmin={workspace?.user_role === 'admin'}
+              isAdmin={(workspace?.my_role ?? workspace?.user_role) === 'admin'}
             />
           )}
         </TabsContent>

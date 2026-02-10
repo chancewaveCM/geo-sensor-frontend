@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { ProfileSelector } from '@/components/analysis/shared/ProfileSelector'
-import { startPipeline } from '@/lib/api/pipeline'
+import { startQuickAnalysis } from '@/lib/api/analysis'
 import type { LLMProvider } from '@/types/pipeline'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -44,11 +44,9 @@ export function QuickSetupForm({ onStart, className }: QuickSetupFormProps) {
     setError(null)
 
     try {
-      const response = await startPipeline({
-        company_profile_id: selectedProfileId,
-        category_count: 3,
-        queries_per_category: 10,
-        llm_providers: selectedProviders
+      const response = await startQuickAnalysis({
+        companyProfileId: selectedProfileId,
+        llmProviders: selectedProviders,
       })
       onStart(response.job_id)
     } catch (err) {

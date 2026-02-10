@@ -1,8 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-
-const STORAGE_KEY = 'geo-dashboard-campaign'
+import {
+  readDashboardSelection,
+  writeDashboardSelection,
+} from '@/lib/utils/workspace-selection'
 
 interface DashboardCampaignSelection {
   workspaceId: number | undefined
@@ -25,20 +27,8 @@ export function useDashboardCampaign(): UseDashboardCampaignReturn {
 
   // Load from localStorage on mount
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        const parsed = JSON.parse(stored)
-        // Validate parsed data before using
-        if (parsed && typeof parsed === 'object') {
-          const workspaceId = typeof parsed.workspaceId === 'number' ? parsed.workspaceId : undefined
-          const campaignId = typeof parsed.campaignId === 'number' ? parsed.campaignId : undefined
-          setSelectionState({ workspaceId, campaignId })
-        }
-      }
-    } catch {
-      // Ignore parse errors
-    }
+    const { workspaceId, campaignId } = readDashboardSelection()
+    setSelectionState({ workspaceId, campaignId })
     setIsReady(true)
   }, [])
 
@@ -49,11 +39,7 @@ export function useDashboardCampaign(): UseDashboardCampaignReturn {
       if (update.workspaceId !== undefined && update.workspaceId !== prev.workspaceId) {
         next.campaignId = undefined
       }
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(next))
-      } catch {
-        // Ignore storage errors
-      }
+      writeDashboardSelection(next)
       return next
     })
   }, [])
