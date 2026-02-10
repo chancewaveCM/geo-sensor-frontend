@@ -19,6 +19,7 @@ import {
   fetchProviderComparison,
   fetchGeoScoreSummary,
   fetchTimeseries,
+  fetchBrandSafety,
 } from '@/lib/api/campaigns'
 import type {
   CampaignCreate,
@@ -265,6 +266,17 @@ export function useTimeseries(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'timeseries', brandName],
     queryFn: () => fetchTimeseries(workspaceId!, campaignId!, brandName),
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useBrandSafety(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'brand-safety'],
+    queryFn: () => fetchBrandSafety(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
