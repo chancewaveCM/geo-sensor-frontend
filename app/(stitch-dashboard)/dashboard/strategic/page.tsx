@@ -21,14 +21,15 @@ import {
 export default function StrategicAnalysisPage() {
   const [timeRange, setTimeRange] = useState('30D')
 
-  const { workspaceId, campaignId, isReady } = useDashboardCampaign()
-  const { data: citationShare, isLoading: csLoading } = useCitationShare(workspaceId, campaignId)
-  const { data: brandRanking, isLoading: brLoading } = useBrandRanking(workspaceId, campaignId)
-  const { data: timeseries, isLoading: tsLoading } = useTimeseries(workspaceId, campaignId)
-  const { data: summary, isLoading: smLoading } = useCampaignSummary(workspaceId, campaignId)
-  const { data: geoScore, isLoading: gsLoading } = useGeoScoreSummary(workspaceId, campaignId)
+  const { workspaceId, campaignId } = useDashboardCampaign()
+  const { data: citationShare, isLoading: csLoading, isError: csError } = useCitationShare(workspaceId, campaignId)
+  const { data: brandRanking, isLoading: brLoading, isError: brError } = useBrandRanking(workspaceId, campaignId)
+  const { data: timeseries, isLoading: tsLoading, isError: tsError } = useTimeseries(workspaceId, campaignId)
+  const { data: summary, isLoading: smLoading, isError: smError } = useCampaignSummary(workspaceId, campaignId)
+  const { data: geoScore, isLoading: gsLoading, isError: gsError } = useGeoScoreSummary(workspaceId, campaignId)
 
   const isLoading = csLoading || brLoading || tsLoading || smLoading || gsLoading
+  const isError = csError || brError || tsError || smError || gsError
 
   if (!campaignId) {
     return (
@@ -46,6 +47,17 @@ export default function StrategicAnalysisPage() {
       <div className="space-y-6">
         <CampaignSelector />
         <LoadingSkeleton />
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <CampaignSelector />
+        <div className="flex items-center justify-center h-64 text-destructive">
+          Failed to load analytics data. Please try again later.
+        </div>
       </div>
     )
   }
@@ -91,14 +103,13 @@ export default function StrategicAnalysisPage() {
                 <span className="text-7xl font-bold">{pawcScore.toFixed(1)}</span>
                 <div className="flex items-center bg-success/20 text-success px-2 py-1 rounded-full text-sm font-bold border border-success/30">
                   <TrendingUp className="h-4 w-4 mr-1" />
-                  +0.0
+                  --
                 </div>
               </div>
               <h2 className="text-2xl font-bold mt-2">PAWC Score Card</h2>
             </div>
             <p className="text-white/70 max-w-md">
-              Your citations in AI search engines have increased by 14% compared to the previous period.
-              Focus on technical specs for further gains.
+              Track your AI citation performance across search engines. Detailed trend analysis available below.
             </p>
             <Button className="bg-primary hover:bg-primary/90 text-white font-bold shadow-lg">
               Generate Detailed Strategy
@@ -259,7 +270,7 @@ export default function StrategicAnalysisPage() {
             <div>
               <p className="text-sm font-bold">Latest Citations Report Available</p>
               <p className="text-xs text-muted-foreground">
-                Last updated 14 minutes ago • Source: Multi-LLM API Bridge
+                Data refreshed on page load • Source: Multi-LLM API Bridge
               </p>
             </div>
           </div>

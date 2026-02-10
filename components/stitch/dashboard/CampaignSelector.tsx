@@ -19,7 +19,7 @@ export function CampaignSelector() {
         value={workspaceId?.toString() ?? ''}
         onValueChange={(val) => setSelection({ workspaceId: Number(val) })}
       >
-        <SelectTrigger className="w-[200px]">
+        <SelectTrigger className="w-[200px]" aria-label="Select workspace">
           <SelectValue placeholder={wsLoading ? 'Loading...' : 'Select Workspace'} />
         </SelectTrigger>
         <SelectContent>
@@ -37,7 +37,7 @@ export function CampaignSelector() {
         onValueChange={(val) => setSelection({ campaignId: Number(val) })}
         disabled={!workspaceId}
       >
-        <SelectTrigger className="w-[240px]">
+        <SelectTrigger className="w-[240px]" aria-label="Select campaign">
           <SelectValue placeholder={
             !workspaceId ? 'Select workspace first'
             : campLoading ? 'Loading...'

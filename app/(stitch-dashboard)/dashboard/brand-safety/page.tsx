@@ -12,12 +12,26 @@ import { CampaignSelector } from '@/components/stitch/dashboard/CampaignSelector
 import { useDashboardCampaign } from '@/lib/hooks/use-dashboard-campaign'
 import { useBrandSafety } from '@/lib/hooks/use-campaigns'
 
+function mapConfidenceToSeverity(score: number | null): 'critical' | 'warning' | 'safe' {
+  if (score === null) return 'warning'
+  if (score < 0.5) return 'critical'
+  if (score < 0.7) return 'warning'
+  return 'safe'
+}
+
+function mapConfidenceToTimelineSeverity(score: number | null): 'critical' | 'warning' | 'info' {
+  if (score === null) return 'warning'
+  if (score < 0.5) return 'critical'
+  if (score < 0.7) return 'warning'
+  return 'info'
+}
+
 export default function BrandSafetyPage() {
   const [activeTab, setActiveTab] = useState<'realtime' | 'flagged' | 'history'>('realtime')
   const [safetySettings, setSafetySettings] = useState({ shieldActive: true })
 
   const { workspaceId, campaignId } = useDashboardCampaign()
-  const { data: brandSafety, isLoading } = useBrandSafety(workspaceId, campaignId)
+  const { data: brandSafety, isLoading, isError } = useBrandSafety(workspaceId, campaignId)
 
   const handleAction = (action: 'refresh' | 'config') => {
     // Action handled
@@ -34,10 +48,7 @@ export default function BrandSafetyPage() {
   // Map data for IncidentList
   const incidents: Incident[] = (brandSafety?.recent_incidents ?? []).map(citation => ({
     id: String(citation.citation_id),
-    severity: citation.confidence_score === null ? 'warning' as const :
-              citation.confidence_score < 0.5 ? 'critical' as const :
-              citation.confidence_score < 0.7 ? 'warning' as const :
-              'safe' as const,
+    severity: mapConfidenceToSeverity(citation.confidence_score),
     title: citation.cited_brand,
     description: citation.citation_span || 'No description available',
     source: citation.llm_provider,
@@ -49,10 +60,7 @@ export default function BrandSafetyPage() {
     id: String(citation.citation_id),
     timestamp: new Date(citation.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
     datetime: citation.created_at,
-    severity: citation.confidence_score === null ? 'warning' as const :
-              citation.confidence_score >= 0.7 ? 'info' as const :
-              citation.confidence_score >= 0.5 ? 'warning' as const :
-              'critical' as const,
+    severity: mapConfidenceToTimelineSeverity(citation.confidence_score),
     title: citation.cited_brand,
     description: citation.llm_provider || 'Unknown provider',
   }))
@@ -87,6 +95,19 @@ export default function BrandSafetyPage() {
               <div className="h-48 rounded-lg bg-muted animate-pulse" />
             </div>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="px-6 pt-6">
+          <CampaignSelector />
+        </div>
+        <div className="flex items-center justify-center h-64 text-destructive">
+          Failed to load brand safety data. Please try again later.
         </div>
       </div>
     )
