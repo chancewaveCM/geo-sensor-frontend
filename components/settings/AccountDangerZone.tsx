@@ -23,8 +23,15 @@ export function AccountDangerZone() {
       localStorage.removeItem('access_token')
       localStorage.removeItem('refresh_token')
       window.location.href = '/login'
-    } catch {
-      alert('계정 삭제에 실패했습니다.')
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status
+      if (status === 403) {
+        alert('계정 삭제는 워크스페이스 소유자만 가능합니다.')
+      } else if (status === 409) {
+        alert('활성 데이터가 있어 삭제할 수 없습니다.')
+      } else {
+        alert('계정 삭제에 실패했습니다. 다시 시도해주세요.')
+      }
       setDeleting(false)
     }
   }

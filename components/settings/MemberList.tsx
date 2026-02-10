@@ -62,8 +62,13 @@ export function MemberList() {
     try {
       await del(`/api/v1/workspaces/${wsId}/members/${memberId}`)
       setMembers((prev) => prev.filter((m) => m.id !== memberId))
-    } catch {
-      alert('멤버 제거에 실패했습니다.')
+    } catch (err: unknown) {
+      const status = (err as { response?: { status?: number } })?.response?.status
+      if (status === 403) {
+        alert('멤버 관리 권한이 없습니다.')
+      } else {
+        alert('멤버 제거에 실패했습니다.')
+      }
     }
   }
 

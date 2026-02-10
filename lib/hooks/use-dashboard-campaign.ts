@@ -29,10 +29,12 @@ export function useDashboardCampaign(): UseDashboardCampaignReturn {
       const stored = localStorage.getItem(STORAGE_KEY)
       if (stored) {
         const parsed = JSON.parse(stored)
-        setSelectionState({
-          workspaceId: parsed.workspaceId ?? undefined,
-          campaignId: parsed.campaignId ?? undefined,
-        })
+        // Validate parsed data before using
+        if (parsed && typeof parsed === 'object') {
+          const workspaceId = typeof parsed.workspaceId === 'number' ? parsed.workspaceId : undefined
+          const campaignId = typeof parsed.campaignId === 'number' ? parsed.campaignId : undefined
+          setSelectionState({ workspaceId, campaignId })
+        }
       }
     } catch {
       // Ignore parse errors

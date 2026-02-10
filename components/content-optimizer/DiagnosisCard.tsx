@@ -60,7 +60,7 @@ export function DiagnosisCard({ score, grade, className }: DiagnosisCardProps) {
       </CardHeader>
       <CardContent className="flex flex-col items-center space-y-6">
         {/* Circular Gauge */}
-        <ScoreGauge score={normalizedScore} grade={grade} size="lg" />
+        <ScoreGauge score={normalizedScore} size="lg" />
 
         {/* Grade Badge */}
         <div className="flex flex-col items-center gap-2">

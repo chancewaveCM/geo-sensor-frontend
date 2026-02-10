@@ -39,6 +39,9 @@ export function AdvancedProgressView({
   const [showCancelDialog, setShowCancelDialog] = useState(false)
 
   // Use ref to avoid stale closure in polling useEffect
+  // The ref pattern prevents onComplete from being added to the dependency array,
+  // which would cause unnecessary effect re-runs while still ensuring the latest
+  // callback is always invoked when the job completes.
   const onCompleteRef = useRef(onComplete)
   onCompleteRef.current = onComplete
 
