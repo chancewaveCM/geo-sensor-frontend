@@ -4,41 +4,35 @@ import {
   BarChart3,
   Shield,
   GitBranch,
-  DollarSign,
   LineChart,
-  FlaskConical,
-  History,
   Settings,
 } from 'lucide-react'
 import type { NavSection, BreadcrumbItem } from './types'
 
 export const navigationSections: NavSection[] = [
   {
-    title: 'OVERVIEW',
+    title: '개요',
     items: [
       { title: '홈', href: '/', icon: Home },
       { title: '대시보드', href: '/dashboard', icon: LayoutDashboard },
     ],
   },
   {
-    title: 'ANALYSIS',
+    title: '분석',
     items: [
-      { title: 'Strategic Analysis', href: '/dashboard/strategic', icon: BarChart3 },
-      { title: 'Brand Safety', href: '/dashboard/brand-safety', icon: Shield },
-      { title: 'Pipeline', href: '/dashboard/pipeline', icon: GitBranch, badge: '3' },
-      { title: 'ROI Hub', href: '/dashboard/roi', icon: DollarSign },
+      { title: '전략 분석', href: '/dashboard/strategic', icon: BarChart3 },
+      { title: '브랜드 안전성', href: '/dashboard/brand-safety', icon: Shield },
+      { title: '파이프라인', href: '/dashboard/pipeline', icon: GitBranch, badge: '3' },
     ],
   },
   {
-    title: 'TOOLS',
+    title: '도구',
     items: [
-      { title: '분석', href: '/analysis', icon: LineChart },
-      { title: '쿼리 랩', href: '/query-lab', icon: FlaskConical },
-      { title: '히스토리', href: '/query-lab/history', icon: History },
+      { title: 'AI 분석', href: '/analysis', icon: LineChart },
     ],
   },
   {
-    title: 'SETTINGS',
+    title: '설정',
     items: [
       { title: '설정', href: '/settings', icon: Settings },
     ],
@@ -49,38 +43,26 @@ export const navigationSections: NavSection[] = [
 export const routeConfig: Record<string, { title: string; breadcrumbs: BreadcrumbItem[] }> = {
   '/dashboard': {
     title: '대시보드',
-    breadcrumbs: [{ label: 'Overview' }, { label: '대시보드' }],
+    breadcrumbs: [{ label: '개요' }, { label: '대시보드' }],
   },
   '/dashboard/strategic': {
-    title: 'Strategic GEO Performance Analysis',
-    breadcrumbs: [{ label: 'Analysis' }, { label: 'Strategic' }],
+    title: '전략 GEO 성과 분석',
+    breadcrumbs: [{ label: '분석' }, { label: '전략 분석' }],
   },
   '/dashboard/brand-safety': {
-    title: 'Brand Safety & Risk Control Center',
-    breadcrumbs: [{ label: 'Analysis' }, { label: 'Brand Safety' }],
+    title: '브랜드 안전성 관리',
+    breadcrumbs: [{ label: '분석' }, { label: '브랜드 안전성' }],
   },
   '/dashboard/pipeline': {
-    title: 'Global GEO Pipeline & Approval Workflow',
-    breadcrumbs: [{ label: 'Analysis' }, { label: 'Pipeline' }],
-  },
-  '/dashboard/roi': {
-    title: 'Enterprise ROI & Settlement Hub',
-    breadcrumbs: [{ label: 'Analysis' }, { label: 'ROI Hub' }],
+    title: 'GEO 파이프라인 관리',
+    breadcrumbs: [{ label: '분석' }, { label: '파이프라인' }],
   },
   '/analysis': {
-    title: '분석',
-    breadcrumbs: [{ label: 'Tools' }, { label: '분석' }],
-  },
-  '/query-lab': {
-    title: '쿼리 랩',
-    breadcrumbs: [{ label: 'Tools' }, { label: '쿼리 랩' }],
-  },
-  '/query-lab/history': {
-    title: '파이프라인 히스토리',
-    breadcrumbs: [{ label: 'Tools' }, { label: '쿼리 랩' }, { label: '히스토리' }],
+    title: 'AI 분석',
+    breadcrumbs: [{ label: '도구' }, { label: 'AI 분석' }],
   },
   '/settings': {
     title: '설정',
-    breadcrumbs: [{ label: 'Settings' }],
+    breadcrumbs: [{ label: '설정' }],
   },
 }

@@ -20,28 +20,28 @@ test.describe('Dashboard', () => {
     for (const label of statLabels) {
       const element = page.getByText(label).first();
       const isVisible = await element.isVisible().catch(() => false);
-      expect(isVisible || true).toBeTruthy(); // Allow graceful failure
+      expect.soft(isVisible).toBeTruthy(); // Allow graceful failure
     }
   });
 
   test('sidebar navigation is visible', async ({ page }) => {
     // Check for navigation items
     const navItems = [
-      /대시보드|홈|Home/i,
-      /분석|Analysis/i,
-      /설정|Settings/i,
+      /대시보드|홈/i,
+      /AI 분석/i,
+      /설정/i,
     ];
 
     for (const item of navItems) {
       const element = page.getByRole('link', { name: item }).or(page.getByText(item));
       const isVisible = await element.first().isVisible().catch(() => false);
-      expect(isVisible || true).toBeTruthy();
+      expect.soft(isVisible).toBeTruthy();
     }
   });
 
   test('can navigate to Analysis tab', async ({ page }) => {
     // Find and click analysis link
-    const analysisLink = page.getByRole('link', { name: /분석|Analysis/i });
+    const analysisLink = page.getByRole('link', { name: /AI 분석/i });
 
     if (await analysisLink.isVisible().catch(() => false)) {
       await analysisLink.click();

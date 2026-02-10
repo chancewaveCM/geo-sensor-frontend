@@ -26,20 +26,20 @@ interface NavSection {
 function getNavSections(slug: string, pathname: string): NavSection[] {
   const sections: NavSection[] = [
     {
-      title: 'Workspace',
+      title: '워크스페이스',
       items: [
         {
-          title: 'Overview',
+          title: '개요',
           href: `/workspace/${slug}`,
           icon: LayoutDashboard,
         },
       ],
     },
     {
-      title: 'Campaigns',
+      title: '캠페인',
       items: [
         {
-          title: 'All Campaigns',
+          title: '전체 캠페인',
           href: `/workspace/${slug}/campaigns`,
           icon: Megaphone,
         },
@@ -52,35 +52,35 @@ function getNavSections(slug: string, pathname: string): NavSection[] {
   if (campaignMatch) {
     const campaignId = campaignMatch[1]
     sections.push({
-      title: 'Campaign',
+      title: '캠페인 상세',
       items: [
         {
-          title: 'Dashboard',
+          title: '대시보드',
           href: `/workspace/${slug}/campaigns/${campaignId}`,
           icon: LayoutDashboard,
         },
         {
-          title: 'Runs',
+          title: '실행',
           href: `/workspace/${slug}/campaigns/${campaignId}/runs`,
           icon: Play,
         },
         {
-          title: 'Queries',
+          title: '쿼리',
           href: `/workspace/${slug}/campaigns/${campaignId}/queries`,
           icon: Search,
         },
         {
-          title: 'Gallery',
+          title: '갤러리',
           href: `/workspace/${slug}/campaigns/${campaignId}/gallery`,
           icon: Image,
         },
         {
-          title: 'Compare',
+          title: '비교',
           href: `/workspace/${slug}/campaigns/${campaignId}/gallery/compare`,
           icon: GitCompareArrows,
         },
         {
-          title: 'Operations',
+          title: '작업',
           href: `/workspace/${slug}/campaigns/${campaignId}/operations`,
           icon: ClipboardList,
         },
@@ -89,10 +89,10 @@ function getNavSections(slug: string, pathname: string): NavSection[] {
   }
 
   sections.push({
-    title: 'Tools',
+    title: '도구',
     items: [
       {
-        title: 'Settings',
+        title: '설정',
         href: `/workspace/${slug}/settings`,
         icon: Settings,
       },
@@ -129,7 +129,7 @@ export function WorkspaceSidebar({
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
         role="navigation"
-        aria-label="Workspace navigation"
+        aria-label="워크스페이스 내비게이션"
       >
         <div className="flex h-full flex-col">
           {/* Workspace Header */}
@@ -138,7 +138,7 @@ export function WorkspaceSidebar({
             <button
               onClick={onClose}
               className="rounded-lg p-1 text-muted-foreground transition-colors hover:bg-accent md:hidden"
-              aria-label="Close menu"
+              aria-label="메뉴 닫기"
             >
               <X className="h-5 w-5" />
             </button>
@@ -151,7 +151,7 @@ export function WorkspaceSidebar({
                 {workspaceName}
               </h1>
               <p className="text-[10px] uppercase tracking-wider text-muted-foreground">
-                Workspace
+                워크스페이스
               </p>
             </div>
           </div>
@@ -211,7 +211,7 @@ export function WorkspaceSidebar({
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               <LayoutDashboard className="h-5 w-5" aria-hidden="true" />
-              <span>Back to Home</span>
+              <span>홈으로</span>
             </Link>
           </div>
         </div>

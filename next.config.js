@@ -4,6 +4,20 @@ const nextConfig = {
   experimental: {
     typedRoutes: true,
   },
+  async redirects() {
+    return [
+      {
+        source: '/query-lab',
+        destination: '/analysis',
+        permanent: true,
+      },
+      {
+        source: '/query-lab/history',
+        destination: '/analysis',
+        permanent: true,
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig
