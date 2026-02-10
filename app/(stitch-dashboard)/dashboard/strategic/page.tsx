@@ -1,64 +1,96 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { PerformanceMetricCard } from '@/components/stitch/dashboard/strategic/PerformanceMetricCard'
 import { CitationShareChart } from '@/components/stitch/dashboard/strategic/CitationShareChart'
 import { BrandRankingTable, BrandRanking } from '@/components/stitch/dashboard/strategic/BrandRankingTable'
 import { TrendChart } from '@/components/stitch/dashboard/strategic/TrendChart'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { FileText, TrendingUp, BarChart3, AlertCircle } from 'lucide-react'
-
-// Mock data - replace with real API calls
-const mockCitationData = [
-  { brand: 'Your Brand', share: 35.2, color: 'hsl(var(--chart-1))' },
-  { brand: 'Competitor A', share: 28.5, color: 'hsl(var(--chart-2))' },
-  { brand: 'Competitor B', share: 18.3, color: 'hsl(var(--chart-3))' },
-  { brand: 'Competitor C', share: 12.1, color: 'hsl(var(--chart-4))' },
-  { brand: 'Others', share: 5.9, color: 'hsl(var(--chart-5))' },
-]
-
-const mockBrandRankings: BrandRanking[] = [
-  { rank: 1, brand: 'Your Brand', mentions: 1450, share: 35.2, change: 5.2 },
-  { rank: 2, brand: 'Competitor A', mentions: 1175, share: 28.5, change: -2.1 },
-  { rank: 3, brand: 'Competitor B', mentions: 755, share: 18.3, change: 3.4 },
-  { rank: 4, brand: 'Competitor C', mentions: 498, share: 12.1, change: -1.5 },
-  { rank: 5, brand: 'Competitor D', mentions: 243, share: 5.9, change: 0.8 },
-]
-
-const mockTrendData = [
-  { date: 'W1', 'Your Brand': 32, 'Competitor A': 30, 'Competitor B': 15 },
-  { date: 'W2', 'Your Brand': 33, 'Competitor A': 29, 'Competitor B': 16 },
-  { date: 'W3', 'Your Brand': 31, 'Competitor A': 31, 'Competitor B': 17 },
-  { date: 'W4', 'Your Brand': 34, 'Competitor A': 28, 'Competitor B': 18 },
-  { date: 'W5', 'Your Brand': 33, 'Competitor A': 29, 'Competitor B': 17 },
-  { date: 'W6', 'Your Brand': 35, 'Competitor A': 28, 'Competitor B': 18 },
-  { date: 'W7', 'Your Brand': 36, 'Competitor A': 27, 'Competitor B': 19 },
-  { date: 'W8', 'Your Brand': 35, 'Competitor A': 28, 'Competitor B': 18 },
-]
-
-const trendBrands = [
-  { name: 'Your Brand', color: 'hsl(var(--chart-1))' },
-  { name: 'Competitor A', color: 'hsl(var(--chart-2))' },
-  { name: 'Competitor B', color: 'hsl(var(--chart-3))' },
-]
+import { FileText, TrendingUp, AlertCircle } from 'lucide-react'
+import { CampaignSelector } from '@/components/stitch/dashboard/CampaignSelector'
+import { useDashboardCampaign } from '@/lib/hooks/use-dashboard-campaign'
+import {
+  useCitationShare,
+  useBrandRanking,
+  useTimeseries,
+  useCampaignSummary,
+  useGeoScoreSummary
+} from '@/lib/hooks/use-campaigns'
 
 export default function StrategicAnalysisPage() {
-  const [isLoading, setIsLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('30D')
 
-  useEffect(() => {
-    // Simulate data loading
-    const timer = setTimeout(() => setIsLoading(false), 1000)
-    return () => clearTimeout(timer)
-  }, [])
+  const { workspaceId, campaignId } = useDashboardCampaign()
+  const { data: citationShare, isLoading: csLoading, isError: csError } = useCitationShare(workspaceId, campaignId)
+  const { data: brandRanking, isLoading: brLoading, isError: brError } = useBrandRanking(workspaceId, campaignId)
+  const { data: timeseries, isLoading: tsLoading, isError: tsError } = useTimeseries(workspaceId, campaignId)
+  const { data: summary, isLoading: smLoading, isError: smError } = useCampaignSummary(workspaceId, campaignId)
+  const { data: geoScore, isLoading: gsLoading, isError: gsError } = useGeoScoreSummary(workspaceId, campaignId)
+
+  const isLoading = csLoading || brLoading || tsLoading || smLoading || gsLoading
+  const isError = csError || brError || tsError || smError || gsError
+
+  if (!campaignId) {
+    return (
+      <div className="space-y-6">
+        <CampaignSelector />
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Select a campaign above to view strategic analytics.
+        </div>
+      </div>
+    )
+  }
 
   if (isLoading) {
-    return <LoadingSkeleton />
+    return (
+      <div className="space-y-6">
+        <CampaignSelector />
+        <LoadingSkeleton />
+      </div>
+    )
   }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <CampaignSelector />
+        <div className="flex items-center justify-center h-64 text-destructive">
+          Failed to load analytics data. Please try again later.
+        </div>
+      </div>
+    )
+  }
+
+  // Map real data for components
+  const pawcScore = (geoScore?.avg_geo_score ?? 0) * 100
+  const strokeDashoffset = 552.9 * (1 - (pawcScore / 100))
+
+  const chartColors = ['hsl(var(--chart-1))', 'hsl(var(--chart-2))', 'hsl(var(--chart-3))', 'hsl(var(--chart-4))', 'hsl(var(--chart-5))']
+  const citationData = (citationShare?.by_brand ?? []).map((b, i) => ({
+    brand: b.brand,
+    share: b.share * 100,
+    color: chartColors[i % chartColors.length],
+  }))
+
+  const brandRankings: BrandRanking[] = (brandRanking?.rankings ?? []).map(r => ({
+    rank: r.rank,
+    brand: r.brand,
+    mentions: r.citation_count,
+    share: r.citation_share * 100,
+    change: 0, // Phase 2: historical comparison
+  }))
+
+  const trendData = (timeseries?.time_series ?? []).map(point => ({
+    date: new Date(point.timestamp).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+    'Target Brand': point.citation_share_overall * 100,
+  }))
+  const trendBrands = [{ name: 'Target Brand', color: 'hsl(var(--chart-1))' }]
 
   return (
     <div className="space-y-6 animate-fade-in">
+      <CampaignSelector />
+
       {/* Hero Section - PAWC Score Card */}
       <section className="relative overflow-hidden rounded-lg bg-gradient-to-r from-brand-navy via-brand-navy-light to-chart-4 text-white p-8 shadow-sm">
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
@@ -68,17 +100,16 @@ export default function StrategicAnalysisPage() {
                 Overall Performance Index
               </h3>
               <div className="flex items-baseline gap-4 mt-1">
-                <span className="text-7xl font-bold">78.5</span>
+                <span className="text-7xl font-bold">{pawcScore.toFixed(1)}</span>
                 <div className="flex items-center bg-success/20 text-success px-2 py-1 rounded-full text-sm font-bold border border-success/30">
                   <TrendingUp className="h-4 w-4 mr-1" />
-                  +5.2
+                  --
                 </div>
               </div>
               <h2 className="text-2xl font-bold mt-2">PAWC Score Card</h2>
             </div>
             <p className="text-white/70 max-w-md">
-              Your citations in AI search engines have increased by 14% compared to the previous period.
-              Focus on technical specs for further gains.
+              Track your AI citation performance across search engines. Detailed trend analysis available below.
             </p>
             <Button className="bg-primary hover:bg-primary/90 text-white font-bold shadow-lg">
               Generate Detailed Strategy
@@ -88,7 +119,7 @@ export default function StrategicAnalysisPage() {
 
           <div className="relative w-48 h-48 flex items-center justify-center">
             {/* Progress Ring */}
-            <svg className="w-full h-full transform -rotate-90" role="img" aria-label="78.5% efficiency rating">
+            <svg className="w-full h-full transform -rotate-90" role="img" aria-label={`${pawcScore.toFixed(1)}% efficiency rating`}>
               <circle
                 className="text-white/10"
                 cx="96"
@@ -106,12 +137,12 @@ export default function StrategicAnalysisPage() {
                 r="88"
                 stroke="currentColor"
                 strokeDasharray="552.9"
-                strokeDashoffset="118.8"
+                strokeDashoffset={strokeDashoffset}
                 strokeWidth="12"
               />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-4xl font-bold">78.5%</span>
+              <span className="text-4xl font-bold">{pawcScore.toFixed(1)}%</span>
               <span className="text-xs text-white/70 uppercase font-bold tracking-widest">
                 Efficiency
               </span>
@@ -148,44 +179,38 @@ export default function StrategicAnalysisPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
         <PerformanceMetricCard
           title="Citation Share"
-          value="35.2%"
-          change={5.2}
+          value={`${((citationShare?.overall_citation_share ?? 0) * 100).toFixed(1)}%`}
+          change={0}
           trend="up"
-          sparklineData={[60, 65, 62, 70, 68, 75, 78, 85]}
         />
         <PerformanceMetricCard
           title="Total Mentions"
-          value="1,450"
-          change={12.5}
+          value={(summary?.total_citations ?? 0).toLocaleString()}
+          change={0}
           trend="up"
-          unit="%"
-          sparklineData={[55, 58, 60, 65, 70, 72, 75, 80]}
         />
         <PerformanceMetricCard
           title="Response Quality"
-          value="8.7"
-          change={0.3}
+          value={((geoScore?.avg_geo_score ?? 0) * 10).toFixed(1)}
+          change={0}
           trend="up"
           unit="/10"
-          sparklineData={[70, 72, 68, 75, 78, 80, 82, 87]}
         />
         <PerformanceMetricCard
           title="Coverage Rate"
-          value="92%"
-          change={-2.1}
-          trend="down"
-          unit="%"
-          sparklineData={[95, 94, 96, 93, 92, 94, 93, 92]}
+          value={`${summary?.latest_run ? Math.round((summary.latest_run.completed_queries / Math.max(summary.latest_run.total_queries, 1)) * 100) : 0}%`}
+          change={0}
+          trend="up"
         />
       </div>
 
       {/* Analysis Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Citation Share Chart */}
-        <CitationShareChart data={mockCitationData} title="Citation Share Distribution" />
+        <CitationShareChart data={citationData} title="Citation Share Distribution" />
 
         {/* Brand Rankings */}
-        <BrandRankingTable brands={mockBrandRankings} />
+        <BrandRankingTable brands={brandRankings} />
 
         {/* SHAP Contribution Analysis */}
         <Card className="shadow-sm hover:shadow-md transition-all duration-200">
@@ -228,7 +253,7 @@ export default function StrategicAnalysisPage() {
 
         {/* Trend Chart */}
         <TrendChart
-          data={mockTrendData}
+          data={trendData}
           brands={trendBrands}
           timeRange={timeRange}
           title="Performance Trends Over Time"
@@ -245,7 +270,7 @@ export default function StrategicAnalysisPage() {
             <div>
               <p className="text-sm font-bold">Latest Citations Report Available</p>
               <p className="text-xs text-muted-foreground">
-                Last updated 14 minutes ago • Source: Multi-LLM API Bridge
+                Data refreshed on page load • Source: Multi-LLM API Bridge
               </p>
             </div>
           </div>

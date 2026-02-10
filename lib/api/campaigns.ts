@@ -17,6 +17,7 @@ import type {
   GEOScoreSummary,
   CampaignSummary,
   TimeseriesData,
+  BrandSafetyMetrics,
 } from '@/lib/types'
 
 const API_PREFIX = '/api/v1'
@@ -179,4 +180,8 @@ export async function exportCampaignCSV(workspaceId: number, campaignId: number)
     { responseType: 'blob' }
   )
   return response.data
+}
+
+export async function fetchBrandSafety(workspaceId: number, campaignId: number): Promise<BrandSafetyMetrics> {
+  return get<BrandSafetyMetrics>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/brand-safety`)
 }

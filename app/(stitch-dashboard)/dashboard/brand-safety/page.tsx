@@ -8,67 +8,30 @@ import { RiskTimeline, TimelineEvent } from '@/components/stitch/dashboard/brand
 import { SafetyActionPanel } from '@/components/stitch/dashboard/brand-safety/SafetyActionPanel'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, Settings } from 'lucide-react'
+import { CampaignSelector } from '@/components/stitch/dashboard/CampaignSelector'
+import { useDashboardCampaign } from '@/lib/hooks/use-dashboard-campaign'
+import { useBrandSafety } from '@/lib/hooks/use-campaigns'
 
-// Mock data
-const mockIncidents: Incident[] = [
-  {
-    id: '#AI-9482',
-    severity: 'critical',
-    title: 'Hallucination: Bankruptcy Claim Detected',
-    description: 'AI is fabricating bankruptcy claims about the company without factual basis.',
-    source: 'ChatGPT-4',
-    timestamp: '2 mins ago',
-    quote: '"According to recent reports, the GEO Corp parent company filed for Chapter 11 bankruptcy in early 2024 following its failed acquisition..."'
-  },
-  {
-    id: '#AI-9467',
-    severity: 'warning',
-    title: 'Misinformation: Outdated Product Pricing',
-    description: 'AI is citing the 2022 Enterprise subscription rates ($499/mo) instead of the current 2024 rates ($649/mo).',
-    source: 'Perplexity',
-    timestamp: '14 mins ago'
-  },
-  {
-    id: '#AI-9431',
-    severity: 'safe',
-    title: 'Verified: Quarterly Earnings Report',
-    description: 'AI accurately cited Q3 earnings with correct figures and sources.',
-    source: 'Anthropic Claude',
-    timestamp: '45 mins ago',
-    quote: '"GEO Sensor Platform announced its Q3 earnings today, showing a 15% increase in year-over-year revenue..."'
-  }
-]
+function mapConfidenceToSeverity(score: number | null): 'critical' | 'warning' | 'safe' {
+  if (score === null) return 'warning'
+  if (score < 0.5) return 'critical'
+  if (score < 0.7) return 'warning'
+  return 'safe'
+}
 
-const mockTimelineEvents: TimelineEvent[] = [
-  {
-    id: '1',
-    timestamp: '10:42 AM',
-    datetime: '2024-01-01T10:42:00',
-    severity: 'critical',
-    title: 'Negative citation spike',
-    description: 'Social Media & News Feed'
-  },
-  {
-    id: '2',
-    timestamp: '09:15 AM',
-    datetime: '2024-01-01T09:15:00',
-    severity: 'warning',
-    title: 'Sentiment deviation detected',
-    description: 'Reddit r/technology'
-  },
-  {
-    id: '3',
-    timestamp: '08:30 AM',
-    datetime: '2024-01-01T08:30:00',
-    severity: 'info',
-    title: 'New AI crawler detected',
-    description: 'Corporate Domain Index'
-  }
-]
+function mapConfidenceToTimelineSeverity(score: number | null): 'critical' | 'warning' | 'info' {
+  if (score === null) return 'warning'
+  if (score < 0.5) return 'critical'
+  if (score < 0.7) return 'warning'
+  return 'info'
+}
 
 export default function BrandSafetyPage() {
   const [activeTab, setActiveTab] = useState<'realtime' | 'flagged' | 'history'>('realtime')
   const [safetySettings, setSafetySettings] = useState({ shieldActive: true })
+
+  const { workspaceId, campaignId } = useDashboardCampaign()
+  const { data: brandSafety, isLoading, isError } = useBrandSafety(workspaceId, campaignId)
 
   const handleAction = (action: 'refresh' | 'config') => {
     // Action handled
@@ -82,8 +45,81 @@ export default function BrandSafetyPage() {
     // Open configuration
   }
 
+  // Map data for IncidentList
+  const incidents: Incident[] = (brandSafety?.recent_incidents ?? []).map(citation => ({
+    id: String(citation.citation_id),
+    severity: mapConfidenceToSeverity(citation.confidence_score),
+    title: citation.cited_brand,
+    description: citation.citation_span || 'No description available',
+    source: citation.llm_provider,
+    timestamp: new Date(citation.created_at).toLocaleString(),
+  }))
+
+  // Map data for RiskTimeline
+  const timelineEvents: TimelineEvent[] = (brandSafety?.recent_incidents ?? []).slice(0, 10).map(citation => ({
+    id: String(citation.citation_id),
+    timestamp: new Date(citation.created_at).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
+    datetime: citation.created_at,
+    severity: mapConfidenceToTimelineSeverity(citation.confidence_score),
+    title: citation.cited_brand,
+    description: citation.llm_provider || 'Unknown provider',
+  }))
+
+  // Show empty state when no campaign
+  if (!campaignId) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="px-6 pt-6">
+          <CampaignSelector />
+        </div>
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Select a campaign above to view brand safety data.
+        </div>
+      </div>
+    )
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="px-6 pt-6">
+          <CampaignSelector />
+        </div>
+        <div className="space-y-6 p-6">
+          <div className="h-16 rounded-lg bg-muted animate-pulse" />
+          <div className="flex gap-6">
+            <div className="flex-[0.7] h-96 rounded-lg bg-muted animate-pulse" />
+            <div className="flex-[0.3] space-y-6">
+              <div className="h-48 rounded-lg bg-muted animate-pulse" />
+              <div className="h-48 rounded-lg bg-muted animate-pulse" />
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="px-6 pt-6">
+          <CampaignSelector />
+        </div>
+        <div className="flex items-center justify-center h-64 text-destructive">
+          Failed to load brand safety data. Please try again later.
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-background">
+      {/* Campaign Selector */}
+      <div className="px-6 pt-6">
+        <CampaignSelector />
+      </div>
+
       {/* Alert Summary Bar */}
       <div className="bg-gray-900 text-white px-6 py-4" role="status" aria-live="polite">
         <div className="flex flex-wrap gap-4 items-center justify-between">
@@ -91,11 +127,11 @@ export default function BrandSafetyPage() {
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
               System Status:
             </span>
-            <RiskMetricCard level="critical" count={12} description="critical incidents" />
-            <RiskMetricCard level="warning" count={45} description="warnings" />
-            <RiskMetricCard level="safe" count={1240} description="safe responses" />
+            <RiskMetricCard level="critical" count={brandSafety?.critical_count ?? 0} description="critical incidents" />
+            <RiskMetricCard level="warning" count={brandSafety?.warning_count ?? 0} description="warnings" />
+            <RiskMetricCard level="safe" count={brandSafety?.safe_count ?? 0} description="safe responses" />
             <div className="flex items-center gap-2 bg-gray-700 border border-gray-600 px-3 py-1 rounded-full ml-2">
-              <span className="text-xs font-bold text-gray-300">TOTAL: 1,297</span>
+              <span className="text-xs font-bold text-gray-300">TOTAL: {(brandSafety?.total_citations ?? 0).toLocaleString()}</span>
             </div>
           </div>
           <div className="flex gap-2">
@@ -179,7 +215,7 @@ export default function BrandSafetyPage() {
 
             {/* Feed Content */}
             <div className="flex-1 overflow-y-auto p-4 max-h-[calc(100vh-320px)]">
-              <IncidentList incidents={mockIncidents} />
+              <IncidentList incidents={incidents} />
             </div>
           </div>
         </section>
@@ -187,7 +223,11 @@ export default function BrandSafetyPage() {
         {/* Right Panel: Side Stats (30%) */}
         <aside className="flex-[0.3] flex flex-col gap-6">
           {/* Sentiment Gauge */}
-          <SentimentGauge positive={856} neutral={384} negative={57} />
+          <SentimentGauge
+            positive={brandSafety?.safe_count ?? 0}
+            neutral={(brandSafety?.warning_count ?? 0) + (brandSafety?.unknown_count ?? 0)}
+            negative={brandSafety?.critical_count ?? 0}
+          />
 
           {/* Official Source Status Card */}
           <section className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
@@ -247,7 +287,7 @@ export default function BrandSafetyPage() {
           </section>
 
           {/* Threat Detection Timeline */}
-          <RiskTimeline events={mockTimelineEvents} />
+          <RiskTimeline events={timelineEvents} />
 
           {/* Quick Shield Toggle */}
           <SafetyActionPanel

@@ -174,3 +174,25 @@ export interface TimeseriesData {
   time_series: TimeseriesDataPoint[]
   annotations: Array<Record<string, unknown>>
 }
+
+export interface BrandSafetyIncident {
+  citation_id: number
+  cited_brand: string
+  citation_span: string
+  confidence_score: number | null
+  is_verified: boolean
+  llm_provider: string
+  created_at: string
+}
+
+export interface BrandSafetyMetrics {
+  campaign_id: number
+  total_citations: number
+  critical_count: number
+  warning_count: number
+  safe_count: number
+  unknown_count: number
+  verified_count: number
+  unverified_count: number
+  recent_incidents: BrandSafetyIncident[]
+}
