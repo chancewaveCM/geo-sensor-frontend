@@ -68,8 +68,8 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <Card className="w-full max-w-md bg-card shadow-xl border-brand-navy/10">
+    <div className="flex items-center justify-center">
+      <Card className="auth-card-fallback w-full max-w-md bg-card shadow-xl border-brand-navy/10">
         <CardHeader className="space-y-4 pb-8">
           {/* GEO Sensor Logo */}
           <div className="flex justify-center">
@@ -158,7 +158,7 @@ export default function LoginPage() {
             계정이 없으신가요?{' '}
             <Link
               href="/register"
-              className="text-brand-orange hover:text-brand-orange/90 font-medium underline underline-offset-4 transition-colors"
+              className="auth-link-fallback text-brand-orange hover:text-brand-orange/90 font-medium underline underline-offset-4 transition-colors"
             >
               회원가입
             </Link>
