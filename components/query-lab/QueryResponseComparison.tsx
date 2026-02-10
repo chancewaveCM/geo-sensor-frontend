@@ -3,9 +3,9 @@
 import { useEffect, useState, useCallback } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/ui/empty-state'
 import { Button } from '@/components/ui/button'
+import { LoadingCard } from '@/components/ui/loading-card'
 import { AlertCircle, RefreshCw } from 'lucide-react'
 import { getQueryResponses } from '@/lib/api/pipeline'
 import type { RawLLMResponse } from '@/types/pipeline'
@@ -179,39 +179,8 @@ function ResponseCard({ response }: ResponseCardProps) {
 function LoadingSkeleton() {
   return (
     <div className="space-y-6">
-      {/* Query Header Skeleton */}
-      <div className="space-y-2">
-        <Skeleton className="h-7 w-32" />
-        <Skeleton className="h-5 w-full max-w-xl" />
-      </div>
-
-      {/* Grid Skeleton */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {[1, 2].map((i) => (
-          <Card key={i} className="shadow-sm">
-            <CardHeader className="space-y-3">
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-5 w-20" />
-                <Skeleton className="h-4 w-24" />
-              </div>
-              <Skeleton className="h-5 w-24" />
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Skeleton className="h-[200px] w-full rounded-lg" />
-              <div className="flex justify-between">
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-                <div className="space-y-2">
-                  <Skeleton className="h-4 w-24" />
-                  <Skeleton className="h-4 w-20" />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <LoadingCard type="page-header" />
+      <LoadingCard type="gallery" count={2} />
     </div>
   )
 }

@@ -11,6 +11,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from 'recharts'
+import { EmptyState } from '@/components/ui/empty-state'
 import { TrendingUp } from 'lucide-react'
 import { getTokenColor, CHART_PALETTE } from '@/lib/design-tokens'
 
@@ -72,11 +73,12 @@ export function CitationTrendChart({ data, brandName = 'Target', isLoading }: Ci
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col items-center justify-center h-[350px] text-muted-foreground">
-            <TrendingUp className="h-12 w-12 mb-4 opacity-50" />
-            <p>아직 시계열 데이터가 없습니다</p>
-            <p className="text-sm">캠페인을 실행하면 추이가 표시됩니다</p>
-          </div>
+          <EmptyState
+            variant="minimal"
+            icon={<TrendingUp className="h-6 w-6" />}
+            title="아직 시계열 데이터가 없습니다"
+            description="캠페인을 실행하면 추이가 표시됩니다"
+          />
         </CardContent>
       </Card>
     )

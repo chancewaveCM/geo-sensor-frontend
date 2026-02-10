@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { getCompanyProfiles, type CompanyProfileListResponse } from "@/lib/api/company-profiles"
 import { PROVIDERS } from "@/lib/constants/query-lab-config"
 import type { CompanyProfile } from "@/types/analysis"
@@ -91,25 +92,27 @@ export function PipelineSetupForm({ onSubmit, isLoading, disabled }: PipelineSet
 
           <div className="space-y-2">
             <Label htmlFor="company">기업 프로필</Label>
-            <select
-              id="company"
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-              value={config.companyProfileId ?? ""}
-              onChange={(e) =>
+            <Select
+              value={config.companyProfileId?.toString() ?? ""}
+              onValueChange={(value) =>
                 setConfig((prev) => ({
                   ...prev,
-                  companyProfileId: e.target.value ? Number(e.target.value) : null,
+                  companyProfileId: value ? Number(value) : null,
                 }))
               }
               disabled={disabled || profilesLoading}
             >
-              <option value="">기업을 선택하세요</option>
-              {profiles.map((profile) => (
-                <option key={profile.id} value={profile.id}>
-                  {profile.name}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="company">
+                <SelectValue placeholder="기업을 선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                {profiles.map((profile) => (
+                  <SelectItem key={profile.id} value={profile.id.toString()}>
+                    {profile.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-2">
