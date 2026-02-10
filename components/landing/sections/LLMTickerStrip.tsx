@@ -30,12 +30,12 @@ export function LLMTickerStrip() {
   return (
     <section className="overflow-hidden border-y border-gray-800 bg-gray-900 py-4">
       <div className="flex w-max animate-ticker-scroll items-center motion-reduce:animate-none [animation-duration:22s] hover:[animation-play-state:paused] md:[animation-duration:32s]">
-        <div className="flex shrink-0 items-center gap-3 pr-3">
+        <div className="flex min-w-full shrink-0 items-center justify-around gap-3 pr-3">
           {providers.map((provider) => (
             <ProviderPill key={provider.id} provider={provider} />
           ))}
         </div>
-        <div aria-hidden className="flex shrink-0 items-center gap-3 pr-3">
+        <div aria-hidden className="flex min-w-full shrink-0 items-center justify-around gap-3 pr-3">
           {providers.map((provider) => (
             <ProviderPill key={`${provider.id}-dup`} provider={provider} />
           ))}
