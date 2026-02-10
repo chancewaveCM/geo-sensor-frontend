@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import type { CampaignRun } from '@/lib/types'
+import { getTokenColor } from '@/lib/design-tokens'
 
 interface TimeseriesChartProps {
   runs: CampaignRun[]
@@ -24,7 +25,7 @@ export function TimeseriesChart({ runs }: TimeseriesChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Query Execution Trends</CardTitle>
+        <CardTitle className="text-lg">쿼리 실행 추이</CardTitle>
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={300}>
@@ -53,19 +54,19 @@ export function TimeseriesChart({ runs }: TimeseriesChartProps) {
             <Line
               type="monotone"
               dataKey="completed"
-              stroke="#F97316"
+              stroke={getTokenColor('--chart-1')}
               strokeWidth={2}
-              name="Completed"
-              dot={{ fill: '#F97316', r: 4 }}
+              name="완료"
+              dot={{ fill: getTokenColor('--chart-1'), r: 4 }}
               activeDot={{ r: 6 }}
             />
             <Line
               type="monotone"
               dataKey="failed"
-              stroke="#ef4444"
+              stroke={getTokenColor('--chart-5')}
               strokeWidth={2}
-              name="Failed"
-              dot={{ fill: '#ef4444', r: 4 }}
+              name="실패"
+              dot={{ fill: getTokenColor('--chart-5'), r: 4 }}
               activeDot={{ r: 6 }}
             />
           </LineChart>

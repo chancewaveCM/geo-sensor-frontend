@@ -33,3 +33,33 @@ export function Breadcrumbs({ items }: BreadcrumbsProps) {
     </nav>
   )
 }
+
+/** Generate breadcrumb items for workspace routes */
+export function getWorkspaceBreadcrumbs(
+  workspaceName: string,
+  slug: string,
+  campaignName?: string,
+  campaignId?: string,
+  currentPage?: string,
+): BreadcrumbItem[] {
+  const items: BreadcrumbItem[] = [
+    { label: workspaceName, href: `/workspace/${slug}` },
+  ]
+
+  if (campaignName && campaignId) {
+    items.push({
+      label: '캠페인',
+      href: `/workspace/${slug}/campaigns`,
+    })
+    items.push({
+      label: campaignName,
+      href: `/workspace/${slug}/campaigns/${campaignId}`,
+    })
+  }
+
+  if (currentPage) {
+    items.push({ label: currentPage })
+  }
+
+  return items
+}

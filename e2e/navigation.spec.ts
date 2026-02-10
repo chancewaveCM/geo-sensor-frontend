@@ -22,7 +22,7 @@ async function isBackendAvailable(): Promise<boolean> {
  * CURRENT STATE (middleware.ts):
  * - DISABLE_AUTH_FOR_TESTING = true (auth checks disabled)
  * - Only /dashboard is in protected routes matcher
- * - /analysis, /settings, /query-lab not yet protected
+ * - /analysis, /settings not yet protected
  *
  * PRODUCTION REQUIREMENTS:
  * - Set DISABLE_AUTH_FOR_TESTING = false
@@ -80,17 +80,6 @@ test.describe('Navigation and Protected Routes', () => {
       expect(token).toBeNull();
     });
 
-    test('query-lab redirects to login when unauthenticated', async ({ page }) => {
-      await page.goto('/query-lab');
-      const currentUrl = page.url();
-      if (!currentUrl.includes('/login')) {
-        test.skip(true, 'Auth protection disabled in middleware (DISABLE_AUTH_FOR_TESTING)');
-      }
-      await page.waitForURL(/\/login/, { timeout: 5000 });
-      const token = await getAuthToken(page);
-      expect(token).toBeNull();
-    });
-
     test('public routes accessible without authentication', async ({ page }) => {
       // Landing page
       await page.goto('/');
@@ -114,7 +103,7 @@ test.describe('Navigation and Protected Routes', () => {
         test.skip(true, 'Auth protection disabled in middleware (DISABLE_AUTH_FOR_TESTING)');
       }
 
-      const protectedTexts = ['대시보드', '분석', '쿼리랩', 'Dashboard'];
+      const protectedTexts = ['대시보드', 'AI 분석'];
       let flashDetected = false;
 
       page.on('framenavigated', async () => {
@@ -162,19 +151,6 @@ test.describe('Navigation and Protected Routes', () => {
         await expect(page).toHaveURL(/\/analysis/);
       } else {
         // Route may not exist yet, pass test
-        expect(true).toBeTruthy();
-      }
-
-      // Navigate back to dashboard
-      await page.goto('/dashboard');
-
-      // Navigate to Query Lab (check if link exists)
-      const queryLabLink = page.locator('a[href*="/query-lab"]').first();
-      if (await queryLabLink.isVisible().catch(() => false)) {
-        await queryLabLink.click();
-        await page.waitForURL(/\/query-lab/, { timeout: 5000 });
-        await expect(page).toHaveURL(/\/query-lab/);
-      } else {
         expect(true).toBeTruthy();
       }
 
