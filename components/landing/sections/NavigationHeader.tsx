@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -22,21 +22,40 @@ export function NavigationHeader() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [activeId, setActiveId] = useState<string>('features')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const scrollRafRef = useRef<number | null>(null)
+  const mobileMenuPanelId = 'landing-mobile-nav'
 
   useEffect(() => {
-    const handleScroll = () => {
+    const updateScrolledState = () => {
       setIsScrolled(window.scrollY > 50)
     }
 
-    handleScroll()
-    window.addEventListener('scroll', handleScroll, { passive: true })
+    const handleScroll = () => {
+      if (scrollRafRef.current !== null) return
+      scrollRafRef.current = window.requestAnimationFrame(() => {
+        updateScrolledState()
+        scrollRafRef.current = null
+      })
+    }
 
-    return () => window.removeEventListener('scroll', handleScroll)
+    updateScrolledState()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', handleScroll, { passive: true })
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', handleScroll)
+      if (scrollRafRef.current !== null) {
+        window.cancelAnimationFrame(scrollRafRef.current)
+      }
+    }
   }, [])
 
   useEffect(() => {
-    const sections = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(Boolean)
-    if (!sections.length) return
+    const sectionElements = NAV_ITEMS.map((item) => document.getElementById(item.id)).filter(
+      (section): section is HTMLElement => Boolean(section)
+    )
+    if (!sectionElements.length) return
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -50,9 +69,23 @@ export function NavigationHeader() {
       { threshold: [0.2, 0.45, 0.7], rootMargin: '-80px 0px -45% 0px' }
     )
 
-    sections.forEach((section) => observer.observe(section as Element))
-    return () => observer.disconnect()
+    sectionElements.forEach((section) => observer.observe(section))
+    return () => {
+      sectionElements.forEach((section) => observer.unobserve(section))
+      observer.disconnect()
+    }
   }, [])
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false)
+      }
+    }
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [isMobileMenuOpen])
 
   const baseClass = useMemo(
     () =>
@@ -84,6 +117,7 @@ export function NavigationHeader() {
             <button
               key={item.id}
               type="button"
+              aria-current={activeId === item.id ? 'page' : undefined}
               onClick={() => handleScrollTo(item.id)}
               className={cn(
                 'relative text-sm font-medium text-gray-600 transition-colors hover:text-brand-navy',
@@ -111,7 +145,10 @@ export function NavigationHeader() {
         <button
           type="button"
           className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-gray-700 md:hidden"
-          aria-label="모바일 메뉴 열기"
+          aria-label={isMobileMenuOpen ? '모바일 메뉴 닫기' : '모바일 메뉴 열기'}
+          aria-haspopup="menu"
+          aria-controls={mobileMenuPanelId}
+          aria-expanded={isMobileMenuOpen}
           onClick={() => setIsMobileMenuOpen((prev) => !prev)}
         >
           {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -119,12 +156,18 @@ export function NavigationHeader() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="border-t border-border bg-white/95 px-4 py-4 md:hidden">
+        <div
+          id={mobileMenuPanelId}
+          role="menu"
+          aria-label="모바일 네비게이션 메뉴"
+          className="border-t border-border bg-white/95 px-4 py-4 md:hidden"
+        >
           <div className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
                 type="button"
+                role="menuitem"
                 className={cn(
                   'rounded-lg px-3 py-2 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-muted hover:text-brand-navy',
                   activeId === item.id && 'bg-muted text-brand-navy'

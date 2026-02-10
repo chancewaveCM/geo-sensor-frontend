@@ -17,7 +17,7 @@ export function ScrollReveal({ children, className, delay = 0 }: ScrollRevealPro
     <div
       ref={ref}
       className={cn(
-        'transition-all duration-700 will-change-transform',
+        'transition-all duration-700 motion-reduce:transition-none',
         isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0',
         className
       )}

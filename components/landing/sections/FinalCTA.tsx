@@ -7,12 +7,34 @@ import { Input } from '@/components/ui/input'
 
 export function FinalCTA() {
   const [email, setEmail] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [feedbackMessage, setFeedbackMessage] = useState('')
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    if (!email.trim()) return
-    setSubmitted(true)
+    if (status === 'submitting') return
+
+    const normalizedEmail = email.trim()
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)
+
+    if (!isValidEmail) {
+      setStatus('error')
+      setFeedbackMessage('유효한 업무용 이메일을 입력해주세요.')
+      return
+    }
+
+    setStatus('submitting')
+    setFeedbackMessage('요청을 처리하고 있습니다...')
+
+    try {
+      // API 연동 전까지 UX 검증용 비동기 시뮬레이션
+      await new Promise((resolve) => setTimeout(resolve, 700))
+      setStatus('success')
+      setFeedbackMessage('얼리 액세스 요청이 접수되었습니다.')
+    } catch {
+      setStatus('error')
+      setFeedbackMessage('요청 처리에 실패했습니다. 잠시 후 다시 시도해주세요.')
+    }
   }
 
   return (
@@ -34,16 +56,32 @@ export function FinalCTA() {
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             placeholder="work@email.com"
+            aria-invalid={status === 'error'}
+            disabled={status === 'submitting' || status === 'success'}
             className="h-11 rounded-full border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-gray-500"
           />
           <Button
             type="submit"
-            className="h-11 rounded-full bg-brand-orange px-6 text-white hover:bg-brand-orange-hover animate-pulse-subtle"
+            disabled={status === 'submitting' || status === 'success'}
+            className={`h-11 rounded-full bg-brand-orange px-6 text-white hover:bg-brand-orange-hover ${
+              status === 'idle' ? 'animate-pulse-subtle' : ''
+            }`}
           >
-            {submitted ? '요청이 접수되었습니다' : '얼리 액세스 신청'}
-            {!submitted && <ArrowRight className="ml-2 h-4 w-4" />}
+            {status === 'submitting' && '처리 중...'}
+            {status === 'success' && '요청 접수 완료'}
+            {status === 'error' && '다시 시도하기'}
+            {status === 'idle' && '얼리 액세스 신청'}
+            {status !== 'success' && <ArrowRight className="ml-2 h-4 w-4" />}
           </Button>
         </form>
+        <p
+          aria-live="polite"
+          className={`mt-3 text-sm ${
+            status === 'error' ? 'text-rose-300' : 'text-gray-300'
+          }`}
+        >
+          {feedbackMessage}
+        </p>
       </div>
     </section>
   )

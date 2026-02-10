@@ -15,6 +15,7 @@ import { FAQSection } from '@/components/landing/sections/FAQSection'
 import { FinalCTA } from '@/components/landing/sections/FinalCTA'
 import { Footer } from '@/components/landing/sections/Footer'
 import { ScrollReveal } from '@/components/landing/sections/ScrollReveal'
+import { SectionErrorBoundary } from '@/components/landing/sections/SectionErrorBoundary'
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
@@ -33,30 +34,56 @@ export function LandingPage() {
       className={`${notoSansKr.variable} ${inter.variable} min-h-screen bg-background text-foreground [font-family:var(--font-noto-sans-kr),var(--font-inter-landing),system-ui,sans-serif]`}
     >
       <NavigationHeader />
-      <main>
-        <HeroSection />
-        <LLMTickerStrip />
-        <SocialProofBar />
-        <WhyCitationShareSection />
-        <ScrollReveal>
-          <FeatureShowcase />
-        </ScrollReveal>
-        <ScrollReveal>
-          <DashboardPreview />
-        </ScrollReveal>
-        <GeoScoreExplained />
-        <ScrollReveal>
-          <HowItWorks />
-        </ScrollReveal>
-        <ProviderComparison />
-        <ScrollReveal>
-          <CaseStudies />
-        </ScrollReveal>
-        <ScrollReveal>
-          <TestimonialsSection />
-        </ScrollReveal>
-        <FAQSection />
-        <FinalCTA />
+      <main id="main-content">
+        <SectionErrorBoundary sectionName="Hero">
+          <HeroSection />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="LLM Ticker">
+          <LLMTickerStrip />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Social Proof">
+          <SocialProofBar />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Why Citation Share">
+          <WhyCitationShareSection />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Feature Showcase">
+          <ScrollReveal>
+            <FeatureShowcase />
+          </ScrollReveal>
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Dashboard Preview">
+          <ScrollReveal>
+            <DashboardPreview />
+          </ScrollReveal>
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="GEO Score">
+          <GeoScoreExplained />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="How It Works">
+          <ScrollReveal>
+            <HowItWorks />
+          </ScrollReveal>
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Provider Comparison">
+          <ProviderComparison />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Case Studies">
+          <ScrollReveal>
+            <CaseStudies />
+          </ScrollReveal>
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Testimonials">
+          <ScrollReveal>
+            <TestimonialsSection />
+          </ScrollReveal>
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="FAQ">
+          <FAQSection />
+        </SectionErrorBoundary>
+        <SectionErrorBoundary sectionName="Final CTA">
+          <FinalCTA />
+        </SectionErrorBoundary>
       </main>
       <Footer />
     </div>

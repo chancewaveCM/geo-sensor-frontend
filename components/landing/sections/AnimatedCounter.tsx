@@ -17,19 +17,27 @@ export function AnimatedCounter({ value, duration = 1500, suffix = '', className
   useEffect(() => {
     if (!isVisible) return
 
-    const intervalMs = 20
-    const totalSteps = Math.max(1, Math.floor(duration / intervalMs))
-    let step = 0
-    const timer = window.setInterval(() => {
-      step += 1
-      const nextValue = Math.round((value * step) / totalSteps)
-      setDisplay(Math.min(value, nextValue))
-      if (step >= totalSteps) {
-        window.clearInterval(timer)
-      }
-    }, intervalMs)
+    let rafId = 0
+    const start = performance.now()
 
-    return () => window.clearInterval(timer)
+    const animate = (timestamp: number) => {
+      const elapsed = timestamp - start
+      const progress = Math.min(elapsed / duration, 1)
+      const nextValue = Math.round(value * progress)
+      setDisplay(nextValue)
+
+      if (progress < 1) {
+        rafId = window.requestAnimationFrame(animate)
+      }
+    }
+
+    rafId = window.requestAnimationFrame(animate)
+
+    return () => {
+      if (rafId) {
+        window.cancelAnimationFrame(rafId)
+      }
+    }
   }, [duration, isVisible, value])
 
   return (

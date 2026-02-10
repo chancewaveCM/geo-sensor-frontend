@@ -19,7 +19,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="X"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
               >
                 <Twitter className="h-4 w-4" />
               </a>
@@ -28,21 +28,21 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
               >
                 <Linkedin className="h-4 w-4" />
               </a>
               <a
                 href="mailto:team@geosensor.ai"
                 aria-label="이메일"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
               >
                 <Mail className="h-4 w-4" />
               </a>
               <a
                 href="/#faq"
                 aria-label="커뮤니티"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gray-700 text-gray-400 transition-all hover:scale-110 hover:text-white"
               >
                 <MessageCircle className="h-4 w-4" />
               </a>

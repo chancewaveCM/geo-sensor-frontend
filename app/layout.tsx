@@ -18,7 +18,14 @@ export default function RootLayout({
   return (
     <html lang="ko" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>{children}</Providers>
+        <a href="#app-content" className="skip-link">
+          본문으로 건너뛰기
+        </a>
+        <Providers>
+          <div id="app-content" tabIndex={-1}>
+            {children}
+          </div>
+        </Providers>
       </body>
     </html>
   )

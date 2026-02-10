@@ -4,7 +4,11 @@ export default function AuthLayout({
   children: React.ReactNode
 }) {
   return (
-    <div data-auth-shell className="relative flex min-h-screen items-start justify-center overflow-x-hidden overflow-y-auto bg-background p-4 sm:items-center">
+    <div
+      id="main-content"
+      data-auth-shell
+      className="relative flex min-h-screen items-start justify-center overflow-x-hidden overflow-y-auto bg-background p-4 sm:items-center"
+    >
       {/* Subtle decorative background with gradient mesh */}
       <div className="absolute inset-0 bg-gradient-to-br from-brand-navy/5 via-transparent to-brand-orange/5" />
       <div
@@ -18,76 +22,72 @@ export default function AuthLayout({
           {children}
         </div>
       </div>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            [data-auth-shell] .auth-card-fallback {
-              width: 100%;
-              max-width: 28rem;
-              margin: 0 auto;
-              border: 1px solid #dbe3ed;
-              border-radius: 0.75rem;
-              background: #ffffff;
-              box-shadow: 0 12px 30px rgba(2, 6, 23, 0.08);
-            }
+      <style>{`
+        [data-auth-shell] .auth-card-fallback {
+          width: 100%;
+          max-width: 28rem;
+          margin: 0 auto;
+          border: 1px solid #dbe3ed;
+          border-radius: 0.75rem;
+          background: #ffffff;
+          box-shadow: 0 12px 30px rgba(2, 6, 23, 0.08);
+        }
 
-            [data-auth-shell] .auth-card-fallback h1 {
-              margin: 0;
-              font-size: 2rem;
-              line-height: 1.1;
-            }
+        [data-auth-shell] .auth-card-fallback h1 {
+          margin: 0;
+          font-size: 2rem;
+          line-height: 1.1;
+        }
 
-            [data-auth-shell] .auth-card-fallback form {
-              display: block;
-            }
+        [data-auth-shell] .auth-card-fallback form {
+          display: block;
+        }
 
-            [data-auth-shell] .auth-card-fallback label {
-              display: block;
-              margin-bottom: 0.4rem;
-              font-size: 0.875rem;
-              font-weight: 600;
-              color: #1f2937;
-            }
+        [data-auth-shell] .auth-card-fallback label {
+          display: block;
+          margin-bottom: 0.4rem;
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: #1f2937;
+        }
 
-            [data-auth-shell] .auth-card-fallback input {
-              display: block;
-              width: 100%;
-              height: 2.5rem;
-              border: 1px solid #cbd5e1;
-              border-radius: 0.5rem;
-              padding: 0.5rem 0.75rem;
-              font-size: 0.875rem;
-              background: #ffffff;
-              color: #111827;
-              outline: none;
-            }
+        [data-auth-shell] .auth-card-fallback input {
+          display: block;
+          width: 100%;
+          height: 2.5rem;
+          border: 1px solid #cbd5e1;
+          border-radius: 0.5rem;
+          padding: 0.5rem 0.75rem;
+          font-size: 0.875rem;
+          background: #ffffff;
+          color: #111827;
+          outline: none;
+        }
 
-            [data-auth-shell] .auth-card-fallback input:focus {
-              border-color: #e06820;
-              box-shadow: 0 0 0 2px rgba(224, 104, 32, 0.16);
-            }
+        [data-auth-shell] .auth-card-fallback input:focus {
+          border-color: #e06820;
+          box-shadow: 0 0 0 2px rgba(224, 104, 32, 0.16);
+        }
 
-            [data-auth-shell] .auth-card-fallback button[type='submit'] {
-              width: 100%;
-              height: 2.5rem;
-              border: 0;
-              border-radius: 0.5rem;
-              background: #e06820;
-              color: #ffffff;
-              font-size: 0.875rem;
-              font-weight: 700;
-              cursor: pointer;
-            }
+        [data-auth-shell] .auth-card-fallback button[type='submit'] {
+          width: 100%;
+          height: 2.5rem;
+          border: 0;
+          border-radius: 0.5rem;
+          background: #e06820;
+          color: #ffffff;
+          font-size: 0.875rem;
+          font-weight: 700;
+          cursor: pointer;
+        }
 
-            [data-auth-shell] .auth-card-fallback a.auth-link-fallback {
-              color: #e06820;
-              font-weight: 600;
-              text-decoration: underline;
-              text-underline-offset: 2px;
-            }
-          `,
-        }}
-      />
+        [data-auth-shell] .auth-card-fallback a.auth-link-fallback {
+          color: #e06820;
+          font-weight: 600;
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+      `}</style>
     </div>
   )
 }
