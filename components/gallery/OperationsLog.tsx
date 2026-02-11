@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/dialog'
 import { Textarea } from '@/components/ui/textarea'
 import { useReviewOperation, useCancelOperation } from '@/lib/hooks/use-gallery'
-import type { OperationLog } from '@/lib/types'
+import type { OperationLog } from '@/types'
 
 interface OperationsLogProps {
   operations: OperationLog[]

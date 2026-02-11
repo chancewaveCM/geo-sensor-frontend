@@ -20,7 +20,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreateOperation } from '@/lib/hooks/use-gallery'
-import type { OperationLogCreate } from '@/lib/types'
+import type { OperationLogCreate } from '@/types'
 
 interface CreateOperationDialogProps {
   workspaceId: number

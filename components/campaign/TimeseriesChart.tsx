@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
-import type { CampaignRun } from '@/lib/types'
+import type { CampaignRun } from '@/types'
 import { getTokenColor } from '@/lib/design-tokens'
 
 interface TimeseriesChartProps {

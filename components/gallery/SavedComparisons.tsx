@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useComparisons, useDeleteComparison } from '@/lib/hooks/use-gallery'
-import type { ComparisonSnapshot } from '@/lib/types'
+import type { ComparisonSnapshot } from '@/types'
 
 interface SavedComparisonsProps {
   workspaceId: number

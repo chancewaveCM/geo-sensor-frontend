@@ -6,7 +6,7 @@ import {
   fetchWorkspaceMembers,
   addWorkspaceMember,
 } from '@/lib/api/workspaces'
-import type { WorkspaceCreate, WorkspaceMemberCreate } from '@/lib/types'
+import type { WorkspaceCreate, WorkspaceMemberCreate } from '@/types'
 
 export function useWorkspaces() {
   return useQuery({

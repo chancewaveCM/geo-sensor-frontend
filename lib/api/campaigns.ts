@@ -18,7 +18,7 @@ import type {
   CampaignSummary,
   TimeseriesData,
   BrandSafetyMetrics,
-} from '@/lib/types'
+} from '@/types'
 
 const API_PREFIX = '/api/v1'
 

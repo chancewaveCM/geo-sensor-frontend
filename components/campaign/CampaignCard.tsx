@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge'
 import { Calendar, Target, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import type { Campaign } from '@/lib/types'
+import type { Campaign } from '@/types'
 
 interface CampaignCardProps {
   campaign: Campaign

@@ -22,7 +22,7 @@ import {
 import { Play, Filter } from 'lucide-react'
 import { useCampaignRuns, useTriggerRun } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
-import type { CampaignRun } from '@/lib/types'
+import type { CampaignRun } from '@/types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 

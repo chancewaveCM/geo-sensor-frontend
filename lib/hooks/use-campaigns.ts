@@ -28,7 +28,7 @@ import type {
   IntentClusterCreate,
   QueryDefinitionCreate,
   QueryVersionCreate,
-} from '@/lib/types'
+} from '@/types'
 
 export function useCampaigns(workspaceId: number | undefined) {
   return useQuery({

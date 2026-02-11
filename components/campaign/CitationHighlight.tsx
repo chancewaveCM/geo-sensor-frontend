@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { RunCitation } from '@/lib/types/gallery'
+import { RunCitation } from '@/types/gallery'
 import {
   Tooltip,
   TooltipContent,

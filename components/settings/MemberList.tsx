@@ -6,7 +6,7 @@ import { get, del } from '@/lib/api-client'
 import { Loader2, UserX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { MemberRoleSelect } from './MemberRoleSelect'
-import type { WorkspaceMember } from '@/lib/types'
+import type { WorkspaceMember } from '@/types'
 import { getSelectedWorkspaceId } from '@/lib/utils/workspace-selection'
 
 type Member = WorkspaceMember

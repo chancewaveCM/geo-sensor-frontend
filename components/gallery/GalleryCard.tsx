@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { RunResponse } from '@/lib/types'
+import type { RunResponse } from '@/types'
 import { cn } from '@/lib/utils'
 
 interface GalleryCardProps {

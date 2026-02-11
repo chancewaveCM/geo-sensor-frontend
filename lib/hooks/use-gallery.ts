@@ -27,7 +27,7 @@ import type {
   LLMCompareParams,
   DateCompareParams,
   VersionCompareParams,
-} from '@/lib/types'
+} from '@/types'
 
 // --- Responses ---
 

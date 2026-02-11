@@ -18,7 +18,7 @@ import type {
   DateCompareResponse,
   VersionCompareParams,
   VersionCompareResponse,
-} from '@/lib/types'
+} from '@/types'
 
 const API_PREFIX = '/api/v1'
 
