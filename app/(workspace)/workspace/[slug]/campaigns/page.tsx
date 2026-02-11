@@ -15,6 +15,7 @@ import { useCampaigns, useCreateCampaign } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
 import type { CampaignCreate } from '@/types'
 import { toast } from 'sonner'
+import { EmptyState } from '@/components/shared/EmptyState'
 
 export default function CampaignsPage() {
   const params = useParams()
@@ -179,22 +180,15 @@ export default function CampaignsPage() {
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 px-4 text-center">
-          <div className="rounded-full bg-brand-orange/10 p-6 mb-4">
-            <Rocket className="h-12 w-12 text-brand-orange" />
-          </div>
-          <h3 className="text-xl font-semibold mb-2">No campaigns yet</h3>
-          <p className="text-muted-foreground mb-6 max-w-sm">
-            Create your first campaign to start analyzing brand citations and tracking performance
-          </p>
-          <Button
-            onClick={() => setOpen(true)}
-            className="bg-brand-orange hover:bg-brand-orange-hover"
-          >
-            <Plus className="h-4 w-4 mr-2" />
-            Create Your First Campaign
-          </Button>
-        </div>
+        <EmptyState
+          icon={Rocket}
+          title="캠페인이 없습니다"
+          description="첫 번째 캠페인을 생성하여 브랜드 인용 분석을 시작하세요"
+          action={{
+            label: '첫 캠페인 만들기',
+            onClick: () => setOpen(true),
+          }}
+        />
       )}
     </div>
   )

@@ -29,6 +29,7 @@ import {
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
 function getStatusVariant(status: string) {
   switch (status) {
@@ -118,9 +119,10 @@ export default function CampaignDashboardPage() {
   }
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <ErrorBoundary>
+      <div className="space-y-6 animate-in fade-in duration-500">
+        {/* Header */}
+        <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h1 className="text-3xl font-bold tracking-tight">{campaign.name}</h1>
           <Badge className={cn('text-xs', getStatusVariant(campaign.status))}>
@@ -334,5 +336,6 @@ export default function CampaignDashboardPage() {
         </Card>
       </div>
     </div>
+    </ErrorBoundary>
   )
 }

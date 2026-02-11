@@ -19,6 +19,7 @@ import {
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
 import { toast } from 'sonner'
 import type { ScheduleInterval, AlertRule, AlertRuleCreate, NotificationConfig } from '@/types/campaign'
+import { ErrorBoundary } from '@/components/shared/ErrorBoundary'
 
 export default function CampaignSettingsPage() {
   const params = useParams()
@@ -182,11 +183,12 @@ export default function CampaignSettingsPage() {
   }
 
   return (
-    <div className="container mx-auto py-8 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{campaign.name}</h1>
-        <p className="text-muted-foreground">캠페인 설정</p>
-      </div>
+    <ErrorBoundary>
+      <div className="container mx-auto py-8 space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold">{campaign.name}</h1>
+          <p className="text-muted-foreground">캠페인 설정</p>
+        </div>
 
       <Tabs defaultValue="schedule" className="space-y-6">
         <TabsList>
@@ -231,5 +233,6 @@ export default function CampaignSettingsPage() {
         </TabsContent>
       </Tabs>
     </div>
+    </ErrorBoundary>
   )
 }
