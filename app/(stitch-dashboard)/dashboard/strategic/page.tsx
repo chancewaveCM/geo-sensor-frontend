@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { PerformanceMetricCard } from '@/components/stitch/dashboard/strategic/PerformanceMetricCard'
-import { CitationShareChart } from '@/components/stitch/dashboard/strategic/CitationShareChart'
+import { CitationShareChart } from '@/components/charts/CitationShareChart'
 import { BrandRankingTable, BrandRanking } from '@/components/stitch/dashboard/strategic/BrandRankingTable'
 import { TrendChart } from '@/components/stitch/dashboard/strategic/TrendChart'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

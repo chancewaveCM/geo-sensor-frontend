@@ -13,6 +13,7 @@ import { Badge } from '@/components/ui/badge'
 interface CitationHighlightProps {
   responseText: string
   citations: RunCitation[]
+  onCitationClick?: (citation: RunCitation) => void
 }
 
 interface TextSegment {
@@ -23,6 +24,7 @@ interface TextSegment {
 export function CitationHighlight({
   responseText,
   citations,
+  onCitationClick,
 }: CitationHighlightProps) {
   // Build text segments with citations
   const segments = React.useMemo(() => {
@@ -99,6 +101,7 @@ export function CitationHighlight({
                     cursor-help transition-colors duration-200 hover:opacity-80
                   `}
                   aria-label={`Citation: ${citation.cited_brand}`}
+                  onClick={() => onCitationClick?.(citation)}
                 >
                   {segment.text}
                 </span>

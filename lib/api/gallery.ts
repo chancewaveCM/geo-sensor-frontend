@@ -24,7 +24,7 @@ const API_PREFIX = '/api/v1'
 
 // --- Responses ---
 
-export async function fetchGalleryResponses(
+export async function getGalleryResponses(
   workspaceId: number,
   params?: GalleryFilters
 ): Promise<RunResponse[]> {
@@ -42,7 +42,7 @@ export async function fetchGalleryResponses(
   )
 }
 
-export async function fetchGalleryResponse(
+export async function getGalleryResponse(
   workspaceId: number,
   responseId: number
 ): Promise<GalleryDetailResponse> {
@@ -53,7 +53,7 @@ export async function fetchGalleryResponse(
 
 // --- Labels ---
 
-export async function fetchResponseLabels(
+export async function getResponseLabels(
   workspaceId: number,
   params?: { run_response_id?: number; label_type?: string }
 ): Promise<ResponseLabel[]> {
@@ -97,7 +97,7 @@ export async function resolveResponseLabel(
 
 // --- Citation Reviews ---
 
-export async function fetchCitationReviews(
+export async function getCitationReviews(
   workspaceId: number,
   params?: { run_response_id?: number; review_type?: string }
 ): Promise<CitationReview[]> {
@@ -159,7 +159,7 @@ export async function compareVersions(
   )
 }
 
-export async function fetchComparisons(
+export async function getComparisons(
   workspaceId: number
 ): Promise<ComparisonSnapshot[]> {
   return get<ComparisonSnapshot[]>(
@@ -188,7 +188,7 @@ export async function deleteComparison(
 
 // --- Operations ---
 
-export async function fetchOperations(
+export async function getOperations(
   workspaceId: number,
   params?: { operation_type?: string; status?: string; page?: number; page_size?: number }
 ): Promise<OperationLog[]> {
@@ -213,7 +213,7 @@ export async function createOperation(
   )
 }
 
-export async function fetchOperation(
+export async function getOperation(
   workspaceId: number,
   operationId: number
 ): Promise<OperationLog> {

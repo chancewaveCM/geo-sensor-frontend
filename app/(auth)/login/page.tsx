@@ -56,7 +56,9 @@ export default function LoginPage() {
     } catch (error) {
       console.error('Login error:', error)
       // Extract server detail message if available, otherwise show Korean fallback
-      const axiosDetail = (error as any)?.response?.data?.detail
+      const axiosDetail = error instanceof Error && 'response' in error
+        ? (error as { response?: { data?: { detail?: string } } }).response?.data?.detail
+        : undefined
       setErrorMessage(
         typeof axiosDetail === 'string'
           ? axiosDetail

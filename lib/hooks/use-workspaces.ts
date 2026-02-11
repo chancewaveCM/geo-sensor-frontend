@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  fetchWorkspaces,
-  fetchWorkspace,
+  getWorkspaces,
+  getWorkspace,
   createWorkspace,
-  fetchWorkspaceMembers,
+  getWorkspaceMembers,
   addWorkspaceMember,
 } from '@/lib/api/workspaces'
 import type { WorkspaceCreate, WorkspaceMemberCreate } from '@/types'
@@ -11,14 +11,14 @@ import type { WorkspaceCreate, WorkspaceMemberCreate } from '@/types'
 export function useWorkspaces() {
   return useQuery({
     queryKey: ['workspaces'],
-    queryFn: fetchWorkspaces,
+    queryFn: getWorkspaces,
   })
 }
 
 export function useWorkspace(id: number | undefined) {
   return useQuery({
     queryKey: ['workspaces', id],
-    queryFn: () => fetchWorkspace(id!),
+    queryFn: () => getWorkspace(id!),
     enabled: id != null,
   })
 }
@@ -36,7 +36,7 @@ export function useCreateWorkspace() {
 export function useWorkspaceMembers(workspaceId: number | undefined) {
   return useQuery({
     queryKey: ['workspaces', workspaceId, 'members'],
-    queryFn: () => fetchWorkspaceMembers(workspaceId!),
+    queryFn: () => getWorkspaceMembers(workspaceId!),
     enabled: workspaceId != null,
   })
 }

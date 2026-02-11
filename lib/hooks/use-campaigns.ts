@@ -1,25 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  fetchCampaigns,
-  fetchCampaign,
+  getCampaigns,
+  getCampaign,
   createCampaign,
   updateCampaign,
-  fetchCampaignRuns,
+  getCampaignRuns,
   triggerCampaignRun,
-  fetchIntentClusters,
+  getIntentClusters,
   createIntentCluster,
-  fetchQueryDefinitions,
+  getQueryDefinitions,
   createQueryDefinition,
-  fetchQueryVersions,
+  getQueryVersions,
   createQueryVersion,
   retireQuery,
-  fetchCampaignSummary,
-  fetchCitationShare,
-  fetchBrandRanking,
-  fetchProviderComparison,
-  fetchGeoScoreSummary,
-  fetchTimeseries,
-  fetchBrandSafety,
+  getCampaignSummary,
+  getCitationShare,
+  getBrandRanking,
+  getProviderComparison,
+  getGeoScoreSummary,
+  getTimeseries,
+  getBrandSafety,
 } from '@/lib/api/campaigns'
 import type {
   CampaignCreate,
@@ -33,7 +33,7 @@ import type {
 export function useCampaigns(workspaceId: number | undefined) {
   return useQuery({
     queryKey: ['campaigns', workspaceId],
-    queryFn: () => fetchCampaigns(workspaceId!),
+    queryFn: () => getCampaigns(workspaceId!),
     enabled: workspaceId != null,
   })
 }
@@ -44,7 +44,7 @@ export function useCampaign(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId],
-    queryFn: () => fetchCampaign(workspaceId!, campaignId!),
+    queryFn: () => getCampaign(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -78,7 +78,7 @@ export function useCampaignRuns(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'runs'],
-    queryFn: () => fetchCampaignRuns(workspaceId!, campaignId!),
+    queryFn: () => getCampaignRuns(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -105,7 +105,7 @@ export function useIntentClusters(
 ) {
   return useQuery({
     queryKey: ['clusters', workspaceId, campaignId],
-    queryFn: () => fetchIntentClusters(workspaceId!, campaignId!),
+    queryFn: () => getIntentClusters(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -130,7 +130,7 @@ export function useQueryDefinitions(
 ) {
   return useQuery({
     queryKey: ['queries', workspaceId, campaignId, params],
-    queryFn: () => fetchQueryDefinitions(workspaceId!, campaignId!, params),
+    queryFn: () => getQueryDefinitions(workspaceId!, campaignId!, params),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -158,7 +158,7 @@ export function useQueryVersions(
 ) {
   return useQuery({
     queryKey: ['queryVersions', workspaceId, campaignId, queryId],
-    queryFn: () => fetchQueryVersions(workspaceId!, campaignId!, queryId!),
+    queryFn: () => getQueryVersions(workspaceId!, campaignId!, queryId!),
     enabled: workspaceId != null && campaignId != null && queryId != null,
   })
 }
@@ -209,7 +209,7 @@ export function useCampaignSummary(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'summary'],
-    queryFn: () => fetchCampaignSummary(workspaceId!, campaignId!),
+    queryFn: () => getCampaignSummary(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -220,7 +220,7 @@ export function useCitationShare(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'citation-share'],
-    queryFn: () => fetchCitationShare(workspaceId!, campaignId!),
+    queryFn: () => getCitationShare(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -231,7 +231,7 @@ export function useBrandRanking(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'brand-ranking'],
-    queryFn: () => fetchBrandRanking(workspaceId!, campaignId!),
+    queryFn: () => getBrandRanking(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -242,7 +242,7 @@ export function useProviderComparison(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'provider-comparison'],
-    queryFn: () => fetchProviderComparison(workspaceId!, campaignId!),
+    queryFn: () => getProviderComparison(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -253,7 +253,7 @@ export function useGeoScoreSummary(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'geo-score-summary'],
-    queryFn: () => fetchGeoScoreSummary(workspaceId!, campaignId!),
+    queryFn: () => getGeoScoreSummary(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -265,7 +265,7 @@ export function useTimeseries(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'timeseries', brandName],
-    queryFn: () => fetchTimeseries(workspaceId!, campaignId!, brandName),
+    queryFn: () => getTimeseries(workspaceId!, campaignId!, brandName),
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -276,7 +276,7 @@ export function useBrandSafety(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'brand-safety'],
-    queryFn: () => fetchBrandSafety(workspaceId!, campaignId!),
+    queryFn: () => getBrandSafety(workspaceId!, campaignId!),
     enabled: workspaceId != null && campaignId != null,
   })
 }

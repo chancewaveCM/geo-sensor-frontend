@@ -22,11 +22,11 @@ import type {
 
 const API_PREFIX = '/api/v1'
 
-export async function fetchCampaigns(workspaceId: number): Promise<Campaign[]> {
+export async function getCampaigns(workspaceId: number): Promise<Campaign[]> {
   return get<Campaign[]>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns`)
 }
 
-export async function fetchCampaign(
+export async function getCampaign(
   workspaceId: number,
   campaignId: number
 ): Promise<Campaign> {
@@ -51,7 +51,7 @@ export async function updateCampaign(
   )
 }
 
-export async function fetchCampaignRuns(
+export async function getCampaignRuns(
   workspaceId: number,
   campaignId: number
 ): Promise<CampaignRun[]> {
@@ -71,7 +71,7 @@ export async function triggerCampaignRun(
   )
 }
 
-export async function fetchIntentClusters(
+export async function getIntentClusters(
   workspaceId: number,
   campaignId: number
 ): Promise<IntentCluster[]> {
@@ -91,7 +91,7 @@ export async function createIntentCluster(
   )
 }
 
-export async function fetchQueryDefinitions(
+export async function getQueryDefinitions(
   workspaceId: number,
   campaignId: number,
   params?: { cluster_id?: number; query_type?: string; is_active?: boolean }
@@ -117,7 +117,7 @@ export async function createQueryDefinition(
   )
 }
 
-export async function fetchQueryVersions(
+export async function getQueryVersions(
   workspaceId: number,
   campaignId: number,
   queryId: number
@@ -149,27 +149,27 @@ export async function retireQuery(
   )
 }
 
-export async function fetchCampaignSummary(workspaceId: number, campaignId: number): Promise<CampaignSummary> {
+export async function getCampaignSummary(workspaceId: number, campaignId: number): Promise<CampaignSummary> {
   return get<CampaignSummary>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/summary`)
 }
 
-export async function fetchCitationShare(workspaceId: number, campaignId: number): Promise<CitationShareData> {
+export async function getCitationShare(workspaceId: number, campaignId: number): Promise<CitationShareData> {
   return get<CitationShareData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/citation-share`)
 }
 
-export async function fetchBrandRanking(workspaceId: number, campaignId: number): Promise<BrandRankingData> {
+export async function getBrandRanking(workspaceId: number, campaignId: number): Promise<BrandRankingData> {
   return get<BrandRankingData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/brand-ranking`)
 }
 
-export async function fetchProviderComparison(workspaceId: number, campaignId: number): Promise<ProviderComparisonData> {
+export async function getProviderComparison(workspaceId: number, campaignId: number): Promise<ProviderComparisonData> {
   return get<ProviderComparisonData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/provider-comparison`)
 }
 
-export async function fetchGeoScoreSummary(workspaceId: number, campaignId: number): Promise<GEOScoreSummary> {
+export async function getGeoScoreSummary(workspaceId: number, campaignId: number): Promise<GEOScoreSummary> {
   return get<GEOScoreSummary>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/geo-score-summary`)
 }
 
-export async function fetchTimeseries(workspaceId: number, campaignId: number, brandName?: string): Promise<TimeseriesData> {
+export async function getTimeseries(workspaceId: number, campaignId: number, brandName?: string): Promise<TimeseriesData> {
   const params = brandName ? `?brand_name=${encodeURIComponent(brandName)}` : ''
   return get<TimeseriesData>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/timeseries${params}`)
 }
@@ -182,6 +182,6 @@ export async function exportCampaignCSV(workspaceId: number, campaignId: number)
   return response.data
 }
 
-export async function fetchBrandSafety(workspaceId: number, campaignId: number): Promise<BrandSafetyMetrics> {
+export async function getBrandSafety(workspaceId: number, campaignId: number): Promise<BrandSafetyMetrics> {
   return get<BrandSafetyMetrics>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/brand-safety`)
 }

@@ -24,6 +24,7 @@ interface CitationData {
 
 interface CitationShareChartProps {
   data: CitationData[]
+  title?: string
 }
 
 const CustomTooltip = ({ active, payload }: any) => {
@@ -40,13 +41,13 @@ const CustomTooltip = ({ active, payload }: any) => {
   return null
 }
 
-export function CitationShareChart({ data }: CitationShareChartProps) {
+export function CitationShareChart({ data, title }: CitationShareChartProps) {
   return (
     <div data-testid="citation-share-chart" className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       {/* Bar Chart */}
       <Card className="transition-all duration-300 hover:shadow-lg">
         <CardHeader>
-          <CardTitle className="text-lg">Citation Share Distribution</CardTitle>
+          <CardTitle className="text-lg">{title || 'Citation Share Distribution'}</CardTitle>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>

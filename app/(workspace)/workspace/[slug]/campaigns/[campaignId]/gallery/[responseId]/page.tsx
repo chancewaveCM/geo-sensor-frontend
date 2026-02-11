@@ -4,7 +4,7 @@ import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useGalleryResponse } from '@/lib/hooks/use-gallery'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
-import { CitationHighlight } from '@/components/gallery/CitationHighlight'
+import { CitationHighlight } from '@/components/shared/CitationHighlight'
 import { LabelManager } from '@/components/gallery/LabelManager'
 import { CitationReviewPanel } from '@/components/gallery/CitationReviewPanel'
 import { Button } from '@/components/ui/button'
@@ -113,7 +113,7 @@ export default function GalleryDetailPage() {
               <CardTitle className="text-lg">Response Text</CardTitle>
             </CardHeader>
             <CardContent>
-              <CitationHighlight text={data.content ?? ''} citations={citations} />
+              <CitationHighlight responseText={data.content ?? ''} citations={citations} />
             </CardContent>
           </Card>
         </div>

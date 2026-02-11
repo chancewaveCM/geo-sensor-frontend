@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
-  fetchGalleryResponses,
-  fetchGalleryResponse,
+  getGalleryResponses,
+  getGalleryResponse,
   createResponseLabel,
   deleteResponseLabel,
   resolveResponseLabel,
@@ -10,10 +10,10 @@ import {
   compareLLMs,
   compareDates,
   compareVersions,
-  fetchComparisons,
+  getComparisons,
   createComparison,
   deleteComparison,
-  fetchOperations,
+  getOperations,
   createOperation,
   reviewOperation,
   cancelOperation,
@@ -37,7 +37,7 @@ export function useGalleryResponses(
 ) {
   return useQuery({
     queryKey: ['gallery', workspaceId, 'responses', filters],
-    queryFn: () => fetchGalleryResponses(workspaceId!, filters),
+    queryFn: () => getGalleryResponses(workspaceId!, filters),
     enabled: workspaceId != null,
   })
 }
@@ -48,7 +48,7 @@ export function useGalleryResponse(
 ) {
   return useQuery({
     queryKey: ['gallery', workspaceId, 'responses', responseId],
-    queryFn: () => fetchGalleryResponse(workspaceId!, responseId!),
+    queryFn: () => getGalleryResponse(workspaceId!, responseId!),
     enabled: workspaceId != null && responseId != null,
   })
 }
@@ -149,7 +149,7 @@ export function useCompareVersions(workspaceId: number | undefined) {
 export function useComparisons(workspaceId: number | undefined) {
   return useQuery({
     queryKey: ['comparisons', workspaceId],
-    queryFn: () => fetchComparisons(workspaceId!),
+    queryFn: () => getComparisons(workspaceId!),
     enabled: workspaceId != null,
   })
 }
@@ -189,7 +189,7 @@ export function useOperations(
 ) {
   return useQuery({
     queryKey: ['operations', workspaceId, params],
-    queryFn: () => fetchOperations(workspaceId!, params),
+    queryFn: () => getOperations(workspaceId!, params),
     enabled: workspaceId != null,
   })
 }
