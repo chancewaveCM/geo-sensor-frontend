@@ -247,3 +247,42 @@ export async function getCompetitiveAlerts(workspaceId: number, campaignId: numb
 export async function getCompetitiveRankings(workspaceId: number, campaignId: number) {
   return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/rankings`)
 }
+
+// Notification API functions
+export async function getNotificationConfigs(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications`)
+}
+
+export async function createNotificationConfig(
+  workspaceId: number,
+  campaignId: number,
+  data: { type: string; destination: string; events: string[]; is_active?: boolean }
+) {
+  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications`, data)
+}
+
+export async function updateNotificationConfig(
+  workspaceId: number,
+  notificationId: number,
+  data: Partial<{ type: string; destination: string; events: string[]; is_active?: boolean }>
+) {
+  return put(`${API_PREFIX}/workspaces/${workspaceId}/notifications/${notificationId}`, data)
+}
+
+export async function deleteNotificationConfig(workspaceId: number, notificationId: number) {
+  return apiClient.delete(`${API_PREFIX}/workspaces/${workspaceId}/notifications/${notificationId}`)
+}
+
+export async function getNotificationLogs(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/logs`)
+}
+
+export async function testNotification(workspaceId: number, campaignId: number, notificationId: number) {
+  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/test`, {
+    notification_id: notificationId,
+  })
+}
+
+export async function getSchedulerStatus() {
+  return get(`${API_PREFIX}/scheduler/status`)
+}

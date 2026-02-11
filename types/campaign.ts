@@ -286,3 +286,66 @@ export interface CompetitiveRankingsResponse {
   campaign_id: number
   rankings: CompetitiveBrandEntry[]
 }
+
+// Schedule types
+export type ScheduleInterval = 'hourly' | 'every_6h' | 'daily' | 'weekly' | 'monthly'
+
+export interface ScheduleConfig {
+  is_active: boolean
+  interval: ScheduleInterval
+  cron_expression?: string
+  next_run_at?: string
+  last_run_at?: string
+}
+
+// Notification types
+export type NotificationType = 'email' | 'webhook'
+export type NotificationEvent = 'run_completed' | 'threshold_crossed' | 'competitor_change' | 'error'
+
+export interface NotificationConfig {
+  id: number
+  campaign_id: number
+  workspace_id: number
+  type: NotificationType
+  destination: string
+  events: NotificationEvent[]
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface NotificationConfigCreate {
+  type: NotificationType
+  destination: string
+  events: NotificationEvent[]
+  is_active?: boolean
+}
+
+export interface NotificationLog {
+  id: number
+  notification_config_id: number
+  event_type: string
+  status: 'pending' | 'sent' | 'failed'
+  error_message?: string
+  sent_at?: string
+  created_at: string
+}
+
+// Alert rule types
+export type AlertComparison = 'above' | 'below' | 'change_exceeds'
+
+export interface AlertRule {
+  id: number
+  name: string
+  metric: string
+  comparison: AlertComparison
+  threshold: number
+  is_active: boolean
+}
+
+export interface AlertRuleCreate {
+  name: string
+  metric: string
+  comparison: AlertComparison
+  threshold: number
+}

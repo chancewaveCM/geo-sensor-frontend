@@ -367,3 +367,74 @@ export function useCompetitiveAlerts(
     enabled: workspaceId != null && campaignId != null,
   })
 }
+
+// Notification hooks
+export function useNotificationConfigs(workspaceId: number | undefined, campaignId: number | undefined) {
+  return useQuery({
+    queryKey: ['notifications', workspaceId, campaignId],
+    queryFn: async () => {
+      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
+      const { getNotificationConfigs } = await import('@/lib/api/campaigns')
+      return getNotificationConfigs(workspaceId, campaignId)
+    },
+    enabled: !!workspaceId && !!campaignId,
+  })
+}
+
+export function useCreateNotification(workspaceId: number | undefined, campaignId: number | undefined) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (data: { type: string; destination: string; events: string[]; is_active?: boolean }) => {
+      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
+      const { createNotificationConfig } = await import('@/lib/api/campaigns')
+      return createNotificationConfig(workspaceId, campaignId, data)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications', workspaceId, campaignId] }),
+  })
+}
+
+export function useUpdateNotification(workspaceId: number | undefined) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async ({ notificationId, data }: { notificationId: number; data: Partial<{ type: string; destination: string; events: string[]; is_active?: boolean }> }) => {
+      if (!workspaceId) throw new Error('Missing workspace ID')
+      const { updateNotificationConfig } = await import('@/lib/api/campaigns')
+      return updateNotificationConfig(workspaceId, notificationId, data)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+  })
+}
+
+export function useDeleteNotification(workspaceId: number | undefined) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: async (notificationId: number) => {
+      if (!workspaceId) throw new Error('Missing workspace ID')
+      const { deleteNotificationConfig } = await import('@/lib/api/campaigns')
+      return deleteNotificationConfig(workspaceId, notificationId)
+    },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+  })
+}
+
+export function useNotificationLogs(workspaceId: number | undefined, campaignId: number | undefined) {
+  return useQuery({
+    queryKey: ['notification-logs', workspaceId, campaignId],
+    queryFn: async () => {
+      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
+      const { getNotificationLogs } = await import('@/lib/api/campaigns')
+      return getNotificationLogs(workspaceId, campaignId)
+    },
+    enabled: !!workspaceId && !!campaignId,
+  })
+}
+
+export function useTestNotification(workspaceId: number | undefined, campaignId: number | undefined) {
+  return useMutation({
+    mutationFn: async (notificationId: number) => {
+      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
+      const { testNotification } = await import('@/lib/api/campaigns')
+      return testNotification(workspaceId, campaignId, notificationId)
+    },
+  })
+}

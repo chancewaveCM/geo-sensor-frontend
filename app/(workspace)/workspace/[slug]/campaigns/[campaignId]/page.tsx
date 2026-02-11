@@ -127,14 +127,23 @@ export default function CampaignDashboardPage() {
             {campaign.status}
           </Badge>
         </div>
-        <Button
-          onClick={handleTriggerRun}
-          disabled={triggering}
-          className="bg-brand-orange hover:bg-brand-orange-hover"
-        >
-          <Play className="h-4 w-4 mr-2" />
-          {triggering ? 'Triggering...' : 'Trigger Run'}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/workspace/${slug}/campaigns/${campaignId}/settings`)}
+          >
+            <Settings className="h-4 w-4 mr-2" />
+            설정
+          </Button>
+          <Button
+            onClick={handleTriggerRun}
+            disabled={triggering}
+            className="bg-brand-orange hover:bg-brand-orange-hover"
+          >
+            <Play className="h-4 w-4 mr-2" />
+            {triggering ? 'Triggering...' : 'Trigger Run'}
+          </Button>
+        </div>
       </div>
 
       {/* KPI Cards */}
