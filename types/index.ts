@@ -1,9 +1,10 @@
 // Core domain types for GEO Sensor
 
-// Re-export workspace, campaign, and gallery types
+// Re-export workspace, campaign, gallery, and publishing types
 export * from './workspace'
 export * from './campaign'
 export * from './gallery'
+export * from './publishing'
 
 export interface Project {
   id: string

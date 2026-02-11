@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Megaphone, Settings, ChevronRight, X, Layers, Play, Search, Image, GitCompareArrows, ClipboardList } from 'lucide-react'
+import { LayoutDashboard, Megaphone, Settings, ChevronRight, X, Layers, Play, Search, Image, GitCompareArrows, ClipboardList, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface WorkspaceSidebarProps {
@@ -91,6 +91,11 @@ function getNavSections(slug: string, pathname: string): NavSection[] {
   sections.push({
     title: '도구',
     items: [
+      {
+        title: '콘텐츠 배포',
+        href: `/workspace/${slug}/distribution`,
+        icon: Send,
+      },
       {
         title: '설정',
         href: `/workspace/${slug}/settings`,

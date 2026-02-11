@@ -12,6 +12,7 @@ import {
   Users,
   Briefcase,
   AlertTriangle,
+  Share2,
 } from 'lucide-react'
 
 const settingsNav = [
@@ -23,6 +24,7 @@ const settingsNav = [
   { label: '일반', href: '/settings/workspace', icon: Building2 },
   { label: '멤버', href: '/settings/members', icon: Users },
   { label: '기업 프로필', href: '/settings/company-profiles', icon: Briefcase },
+  { label: '소셜 연동', href: '/settings/social', icon: Share2 },
   { type: 'separator' as const, label: '계정' },
   { label: '계정 삭제', href: '/settings/account', icon: AlertTriangle },
 ] as const
