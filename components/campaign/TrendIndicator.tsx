@@ -33,7 +33,7 @@ export function TrendIndicator({ direction, changePercent, className }: TrendInd
   }
 
   const { icon: Icon, className: badgeClassName } = getStyles()
-  const displayPercent = Math.abs(changePercent).toFixed(1)
+  const displayPercent = isFinite(changePercent) ? Math.abs(changePercent).toFixed(1) : '0.0'
 
   return (
     <Badge className={cn('text-xs flex items-center gap-1', badgeClassName, className)}>

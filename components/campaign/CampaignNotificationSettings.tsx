@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog'
+import { useToast } from '@/hooks/use-toast'
 import { Mail, Webhook, Trash2, TestTube2, Plus } from 'lucide-react'
 import type { NotificationConfig, NotificationEvent, NotificationType } from '@/types/campaign'
 import { cn } from '@/lib/utils'
@@ -63,9 +64,32 @@ export function CampaignNotificationSettings({
   const [newEvents, setNewEvents] = React.useState<NotificationEvent[]>(['run_completed'])
   const [deleteId, setDeleteId] = React.useState<number | null>(null)
   const [isSaving, setIsSaving] = React.useState(false)
+  const { toast } = useToast()
 
   const handleCreate = async () => {
     if (!newDestination.trim() || newEvents.length === 0) return
+
+    // Validate webhook URL
+    if (newType === 'webhook') {
+      try {
+        const url = new URL(newDestination.trim())
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+          toast({
+            title: '유효하지 않은 URL',
+            description: 'HTTP 또는 HTTPS URL을 입력해주세요.',
+            variant: 'destructive',
+          })
+          return
+        }
+      } catch {
+        toast({
+          title: '유효하지 않은 URL',
+          description: '올바른 URL 형식을 입력해주세요.',
+          variant: 'destructive',
+        })
+        return
+      }
+    }
 
     setIsSaving(true)
     try {

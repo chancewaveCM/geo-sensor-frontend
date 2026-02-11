@@ -74,19 +74,38 @@ export function CompetitiveOverview({ brands, className }: CompetitiveOverviewPr
   }: {
     field: SortField
     children: React.ReactNode
-  }) => (
-    <TableHead
-      className="cursor-pointer hover:bg-muted/50 select-none"
-      onClick={() => handleSort(field)}
-    >
-      <div className="flex items-center gap-1">
-        {children}
-        {sortField === field && (
-          <span className="text-xs">{sortDirection === 'asc' ? '↑' : '↓'}</span>
-        )}
-      </div>
-    </TableHead>
-  )
+  }) => {
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault()
+        handleSort(field)
+      }
+    }
+
+    const ariaSort = sortField === field
+      ? sortDirection === 'asc'
+        ? 'ascending'
+        : 'descending'
+      : undefined
+
+    return (
+      <TableHead
+        className="cursor-pointer hover:bg-muted/50 select-none"
+        onClick={() => handleSort(field)}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
+        role="button"
+        aria-sort={ariaSort}
+      >
+        <div className="flex items-center gap-1">
+          {children}
+          {sortField === field && (
+            <span className="text-xs">{sortDirection === 'asc' ? '↑' : '↓'}</span>
+          )}
+        </div>
+      </TableHead>
+    )
+  }
 
   return (
     <Card className={className}>

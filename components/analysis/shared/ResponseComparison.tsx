@@ -22,19 +22,31 @@ export function ResponseComparison({ queryId, queryText, className }: ResponseCo
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    const abortController = new AbortController()
+
     async function fetchResponses() {
       try {
         setLoading(true)
         setError(null)
         const data = await getQueryResponses(queryId)
-        setResponses(data.responses)
+        if (!abortController.signal.aborted) {
+          setResponses(data.responses)
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : '응답을 불러오는데 실패했습니다')
+        if (!abortController.signal.aborted) {
+          setError(err instanceof Error ? err.message : '응답을 불러오는데 실패했습니다')
+        }
       } finally {
-        setLoading(false)
+        if (!abortController.signal.aborted) {
+          setLoading(false)
+        }
       }
     }
     fetchResponses()
+
+    return () => {
+      abortController.abort()
+    }
   }, [queryId])
 
   // Calculate word count for a response

@@ -66,6 +66,9 @@ export function AnnotationMarker({
               color,
               className
             )}
+            role="button"
+            tabIndex={0}
+            aria-label={`${label}: ${title}`}
           >
             <Icon className="h-3 w-3 text-white" />
           </div>
