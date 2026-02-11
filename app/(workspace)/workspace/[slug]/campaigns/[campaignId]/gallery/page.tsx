@@ -7,7 +7,7 @@ import { useWorkspaces } from '@/lib/hooks/use-workspaces'
 import { GalleryFilters } from '@/components/gallery/GalleryFilters'
 import { GalleryCard } from '@/components/gallery/GalleryCard'
 import { Skeleton } from '@/components/ui/skeleton'
-import type { GalleryFilters as GalleryFiltersType } from '@/lib/types'
+import type { GalleryFilters as GalleryFiltersType } from '@/types'
 
 export default function GalleryPage() {
   const params = useParams()

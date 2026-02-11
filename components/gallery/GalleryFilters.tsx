@@ -1,7 +1,7 @@
 'use client'
 
 import { useIntentClusters, useCampaignRuns } from '@/lib/hooks/use-campaigns'
-import type { GalleryFilters as GalleryFiltersType } from '@/lib/types'
+import type { GalleryFilters as GalleryFiltersType } from '@/types'
 import {
   Select,
   SelectContent,

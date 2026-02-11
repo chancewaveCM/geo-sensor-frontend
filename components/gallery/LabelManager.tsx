@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useCreateLabel, useDeleteLabel, useResolveLabel } from '@/lib/hooks/use-gallery'
-import type { ResponseLabel } from '@/lib/types'
+import type { ResponseLabel } from '@/types'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {

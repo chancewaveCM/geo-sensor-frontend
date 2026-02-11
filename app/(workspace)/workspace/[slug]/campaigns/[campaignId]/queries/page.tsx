@@ -24,7 +24,7 @@ import {
   useIntentClusters
 } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
-import type { QueryDefinitionCreate, QueryVersionCreate, QueryDefinition } from '@/lib/types'
+import type { QueryDefinitionCreate, QueryVersionCreate, QueryDefinition } from '@/types'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 

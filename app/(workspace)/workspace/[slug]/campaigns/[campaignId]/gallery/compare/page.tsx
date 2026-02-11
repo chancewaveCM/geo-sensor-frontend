@@ -21,7 +21,7 @@ import type {
   VersionCompareResponse,
   VersionCompareResponseItem,
   ComparisonDiff,
-} from '@/lib/types'
+} from '@/types'
 
 type CompareResult =
   | { type: 'llm'; data: LLMCompareResponse }

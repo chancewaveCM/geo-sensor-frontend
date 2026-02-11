@@ -13,7 +13,7 @@ import { CampaignCard } from '@/components/campaign/CampaignCard'
 import { Plus, Rocket } from 'lucide-react'
 import { useCampaigns, useCreateCampaign } from '@/lib/hooks/use-campaigns'
 import { useWorkspaces } from '@/lib/hooks/use-workspaces'
-import type { CampaignCreate } from '@/lib/types'
+import type { CampaignCreate } from '@/types'
 import { toast } from 'sonner'
 
 export default function CampaignsPage() {

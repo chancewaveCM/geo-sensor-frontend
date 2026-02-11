@@ -1,3 +1,27 @@
+# TypeScript Type Definitions
+
+All type definitions for the GEO Sensor frontend application.
+
+## Files
+
+| File | Purpose |
+|------|---------|
+| `index.ts` | Core domain types (Project, Query, Citation, etc.) + re-exports |
+| `analysis.ts` | Analysis-specific types |
+| `pipeline.ts` | Pipeline job and query set types |
+| `query-lab.ts` | Query Lab feature types |
+| `unified-analysis.ts` | Unified analysis types (Quick/Advanced modes) |
+| `campaign.ts` | Campaign and intent cluster types |
+| `gallery.ts` | Gallery and citation review types |
+| `workspace.ts` | Workspace and membership types |
+
+## Import Pattern
+
+All types are imported from `@/types`:
+```typescript
+import type { Campaign, GalleryItem, Workspace } from '@/types'
+```
+
 <claude-mem-context>
 # Recent Activity
 

@@ -1,6 +1,6 @@
 'use client'
 
-import type { RunCitation } from '@/lib/types'
+import type { RunCitation } from '@/types'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface CitationHighlightProps {

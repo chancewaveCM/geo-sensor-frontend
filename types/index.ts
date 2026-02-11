@@ -1,5 +1,10 @@
 // Core domain types for GEO Sensor
 
+// Re-export workspace, campaign, and gallery types
+export * from './workspace'
+export * from './campaign'
+export * from './gallery'
+
 export interface Project {
   id: string
   name: string
@@ -19,15 +24,6 @@ export interface Query {
 }
 
 export type QueryStatus = 'pending' | 'processing' | 'completed' | 'failed'
-
-export interface AnalysisResult {
-  id: string
-  query_id: string
-  provider: AIProvider
-  response_text: string
-  citations: Citation[]
-  created_at: string
-}
 
 export type AIProvider = 'openai' | 'anthropic' | 'google' | 'perplexity'
 

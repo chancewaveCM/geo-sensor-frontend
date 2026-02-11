@@ -1,7 +1,7 @@
 'use client'
 
 import { useCreateCitationReview, useVerifyCitation } from '@/lib/hooks/use-gallery'
-import type { RunCitation } from '@/lib/types'
+import type { RunCitation } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import {

@@ -6,7 +6,7 @@ import type {
   WorkspaceMember,
   WorkspaceMemberCreate,
   WorkspaceWithRole,
-} from '@/lib/types'
+} from '@/types'
 
 const API_PREFIX = '/api/v1'
 
