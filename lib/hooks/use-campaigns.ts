@@ -280,3 +280,90 @@ export function useBrandSafety(
     enabled: workspaceId != null && campaignId != null,
   })
 }
+
+// Intelligence Dashboard Hooks
+export function useCampaignTimeseries(
+  workspaceId: number | undefined,
+  campaignId: number | undefined,
+  params?: { granularity?: string; dateFrom?: string; dateTo?: string }
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'timeseries-enhanced', params],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCampaignTimeseries(workspaceId!, campaignId!, params)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCampaignTrends(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'trends'],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCampaignTrends(workspaceId!, campaignId!)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCampaignAnnotations(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'annotations'],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCampaignAnnotations(workspaceId!, campaignId!)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCompetitiveOverview(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'competitive-overview'],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCompetitiveOverview(workspaceId!, campaignId!)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCompetitiveTrends(
+  workspaceId: number | undefined,
+  campaignId: number | undefined,
+  params?: { dateFrom?: string; dateTo?: string }
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'competitive-trends', params],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCompetitiveTrends(workspaceId!, campaignId!, params)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}
+
+export function useCompetitiveAlerts(
+  workspaceId: number | undefined,
+  campaignId: number | undefined
+) {
+  return useQuery({
+    queryKey: ['campaigns', workspaceId, campaignId, 'competitive-alerts'],
+    queryFn: () => {
+      // @ts-ignore - will be implemented
+      return getCompetitiveAlerts(workspaceId!, campaignId!)
+    },
+    enabled: workspaceId != null && campaignId != null,
+  })
+}

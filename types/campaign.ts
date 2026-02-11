@@ -196,3 +196,93 @@ export interface BrandSafetyMetrics {
   unverified_count: number
   recent_incidents: BrandSafetyIncident[]
 }
+
+// Intelligence Dashboard Types
+export interface TimeseriesParams {
+  granularity?: 'daily' | 'weekly' | 'monthly'
+  dateFrom?: string
+  dateTo?: string
+}
+
+export interface TrendSummary {
+  direction: 'up' | 'down' | 'flat'
+  change_percent: number
+  change_absolute: number
+}
+
+export interface BrandTrend {
+  brand_name: string
+  current_share: number
+  previous_share: number
+  trend: TrendSummary
+}
+
+export interface TimeseriesResponse {
+  campaign_id: number
+  data_points: TimeseriesDataPoint[]
+  trends: BrandTrend[]
+}
+
+export interface AnnotationCreate {
+  date: string
+  title: string
+  description?: string
+  annotation_type: 'manual' | 'query_change' | 'model_change'
+}
+
+export interface AnnotationResponse {
+  id: number
+  campaign_id: number
+  date: string
+  title: string
+  description: string | null
+  annotation_type: string
+  created_by: number
+  created_at: string
+}
+
+export interface CompetitiveBrandEntry {
+  brand_name: string
+  citation_share: number
+  rank: number
+  change_from_previous: number | null
+  is_target_brand: boolean
+}
+
+export interface CompetitiveOverviewResponse {
+  campaign_id: number
+  brands: CompetitiveBrandEntry[]
+  total_brands: number
+  as_of_run_id: number
+}
+
+export interface CompetitiveTrendEntry {
+  run_id: number
+  timestamp: string
+  brand_shares: Record<string, number>
+}
+
+export interface CompetitiveTrendsResponse {
+  campaign_id: number
+  trends: CompetitiveTrendEntry[]
+}
+
+export interface CompetitiveAlert {
+  id: number
+  campaign_id: number
+  brand_name: string
+  alert_type: string
+  severity: string
+  message: string
+  detected_at: string
+}
+
+export interface CompetitiveAlertsResponse {
+  campaign_id: number
+  alerts: CompetitiveAlert[]
+}
+
+export interface CompetitiveRankingsResponse {
+  campaign_id: number
+  rankings: CompetitiveBrandEntry[]
+}

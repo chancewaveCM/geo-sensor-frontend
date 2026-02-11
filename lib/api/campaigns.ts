@@ -185,3 +185,65 @@ export async function exportCampaignCSV(workspaceId: number, campaignId: number)
 export async function getBrandSafety(workspaceId: number, campaignId: number): Promise<BrandSafetyMetrics> {
   return get<BrandSafetyMetrics>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/brand-safety`)
 }
+
+// Intelligence Dashboard APIs
+export async function getCampaignTimeseries(
+  workspaceId: number,
+  campaignId: number,
+  params?: { granularity?: string; dateFrom?: string; dateTo?: string }
+) {
+  const searchParams = new URLSearchParams()
+  if (params?.granularity) searchParams.set('granularity', params.granularity)
+  if (params?.dateFrom) searchParams.set('date_from', params.dateFrom)
+  if (params?.dateTo) searchParams.set('date_to', params.dateTo)
+  const qs = searchParams.toString()
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/timeseries${qs ? `?${qs}` : ''}`)
+}
+
+export async function getCampaignTrends(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/trends`)
+}
+
+export async function getCampaignAnnotations(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations`)
+}
+
+export async function createCampaignAnnotation(
+  workspaceId: number,
+  campaignId: number,
+  data: { date: string; title: string; description?: string; annotation_type: string }
+) {
+  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations`, data)
+}
+
+export async function deleteCampaignAnnotation(
+  workspaceId: number,
+  campaignId: number,
+  annotationId: number
+) {
+  return apiClient.delete(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations/${annotationId}`)
+}
+
+export async function getCompetitiveOverview(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/overview`)
+}
+
+export async function getCompetitiveTrends(
+  workspaceId: number,
+  campaignId: number,
+  params?: { dateFrom?: string; dateTo?: string }
+) {
+  const searchParams = new URLSearchParams()
+  if (params?.dateFrom) searchParams.set('date_from', params.dateFrom)
+  if (params?.dateTo) searchParams.set('date_to', params.dateTo)
+  const qs = searchParams.toString()
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/trends${qs ? `?${qs}` : ''}`)
+}
+
+export async function getCompetitiveAlerts(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/alerts`)
+}
+
+export async function getCompetitiveRankings(workspaceId: number, campaignId: number) {
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/rankings`)
+}
