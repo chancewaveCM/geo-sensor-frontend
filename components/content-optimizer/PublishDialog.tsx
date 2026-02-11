@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Dialog,
   DialogContent,
@@ -16,6 +16,7 @@ import { Loader2 } from 'lucide-react'
 import { usePublishContent, useOAuthStatus } from '@/lib/hooks/use-publishing'
 import { getSelectedWorkspaceId } from '@/lib/utils/workspace-selection'
 import { useToast } from '@/hooks/use-toast'
+import type { OAuthPlatform } from '@/types'
 
 interface PublishDialogProps {
   open: boolean
@@ -26,10 +27,14 @@ interface PublishDialogProps {
 export function PublishDialog({ open, onOpenChange, initialContent = '' }: PublishDialogProps) {
   const workspaceId = getSelectedWorkspaceId() ?? undefined
   const [content, setContent] = useState(initialContent)
-  const [selectedPlatform, setSelectedPlatform] = useState<string>('')
+  const [selectedPlatform, setSelectedPlatform] = useState<OAuthPlatform | ''>('')
   const { data: oauthStatus } = useOAuthStatus(workspaceId)
   const publishMutation = usePublishContent(workspaceId)
   const { toast } = useToast()
+
+  useEffect(() => {
+    setContent(initialContent)
+  }, [initialContent])
 
   const connectedPlatforms = oauthStatus?.platforms.filter(p => p.is_connected) ?? []
 
@@ -89,6 +94,7 @@ export function PublishDialog({ open, onOpenChange, initialContent = '' }: Publi
                     variant={selectedPlatform === platform.platform ? 'default' : 'outline'}
                     onClick={() => setSelectedPlatform(platform.platform)}
                     className="justify-start"
+                    aria-pressed={selectedPlatform === platform.platform}
                   >
                     {platform.platform}
                   </Button>

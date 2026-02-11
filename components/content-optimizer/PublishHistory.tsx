@@ -26,9 +26,11 @@ const PLATFORM_ICONS = {
 
 export function PublishHistory() {
   const workspaceId = getSelectedWorkspaceId() ?? undefined
-  const { data: publications, isLoading } = usePublications(workspaceId)
+  const { data: pubData, isLoading, isError } = usePublications(workspaceId)
   const retryMutation = useRetryPublication(workspaceId)
   const { toast } = useToast()
+
+  const publications = pubData?.publications ?? []
 
   const handleRetry = async (publicationId: number) => {
     try {
@@ -45,6 +47,9 @@ export function PublishHistory() {
       })
     }
   }
+
+  const isRetrying = (id: number) =>
+    retryMutation.isPending && retryMutation.variables === id
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -64,6 +69,20 @@ export function PublishHistory() {
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           워크스페이스를 선택해주세요.
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>게시 내역</CardTitle>
+          <CardDescription>플랫폼별 게시 현황을 확인합니다.</CardDescription>
+        </CardHeader>
+        <CardContent className="py-8 text-center text-destructive">
+          게시 내역을 불러오는데 실패했습니다.
         </CardContent>
       </Card>
     )
@@ -136,9 +155,10 @@ export function PublishHistory() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleRetry(pub.id)}
-                          disabled={retryMutation.isPending}
+                          disabled={isRetrying(pub.id)}
+                          aria-label="게시 재시도"
                         >
-                          {retryMutation.isPending ? (
+                          {isRetrying(pub.id) ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : (
                             <RotateCw className="h-4 w-4" />

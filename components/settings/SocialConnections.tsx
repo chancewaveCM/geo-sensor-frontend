@@ -17,7 +17,7 @@ const PLATFORM_CONFIG = {
 
 export function SocialConnections() {
   const workspaceId = getSelectedWorkspaceId() ?? undefined
-  const { data, isLoading } = useOAuthStatus(workspaceId)
+  const { data, isLoading, isError } = useOAuthStatus(workspaceId)
   const connectMutation = useConnectPlatform(workspaceId)
   const disconnectMutation = useDisconnectPlatform(workspaceId)
   const { toast } = useToast()
@@ -25,6 +25,20 @@ export function SocialConnections() {
   const handleConnect = async (platform: string) => {
     try {
       const result = await connectMutation.mutateAsync(platform)
+      // Validate auth URL before opening
+      try {
+        const url = new URL(result.auth_url)
+        if (url.protocol !== 'https:') {
+          throw new Error('Invalid auth URL protocol')
+        }
+      } catch {
+        toast({
+          title: '오류',
+          description: '유효하지 않은 인증 URL입니다.',
+          variant: 'destructive',
+        })
+        return
+      }
       // Open auth URL in new window
       window.open(result.auth_url, '_blank', 'width=600,height=700')
       toast({
@@ -61,6 +75,20 @@ export function SocialConnections() {
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           워크스페이스를 선택해주세요.
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>소셜 미디어 연동</CardTitle>
+          <CardDescription>콘텐츠를 게시할 플랫폼을 연결하세요.</CardDescription>
+        </CardHeader>
+        <CardContent className="py-8 text-center text-destructive">
+          연동 상태를 불러오는데 실패했습니다.
         </CardContent>
       </Card>
     )

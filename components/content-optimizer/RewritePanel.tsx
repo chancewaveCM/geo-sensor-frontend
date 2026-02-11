@@ -17,10 +17,12 @@ export function RewritePanel() {
   const workspaceId = getSelectedWorkspaceId() ?? undefined
   const [originalContent, setOriginalContent] = useState('')
   const [suggestions, setSuggestions] = useState('')
-  const { data: rewrites, isLoading } = useRewrites(workspaceId)
+  const { data: rewriteData, isLoading, isError } = useRewrites(workspaceId)
   const generateMutation = useGenerateRewrite(workspaceId)
   const approveMutation = useApproveVariant(workspaceId)
   const { toast } = useToast()
+
+  const rewrites = rewriteData?.rewrites ?? []
 
   const handleGenerate = async () => {
     if (!originalContent.trim()) {
@@ -73,11 +75,24 @@ export function RewritePanel() {
     }
   }
 
+  const isProcessingVariant = (variantId: number) =>
+    approveMutation.isPending && approveMutation.variables?.variantId === variantId
+
   if (!workspaceId) {
     return (
       <Card>
         <CardContent className="py-8 text-center text-muted-foreground">
           워크스페이스를 선택해주세요.
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Card>
+        <CardContent className="py-8 text-center text-destructive">
+          리라이팅 목록을 불러오는데 실패했습니다.
         </CardContent>
       </Card>
     )
@@ -175,18 +190,28 @@ export function RewritePanel() {
                           size="sm"
                           variant="outline"
                           onClick={() => handleApprove(rewrite.id, variant, 'approved')}
-                          disabled={approveMutation.isPending}
+                          disabled={isProcessingVariant(variant.id)}
+                          aria-label={`버전 ${variant.variant_number} 승인`}
                         >
-                          <Check className="mr-1 h-4 w-4" />
+                          {isProcessingVariant(variant.id) ? (
+                            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Check className="mr-1 h-4 w-4" />
+                          )}
                           승인
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() => handleApprove(rewrite.id, variant, 'rejected')}
-                          disabled={approveMutation.isPending}
+                          disabled={isProcessingVariant(variant.id)}
+                          aria-label={`버전 ${variant.variant_number} 거부`}
                         >
-                          <X className="mr-1 h-4 w-4" />
+                          {isProcessingVariant(variant.id) ? (
+                            <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                          ) : (
+                            <X className="mr-1 h-4 w-4" />
+                          )}
                           거부
                         </Button>
                       </div>

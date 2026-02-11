@@ -1,5 +1,9 @@
+export type OAuthPlatform = 'youtube' | 'linkedin' | 'twitter' | 'instagram'
+export type RewriteStatus = 'pending' | 'approved' | 'rejected'
+export type PublicationStatus = 'draft' | 'scheduled' | 'published' | 'failed'
+
 export interface OAuthPlatformStatus {
-  platform: string
+  platform: OAuthPlatform
   is_connected: boolean
   connected_at: string | null
   scopes: string[]
@@ -21,7 +25,7 @@ export interface RewriteVariant {
   id: number
   variant_number: number
   content: string
-  status: string
+  status: RewriteStatus
   diff_summary: string
 }
 
@@ -34,17 +38,22 @@ export interface RewriteResponse {
 
 export interface PublishRequest {
   content: string
-  platform: string
+  platform: OAuthPlatform
   scheduled_at?: string
 }
 
 export interface PublicationResponse {
   id: number
   content: string
-  platform: string
-  status: string
+  platform: OAuthPlatform
+  status: PublicationStatus
   published_at: string | null
   external_id: string | null
   error_message: string | null
   created_at: string
+}
+
+export interface PublicationListResponse {
+  publications: PublicationResponse[]
+  total: number
 }
