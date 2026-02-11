@@ -274,8 +274,8 @@ export default function CampaignDashboardPage() {
         </TabsContent>
 
         <TabsContent value="competitive" className="space-y-4">
-          {competitiveData?.brands && competitiveData.brands.length > 0 ? (
-            <CompetitiveOverview brands={competitiveData.brands} />
+          {competitiveData && (competitiveData as any)?.brands && (competitiveData as any).brands.length > 0 ? (
+            <CompetitiveOverview brands={(competitiveData as any).brands} />
           ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">

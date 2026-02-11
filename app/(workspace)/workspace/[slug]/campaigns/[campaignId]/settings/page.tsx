@@ -40,8 +40,8 @@ export default function CampaignSettingsPage() {
 
   const updateCampaign = useUpdateCampaign(workspaceId || 0, campaignId)
   const createNotification = useCreateNotification(workspaceId, campaignId)
-  const updateNotification = useUpdateNotification(workspaceId)
-  const deleteNotification = useDeleteNotification(workspaceId)
+  const updateNotification = useUpdateNotification(workspaceId, campaignId)
+  const deleteNotification = useDeleteNotification(workspaceId, campaignId)
   const testNotification = useTestNotification(workspaceId, campaignId)
 
   // Mock alert rules data (backend not implemented yet)
@@ -80,7 +80,7 @@ export default function CampaignSettingsPage() {
     is_active?: boolean
   }) => {
     try {
-      await createNotification.mutateAsync(data)
+      await createNotification.mutateAsync(data as any)
       toast.success('알림이 추가되었습니다')
     } catch (error) {
       toast.error('알림 추가에 실패했습니다')
@@ -98,7 +98,7 @@ export default function CampaignSettingsPage() {
     }>
   ) => {
     try {
-      await updateNotification.mutateAsync({ notificationId: id, data })
+      await updateNotification.mutateAsync({ notificationId: id, data: data as any })
       toast.success('알림이 업데이트되었습니다')
     } catch (error) {
       toast.error('알림 업데이트에 실패했습니다')

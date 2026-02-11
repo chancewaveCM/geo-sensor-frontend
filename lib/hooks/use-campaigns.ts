@@ -20,6 +20,18 @@ import {
   getGeoScoreSummary,
   getTimeseries,
   getBrandSafety,
+  getCampaignTimeseries,
+  getCampaignTrends,
+  getCampaignAnnotations,
+  getCompetitiveOverview,
+  getCompetitiveTrends,
+  getCompetitiveAlerts,
+  getNotificationConfigs,
+  createNotificationConfig,
+  updateNotificationConfig,
+  deleteNotificationConfig,
+  getNotificationLogs,
+  testNotification,
 } from '@/lib/api/campaigns'
 import type {
   CampaignCreate,
@@ -28,12 +40,16 @@ import type {
   IntentClusterCreate,
   QueryDefinitionCreate,
   QueryVersionCreate,
+  NotificationConfigCreate,
 } from '@/types'
 
 export function useCampaigns(workspaceId: number | undefined) {
   return useQuery({
     queryKey: ['campaigns', workspaceId],
-    queryFn: () => getCampaigns(workspaceId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      return getCampaigns(workspaceId)
+    },
     enabled: workspaceId != null,
   })
 }
@@ -44,7 +60,11 @@ export function useCampaign(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId],
-    queryFn: () => getCampaign(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaign(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -78,7 +98,11 @@ export function useCampaignRuns(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'runs'],
-    queryFn: () => getCampaignRuns(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaignRuns(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -105,7 +129,11 @@ export function useIntentClusters(
 ) {
   return useQuery({
     queryKey: ['clusters', workspaceId, campaignId],
-    queryFn: () => getIntentClusters(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getIntentClusters(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -113,8 +141,11 @@ export function useIntentClusters(
 export function useCreateIntentCluster(workspaceId: number, campaignId: number) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (data: IntentClusterCreate) =>
-      createIntentCluster(workspaceId, campaignId, data),
+    mutationFn: (data: IntentClusterCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return createIntentCluster(workspaceId, campaignId, data)
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['clusters', workspaceId, campaignId],
@@ -130,7 +161,11 @@ export function useQueryDefinitions(
 ) {
   return useQuery({
     queryKey: ['queries', workspaceId, campaignId, params],
-    queryFn: () => getQueryDefinitions(workspaceId!, campaignId!, params),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getQueryDefinitions(workspaceId, campaignId, params)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -158,7 +193,12 @@ export function useQueryVersions(
 ) {
   return useQuery({
     queryKey: ['queryVersions', workspaceId, campaignId, queryId],
-    queryFn: () => getQueryVersions(workspaceId!, campaignId!, queryId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      if (queryId == null) throw new Error('queryId is required')
+      return getQueryVersions(workspaceId, campaignId, queryId)
+    },
     enabled: workspaceId != null && campaignId != null && queryId != null,
   })
 }
@@ -209,7 +249,11 @@ export function useCampaignSummary(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'summary'],
-    queryFn: () => getCampaignSummary(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaignSummary(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -220,7 +264,11 @@ export function useCitationShare(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'citation-share'],
-    queryFn: () => getCitationShare(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCitationShare(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -231,7 +279,11 @@ export function useBrandRanking(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'brand-ranking'],
-    queryFn: () => getBrandRanking(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getBrandRanking(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -242,7 +294,11 @@ export function useProviderComparison(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'provider-comparison'],
-    queryFn: () => getProviderComparison(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getProviderComparison(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -253,7 +309,11 @@ export function useGeoScoreSummary(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'geo-score-summary'],
-    queryFn: () => getGeoScoreSummary(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getGeoScoreSummary(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -265,7 +325,11 @@ export function useTimeseries(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'timeseries', brandName],
-    queryFn: () => getTimeseries(workspaceId!, campaignId!, brandName),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getTimeseries(workspaceId, campaignId, brandName)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -276,7 +340,11 @@ export function useBrandSafety(
 ) {
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'brand-safety'],
-    queryFn: () => getBrandSafety(workspaceId!, campaignId!),
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getBrandSafety(workspaceId, campaignId)
+    },
     enabled: workspaceId != null && campaignId != null,
   })
 }
@@ -290,8 +358,9 @@ export function useCampaignTimeseries(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'timeseries-enhanced', params],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCampaignTimeseries(workspaceId!, campaignId!, params)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaignTimeseries(workspaceId, campaignId, params)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -304,8 +373,9 @@ export function useCampaignTrends(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'trends'],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCampaignTrends(workspaceId!, campaignId!)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaignTrends(workspaceId, campaignId)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -318,8 +388,9 @@ export function useCampaignAnnotations(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'annotations'],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCampaignAnnotations(workspaceId!, campaignId!)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCampaignAnnotations(workspaceId, campaignId)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -332,8 +403,9 @@ export function useCompetitiveOverview(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'competitive-overview'],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCompetitiveOverview(workspaceId!, campaignId!)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCompetitiveOverview(workspaceId, campaignId)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -347,8 +419,9 @@ export function useCompetitiveTrends(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'competitive-trends', params],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCompetitiveTrends(workspaceId!, campaignId!, params)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCompetitiveTrends(workspaceId, campaignId, params)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -361,8 +434,9 @@ export function useCompetitiveAlerts(
   return useQuery({
     queryKey: ['campaigns', workspaceId, campaignId, 'competitive-alerts'],
     queryFn: () => {
-      // @ts-ignore - will be implemented
-      return getCompetitiveAlerts(workspaceId!, campaignId!)
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
+      return getCompetitiveAlerts(workspaceId, campaignId)
     },
     enabled: workspaceId != null && campaignId != null,
   })
@@ -372,68 +446,72 @@ export function useCompetitiveAlerts(
 export function useNotificationConfigs(workspaceId: number | undefined, campaignId: number | undefined) {
   return useQuery({
     queryKey: ['notifications', workspaceId, campaignId],
-    queryFn: async () => {
-      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
-      const { getNotificationConfigs } = await import('@/lib/api/campaigns')
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
       return getNotificationConfigs(workspaceId, campaignId)
     },
-    enabled: !!workspaceId && !!campaignId,
+    enabled: workspaceId != null && campaignId != null,
   })
 }
 
 export function useCreateNotification(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (data: { type: string; destination: string; events: string[]; is_active?: boolean }) => {
-      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
-      const { createNotificationConfig } = await import('@/lib/api/campaigns')
+    mutationFn: (data: NotificationConfigCreate) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
       return createNotificationConfig(workspaceId, campaignId, data)
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications', workspaceId, campaignId] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications', workspaceId, campaignId] })
+    },
   })
 }
 
-export function useUpdateNotification(workspaceId: number | undefined) {
+export function useUpdateNotification(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async ({ notificationId, data }: { notificationId: number; data: Partial<{ type: string; destination: string; events: string[]; is_active?: boolean }> }) => {
-      if (!workspaceId) throw new Error('Missing workspace ID')
-      const { updateNotificationConfig } = await import('@/lib/api/campaigns')
+    mutationFn: ({ notificationId, data }: { notificationId: number; data: Partial<NotificationConfigCreate> }) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
       return updateNotificationConfig(workspaceId, notificationId, data)
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications', workspaceId, campaignId] })
+    },
   })
 }
 
-export function useDeleteNotification(workspaceId: number | undefined) {
+export function useDeleteNotification(workspaceId: number | undefined, campaignId: number | undefined) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: async (notificationId: number) => {
-      if (!workspaceId) throw new Error('Missing workspace ID')
-      const { deleteNotificationConfig } = await import('@/lib/api/campaigns')
+    mutationFn: (notificationId: number) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
       return deleteNotificationConfig(workspaceId, notificationId)
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['notifications', workspaceId, campaignId] })
+    },
   })
 }
 
 export function useNotificationLogs(workspaceId: number | undefined, campaignId: number | undefined) {
   return useQuery({
     queryKey: ['notification-logs', workspaceId, campaignId],
-    queryFn: async () => {
-      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
-      const { getNotificationLogs } = await import('@/lib/api/campaigns')
+    queryFn: () => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
       return getNotificationLogs(workspaceId, campaignId)
     },
-    enabled: !!workspaceId && !!campaignId,
+    enabled: workspaceId != null && campaignId != null,
   })
 }
 
 export function useTestNotification(workspaceId: number | undefined, campaignId: number | undefined) {
   return useMutation({
-    mutationFn: async (notificationId: number) => {
-      if (!workspaceId || !campaignId) throw new Error('Missing IDs')
-      const { testNotification } = await import('@/lib/api/campaigns')
+    mutationFn: (notificationId: number) => {
+      if (workspaceId == null) throw new Error('workspaceId is required')
+      if (campaignId == null) throw new Error('campaignId is required')
       return testNotification(workspaceId, campaignId, notificationId)
     },
   })
