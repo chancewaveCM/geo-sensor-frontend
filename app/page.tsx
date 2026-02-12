@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { BentoLanding } from '@/components/landing/BentoLanding'
+import { LandingPage } from '@/components/landing/LandingPage'
 
 export const metadata: Metadata = {
   title: 'GEO Sensor | AI 브랜드 인용 분석 플랫폼',
@@ -16,5 +16,5 @@ export const metadata: Metadata = {
 }
 
 export default function HomePage() {
-  return <BentoLanding />
+  return <LandingPage />
 }
