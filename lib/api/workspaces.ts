@@ -11,7 +11,7 @@ import type {
 const API_PREFIX = '/api/v1'
 
 export async function getWorkspaces(): Promise<WorkspaceWithRole[]> {
-  return get<WorkspaceWithRole[]>(`${API_PREFIX}/workspaces`)
+  return get<WorkspaceWithRole[]>(`${API_PREFIX}/workspaces/`)
 }
 
 export async function getWorkspace(id: number): Promise<Workspace> {
@@ -19,7 +19,7 @@ export async function getWorkspace(id: number): Promise<Workspace> {
 }
 
 export async function createWorkspace(data: WorkspaceCreate): Promise<Workspace> {
-  return post<Workspace>(`${API_PREFIX}/workspaces`, data)
+  return post<Workspace>(`${API_PREFIX}/workspaces/`, data)
 }
 
 export async function updateWorkspace(id: number, data: WorkspaceUpdate): Promise<Workspace> {
@@ -27,12 +27,12 @@ export async function updateWorkspace(id: number, data: WorkspaceUpdate): Promis
 }
 
 export async function getWorkspaceMembers(workspaceId: number): Promise<WorkspaceMember[]> {
-  return get<WorkspaceMember[]>(`${API_PREFIX}/workspaces/${workspaceId}/members`)
+  return get<WorkspaceMember[]>(`${API_PREFIX}/workspaces/${workspaceId}/members/`)
 }
 
 export async function addWorkspaceMember(
   workspaceId: number,
   data: WorkspaceMemberCreate
 ): Promise<WorkspaceMember> {
-  return post<WorkspaceMember>(`${API_PREFIX}/workspaces/${workspaceId}/members`, data)
+  return post<WorkspaceMember>(`${API_PREFIX}/workspaces/${workspaceId}/members/`, data)
 }

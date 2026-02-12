@@ -72,7 +72,7 @@ export async function createResponseLabel(
   data: ResponseLabelCreate
 ): Promise<ResponseLabel> {
   return post<ResponseLabel>(
-    `${API_PREFIX}/workspaces/${workspaceId}/gallery/labels`,
+    `${API_PREFIX}/workspaces/${workspaceId}/gallery/labels/`,
     data
   )
 }
@@ -116,7 +116,7 @@ export async function createCitationReview(
   data: CitationReviewCreate
 ): Promise<CitationReview> {
   return post<CitationReview>(
-    `${API_PREFIX}/workspaces/${workspaceId}/gallery/citation-reviews`,
+    `${API_PREFIX}/workspaces/${workspaceId}/gallery/citation-reviews/`,
     data
   )
 }
@@ -163,7 +163,7 @@ export async function getComparisons(
   workspaceId: number
 ): Promise<ComparisonSnapshot[]> {
   return get<ComparisonSnapshot[]>(
-    `${API_PREFIX}/workspaces/${workspaceId}/comparisons`
+    `${API_PREFIX}/workspaces/${workspaceId}/comparisons/`
   )
 }
 
@@ -172,7 +172,7 @@ export async function createComparison(
   data: ComparisonSnapshotCreate
 ): Promise<ComparisonSnapshot> {
   return post<ComparisonSnapshot>(
-    `${API_PREFIX}/workspaces/${workspaceId}/comparisons`,
+    `${API_PREFIX}/workspaces/${workspaceId}/comparisons/`,
     data
   )
 }
@@ -208,7 +208,7 @@ export async function createOperation(
   data: OperationLogCreate
 ): Promise<OperationLog> {
   return post<OperationLog>(
-    `${API_PREFIX}/workspaces/${workspaceId}/operations`,
+    `${API_PREFIX}/workspaces/${workspaceId}/operations/`,
     data
   )
 }

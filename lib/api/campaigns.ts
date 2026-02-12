@@ -23,7 +23,7 @@ import type {
 const API_PREFIX = '/api/v1'
 
 export async function getCampaigns(workspaceId: number): Promise<Campaign[]> {
-  return get<Campaign[]>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns`)
+  return get<Campaign[]>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/`)
 }
 
 export async function getCampaign(
@@ -37,7 +37,7 @@ export async function createCampaign(
   workspaceId: number,
   data: CampaignCreate
 ): Promise<Campaign> {
-  return post<Campaign>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns`, data)
+  return post<Campaign>(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/`, data)
 }
 
 export async function updateCampaign(
@@ -56,7 +56,7 @@ export async function getCampaignRuns(
   campaignId: number
 ): Promise<CampaignRun[]> {
   return get<CampaignRun[]>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/runs`
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/runs/`
   )
 }
 
@@ -76,7 +76,7 @@ export async function getIntentClusters(
   campaignId: number
 ): Promise<IntentCluster[]> {
   return get<IntentCluster[]>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/clusters`
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/clusters/`
   )
 }
 
@@ -86,7 +86,7 @@ export async function createIntentCluster(
   data: IntentClusterCreate
 ): Promise<IntentCluster> {
   return post<IntentCluster>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/clusters`,
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/clusters/`,
     data
   )
 }
@@ -112,7 +112,7 @@ export async function createQueryDefinition(
   data: QueryDefinitionCreate
 ): Promise<QueryDefinition> {
   return post<QueryDefinition>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/queries`,
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/queries/`,
     data
   )
 }
@@ -123,7 +123,7 @@ export async function getQueryVersions(
   queryId: number
 ): Promise<QueryVersion[]> {
   return get<QueryVersion[]>(
-    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/queries/${queryId}/versions`
+    `${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/queries/${queryId}/versions/`
   )
 }
 
@@ -205,7 +205,7 @@ export async function getCampaignTrends(workspaceId: number, campaignId: number)
 }
 
 export async function getCampaignAnnotations(workspaceId: number, campaignId: number) {
-  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations`)
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations/`)
 }
 
 export async function createCampaignAnnotation(
@@ -213,7 +213,7 @@ export async function createCampaignAnnotation(
   campaignId: number,
   data: { date: string; title: string; description?: string; annotation_type: string }
 ) {
-  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations`, data)
+  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/annotations/`, data)
 }
 
 export async function deleteCampaignAnnotation(
@@ -241,16 +241,16 @@ export async function getCompetitiveTrends(
 }
 
 export async function getCompetitiveAlerts(workspaceId: number, campaignId: number) {
-  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/alerts`)
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/alerts/`)
 }
 
 export async function getCompetitiveRankings(workspaceId: number, campaignId: number) {
-  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/rankings`)
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/competitive/rankings/`)
 }
 
 // Notification API functions
 export async function getNotificationConfigs(workspaceId: number, campaignId: number) {
-  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications`)
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/`)
 }
 
 export async function createNotificationConfig(
@@ -258,7 +258,7 @@ export async function createNotificationConfig(
   campaignId: number,
   data: { type: string; destination: string; events: string[]; is_active?: boolean }
 ) {
-  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications`, data)
+  return post(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/`, data)
 }
 
 export async function updateNotificationConfig(
@@ -274,7 +274,7 @@ export async function deleteNotificationConfig(workspaceId: number, notification
 }
 
 export async function getNotificationLogs(workspaceId: number, campaignId: number) {
-  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/logs`)
+  return get(`${API_PREFIX}/workspaces/${workspaceId}/campaigns/${campaignId}/notifications/logs/`)
 }
 
 export async function testNotification(workspaceId: number, campaignId: number, notificationId: number) {
