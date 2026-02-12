@@ -8,6 +8,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'GEO Sensor - AI Citation Analytics',
   description: 'Analyze brand citations in AI responses',
+  icons: {
+    icon: '/icon',
+  },
 }
 
 export default function RootLayout({
