@@ -26,7 +26,8 @@ import {
   useCampaignSummary,
 } from '@/lib/hooks/use-campaigns'
 import { getChartColors } from '@/lib/design-tokens'
-import { FolderKanban, TrendingUp, BarChart3, AlertCircle, Megaphone } from 'lucide-react'
+import { FolderKanban, TrendingUp, BarChart3, AlertCircle, Megaphone, ArrowUpRight } from 'lucide-react'
+import Link from 'next/link'
 
 export default function DashboardPage() {
   const { data: workspaces, isLoading: workspacesLoading } = useWorkspaces()
@@ -181,6 +182,15 @@ export default function DashboardPage() {
             ))}
           </SelectContent>
         </Select>
+        {workspaces?.[0]?.slug && (
+          <Link
+            href={`/workspace/${workspaces[0].slug}/campaigns`}
+            className="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            캠페인 관리
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        )}
       </div>
 
       {!selectedCampaignId ? (

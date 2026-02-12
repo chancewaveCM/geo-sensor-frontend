@@ -39,14 +39,14 @@ export function FinalCTA() {
 
   return (
     <section className="px-4 pb-16 md:px-6 md:pb-20">
-      <div className="mx-auto w-full max-w-[1200px] rounded-3xl bg-gray-900 px-6 py-12 text-gray-100 md:px-10">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-400">Early Access</p>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
+      <div className="mx-auto w-full max-w-[1200px] rounded-3xl bg-gray-900 px-6 py-12 text-gray-100 dark:bg-muted dark:text-foreground md:px-10">
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gray-400 dark:text-muted-foreground">Early Access</p>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight text-white dark:text-foreground md:text-4xl">
           AI 추천 결과에
           <br />
           당신의 브랜드를 올리세요
         </h2>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-300 md:text-base">
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-gray-300 dark:text-muted-foreground md:text-base">
           이메일을 남겨주시면 얼리 액세스와 온보딩 가이드를 보내드립니다. 200팀 한정으로 운영 중입니다.
         </p>
 
@@ -58,7 +58,7 @@ export function FinalCTA() {
             placeholder="work@email.com"
             aria-invalid={status === 'error'}
             disabled={status === 'submitting' || status === 'success'}
-            className="h-11 rounded-full border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-gray-500"
+            className="h-11 rounded-full border-gray-700 bg-gray-800 text-white placeholder:text-gray-500 focus-visible:ring-gray-500 dark:border-border-strong dark:bg-background-subtle dark:text-foreground dark:placeholder:text-muted-foreground dark:focus-visible:ring-ring"
           />
           <Button
             type="submit"
@@ -77,7 +77,7 @@ export function FinalCTA() {
         <p
           aria-live="polite"
           className={`mt-3 text-sm ${
-            status === 'error' ? 'text-rose-300' : 'text-gray-300'
+            status === 'error' ? 'text-rose-300 dark:text-destructive' : 'text-gray-300 dark:text-muted-foreground'
           }`}
         >
           {feedbackMessage}

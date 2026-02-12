@@ -108,12 +108,12 @@ export function NavigationHeader() {
 
   return (
     <header className={baseClass}>
-      <div className="mx-auto flex h-14 w-full max-w-[1440px] items-center justify-between px-4 md:h-16 md:px-6">
+      <div className="mx-auto grid h-14 w-full max-w-[1440px] grid-cols-[auto_1fr_auto] items-center px-4 md:h-16 md:px-6">
         <Link href="/" className="text-sm font-bold tracking-tight text-brand-navy md:text-base">
           GEO Sensor
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center justify-center gap-6 md:flex">
           {NAV_ITEMS.map((item) => (
             <button
               key={item.id}
@@ -131,9 +131,8 @@ export function NavigationHeader() {
           ))}
         </nav>
 
-        <ThemeToggle />
-
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           <Button asChild variant="ghost" className="rounded-full text-foreground hover:text-brand-navy">
             <Link href="/login">로그인</Link>
           </Button>
@@ -180,6 +179,9 @@ export function NavigationHeader() {
                 {item.label}
               </button>
             ))}
+          </div>
+          <div className="flex justify-center py-2">
+            <ThemeToggle />
           </div>
           <div className="mt-3 grid grid-cols-2 gap-2">
             <Button asChild variant="outline" className="rounded-full">
