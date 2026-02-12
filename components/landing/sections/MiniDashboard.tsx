@@ -5,7 +5,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span>{value}%</span>
       </div>
-      <div className="h-2 rounded-full bg-gray-200">
+      <div className="h-2 rounded-full bg-muted">
         <div
           className="h-2 rounded-full bg-gradient-to-r from-brand-orange to-brand-navy"
           style={{ width: `${value}%` }}

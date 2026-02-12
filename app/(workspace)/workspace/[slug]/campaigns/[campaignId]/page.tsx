@@ -41,7 +41,7 @@ function getStatusVariant(status: string) {
       return 'bg-blue-500/10 text-blue-600 border-blue-500/20'
     case 'draft':
     default:
-      return 'bg-gray-500/10 text-gray-600 border-gray-500/20'
+      return 'bg-muted text-muted-foreground border-border'
   }
 }
 

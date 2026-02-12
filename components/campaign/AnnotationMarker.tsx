@@ -48,7 +48,7 @@ export function AnnotationMarker({
       default:
         return {
           icon: FileEdit,
-          color: 'bg-gray-500',
+          color: 'bg-muted-foreground',
           label: '기타',
         }
     }

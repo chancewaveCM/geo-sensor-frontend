@@ -49,7 +49,7 @@ function getTriggerVariant(trigger: string) {
     case 'api':
       return 'bg-orange-500/10 text-orange-600 border-orange-500/20'
     default:
-      return 'bg-gray-500/10 text-gray-600 border-gray-500/20'
+      return 'bg-muted text-muted-foreground border-border'
   }
 }
 

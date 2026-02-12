@@ -13,7 +13,7 @@ export function OutcomeTimeline() {
       <div className="mt-4 flex flex-col gap-2 md:flex-row md:items-center">
         {chain.map((item, index) => (
           <div key={item} className="flex items-center gap-2">
-            <span className="rounded-lg bg-muted px-2.5 py-1 text-xs font-medium text-gray-700">{item}</span>
+            <span className="rounded-lg bg-muted px-2.5 py-1 text-xs font-medium text-foreground">{item}</span>
             {index < chain.length - 1 && <span className="hidden text-brand-navy md:inline">→</span>}
           </div>
         ))}

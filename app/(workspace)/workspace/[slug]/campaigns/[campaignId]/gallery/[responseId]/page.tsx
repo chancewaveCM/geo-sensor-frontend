@@ -69,7 +69,7 @@ export default function GalleryDetailPage() {
   const labels = data.labels
   const providerColor =
     providerColors[data.llm_provider.toLowerCase()] ||
-    'bg-gray-500/10 text-gray-700 dark:text-gray-400 border-gray-500/20'
+    'bg-muted text-muted-foreground border-border'
 
   return (
     <div className="p-8 space-y-6">

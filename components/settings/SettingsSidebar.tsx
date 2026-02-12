@@ -13,6 +13,7 @@ import {
   Briefcase,
   AlertTriangle,
   Share2,
+  ArrowLeft,
 } from 'lucide-react'
 
 const settingsNav = [
@@ -37,6 +38,13 @@ export function SettingsSidebar() {
   return (
     <nav className="w-56 shrink-0">
       <div className="sticky top-6 space-y-1">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 mb-4 px-3 py-2 text-sm text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-accent/50"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          대시보드
+        </Link>
         <h2 className="mb-4 text-lg font-semibold">설정</h2>
         {(settingsNav as readonly NavItem[]).map((item, index) => {
           if ('type' in item && item.type === 'separator') {

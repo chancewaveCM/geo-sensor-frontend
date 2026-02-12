@@ -17,22 +17,22 @@ export function CitationDiagram() {
         </div>
 
         <div className="rounded-2xl border border-brand-orange/30 bg-brand-orange/5 p-4">
-          <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-white/80 px-2 py-0.5 text-[11px] font-semibold text-brand-orange">
+          <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-card/80 px-2 py-0.5 text-[11px] font-semibold text-brand-orange">
             <MessageSquare className="h-3 w-3" />
             AI 응답
           </div>
-          <p className="text-sm leading-relaxed text-gray-700">
+          <p className="text-sm leading-relaxed text-foreground">
             "... Notion, Asana, <strong>Monday.com</strong> ..."
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-gray-900 p-4 text-gray-100">
-          <div className="inline-flex items-center gap-1 text-xs text-gray-300">
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
             <Gauge className="h-3.5 w-3.5" />
             Citation Share
           </div>
-          <p className="mt-1 text-2xl font-bold">33%</p>
-          <p className="mt-1 text-xs text-gray-400">3개 모델 중 1개 언급</p>
+          <p className="mt-1 text-2xl font-bold text-foreground">33%</p>
+          <p className="mt-1 text-xs text-muted-foreground">3개 모델 중 1개 언급</p>
         </div>
       </div>
     </div>

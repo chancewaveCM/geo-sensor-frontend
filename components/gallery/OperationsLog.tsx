@@ -59,25 +59,25 @@ export function OperationsLog({ operations, workspaceId, isAdmin = false }: Oper
 
   const getTypeBadge = (type: string) => {
     const variants: Record<string, { color: string; label: string }> = {
-      promote_to_anchor: { color: 'bg-purple-100 text-purple-800', label: 'Promote' },
-      anchor_change_request: { color: 'bg-blue-100 text-blue-800', label: 'Change Request' },
-      parser_issue: { color: 'bg-orange-100 text-orange-800', label: 'Parser Issue' },
-      archive: { color: 'bg-gray-100 text-gray-800', label: 'Archive' },
-      export: { color: 'bg-teal-100 text-teal-800', label: 'Export' },
-      label_action: { color: 'bg-yellow-100 text-yellow-800', label: 'Label Action' },
+      promote_to_anchor: { color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-400', label: 'Promote' },
+      anchor_change_request: { color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400', label: 'Change Request' },
+      parser_issue: { color: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400', label: 'Parser Issue' },
+      archive: { color: 'bg-muted text-muted-foreground', label: 'Archive' },
+      export: { color: 'bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-400', label: 'Export' },
+      label_action: { color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400', label: 'Label Action' },
     }
-    const variant = variants[type] || { color: 'bg-gray-100 text-gray-800', label: type }
+    const variant = variants[type] || { color: 'bg-muted text-muted-foreground', label: type }
     return <Badge className={variant.color}>{variant.label}</Badge>
   }
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, { color: string; label: string }> = {
-      pending: { color: 'bg-yellow-100 text-yellow-800', label: 'Pending' },
-      approved: { color: 'bg-green-100 text-green-800', label: 'Approved' },
-      rejected: { color: 'bg-red-100 text-red-800', label: 'Rejected' },
-      cancelled: { color: 'bg-gray-100 text-gray-800', label: 'Cancelled' },
+      pending: { color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400', label: 'Pending' },
+      approved: { color: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400', label: 'Approved' },
+      rejected: { color: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400', label: 'Rejected' },
+      cancelled: { color: 'bg-muted text-muted-foreground', label: 'Cancelled' },
     }
-    const variant = variants[status] || { color: 'bg-gray-100 text-gray-800', label: status }
+    const variant = variants[status] || { color: 'bg-muted text-muted-foreground', label: status }
     return <Badge className={variant.color}>{variant.label}</Badge>
   }
 

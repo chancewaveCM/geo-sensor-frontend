@@ -121,7 +121,7 @@ export default function BrandSafetyPage() {
       </div>
 
       {/* Alert Summary Bar */}
-      <div className="bg-gray-900 text-white px-6 py-4" role="status" aria-live="polite">
+      <div className="bg-card border-b px-6 py-4" role="status" aria-live="polite">
         <div className="flex flex-wrap gap-4 items-center justify-between">
           <div className="flex gap-4 items-center flex-wrap">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground mr-2">
@@ -130,15 +130,15 @@ export default function BrandSafetyPage() {
             <RiskMetricCard level="critical" count={brandSafety?.critical_count ?? 0} description="critical incidents" />
             <RiskMetricCard level="warning" count={brandSafety?.warning_count ?? 0} description="warnings" />
             <RiskMetricCard level="safe" count={brandSafety?.safe_count ?? 0} description="safe responses" />
-            <div className="flex items-center gap-2 bg-gray-700 border border-gray-600 px-3 py-1 rounded-full ml-2">
-              <span className="text-xs font-bold text-gray-300">TOTAL: {(brandSafety?.total_citations ?? 0).toLocaleString()}</span>
+            <div className="flex items-center gap-2 bg-muted border border-border px-3 py-1 rounded-full ml-2">
+              <span className="text-xs font-bold text-muted-foreground">TOTAL: {(brandSafety?.total_citations ?? 0).toLocaleString()}</span>
             </div>
           </div>
           <div className="flex gap-2">
             <Button
               variant="secondary"
               size="sm"
-              className="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold border-0"
+              className="bg-muted hover:bg-muted/80 text-foreground text-xs font-bold border-0"
               onClick={handleRefresh}
               aria-label="Refresh data"
             >
@@ -148,7 +148,7 @@ export default function BrandSafetyPage() {
             <Button
               variant="secondary"
               size="sm"
-              className="bg-gray-800 hover:bg-gray-700 text-white text-xs font-bold border-0"
+              className="bg-muted hover:bg-muted/80 text-foreground text-xs font-bold border-0"
               onClick={handleConfig}
               aria-label="Open configuration"
             >

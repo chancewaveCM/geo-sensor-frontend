@@ -72,7 +72,7 @@ export function ProviderComparison() {
             </div>
             <div className="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3">
               {LLM_PROVIDERS.map((provider) => (
-                <div key={provider.id} className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs text-gray-700">
+                <div key={provider.id} className="inline-flex items-center gap-2 rounded-full bg-muted px-3 py-1.5 text-xs text-foreground">
                   <span
                     className="h-2.5 w-2.5 rounded-full"
                     style={{ backgroundColor: getTokenColor(PROVIDER_COLORS[provider.id]) }}
@@ -102,7 +102,7 @@ export function ProviderComparison() {
             </div>
             <div className="mt-3 rounded-2xl border border-border bg-card p-4 shadow-sm">
               <p className="text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">추천 채널 우선순위</p>
-              <ul className="mt-2 space-y-2 text-sm text-gray-700">
+              <ul className="mt-2 space-y-2 text-sm text-foreground">
                 {RADAR_KEYS.map((key) => (
                   <li key={key} className="rounded-lg bg-muted px-3 py-2">
                     {RADAR_METRIC_LABELS.find((item) => item.key === key)?.label}: {selectedProvider.radar[key]}

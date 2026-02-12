@@ -31,7 +31,7 @@ export function BentoLanding() {
             </nav>
             <Link
               href="/login"
-              className="rounded-full border border-gray-300 px-4 py-2 text-xs font-semibold text-gray-700 transition-colors hover:border-brand-navy hover:text-brand-navy"
+              className="rounded-full border border-border px-4 py-2 text-xs font-semibold text-foreground transition-colors hover:border-brand-navy hover:text-brand-navy"
             >
               로그인
             </Link>
@@ -65,7 +65,7 @@ export function BentoLanding() {
               </Link>
               <Link
                 href="/dashboard"
-                className="inline-flex items-center rounded-full border border-gray-300 bg-card px-5 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:border-brand-navy hover:text-brand-navy"
+                className="inline-flex items-center rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:border-brand-navy hover:text-brand-navy"
               >
                 대시보드 보기
               </Link>
@@ -83,7 +83,7 @@ export function BentoLanding() {
                 </p>
               </div>
             </div>
-            <div className="mt-5 h-2 rounded-full bg-gray-100">
+            <div className="mt-5 h-2 rounded-full bg-muted">
               <div className="h-2 w-[58%] rounded-full bg-gradient-to-r from-brand-orange to-brand-navy" />
             </div>
           </article>
@@ -172,9 +172,9 @@ export function BentoLanding() {
                 <span className="text-2xl font-black text-brand-navy">A-</span>
               </div>
               <div className="grid grid-cols-3 gap-1.5 text-[11px] font-semibold text-muted-foreground">
-                <span className="rounded bg-card px-2 py-1 text-center">콘텐츠 A</span>
-                <span className="rounded bg-card px-2 py-1 text-center">신뢰도 A</span>
-                <span className="rounded bg-card px-2 py-1 text-center">구조 B+</span>
+                <span className="rounded bg-background px-2 py-1 text-center">콘텐츠 A</span>
+                <span className="rounded bg-background px-2 py-1 text-center">신뢰도 A</span>
+                <span className="rounded bg-background px-2 py-1 text-center">구조 B+</span>
               </div>
             </div>
           </article>
@@ -185,7 +185,7 @@ export function BentoLanding() {
               {queueItems.map((item) => (
                 <div key={item} className="flex items-start gap-2 rounded-xl border border-border bg-muted p-2.5">
                   <CheckCircle2 className="mt-0.5 h-4 w-4 text-brand-orange" />
-                  <p className="text-sm text-gray-700">{item}</p>
+                  <p className="text-sm text-foreground">{item}</p>
                 </div>
               ))}
             </div>
@@ -224,7 +224,7 @@ export function BentoLanding() {
                 id="early-email"
                 type="email"
                 placeholder="work@email.com"
-                className="h-10 w-full rounded-full border border-gray-300 bg-card px-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand-navy"
+                className="h-10 w-full rounded-full border border-border bg-card px-4 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand-navy"
               />
               <Link
                 href="/register"
@@ -256,7 +256,7 @@ function Gauge({ percent }: { percent: number }) {
   return (
     <div className="relative h-[130px] w-[130px]">
       <svg viewBox="0 0 120 120" className="h-full w-full">
-        <circle cx="60" cy="60" r={radius} fill="none" className="stroke-gray-200" strokeWidth="12" />
+        <circle cx="60" cy="60" r={radius} fill="none" className="stroke-muted" strokeWidth="12" />
         <circle
           cx="60"
           cy="60"
@@ -279,7 +279,7 @@ function Gauge({ percent }: { percent: number }) {
         </defs>
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
-        <span className="text-sm font-bold text-gray-700">Citation</span>
+        <span className="text-sm font-bold text-foreground">Citation</span>
       </div>
     </div>
   )
@@ -292,7 +292,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span>{value}%</span>
       </div>
-      <div className="h-2 rounded-full bg-gray-200">
+      <div className="h-2 rounded-full bg-muted">
         <div className="h-2 rounded-full bg-gradient-to-r from-brand-orange to-brand-navy" style={{ width: `${value}%` }} />
       </div>
     </div>

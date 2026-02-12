@@ -8,7 +8,7 @@ export function ProviderDetailPanel({ provider }: { provider: LLMProvider }) {
       <p className="mt-1 text-sm text-muted-foreground">평균 응답시간 {provider.avgResponseTime}</p>
       <div className="mt-4 space-y-2">
         {provider.strengths.map((strength) => (
-          <p key={strength} className="rounded-lg bg-muted px-3 py-2 text-xs font-medium text-gray-700">
+          <p key={strength} className="rounded-lg bg-muted px-3 py-2 text-xs font-medium text-foreground">
             {strength}
           </p>
         ))}

@@ -7,11 +7,11 @@ export function BrowserFrame({ children }: { children: ReactNode }) {
         <span className="h-2.5 w-2.5 rounded-full bg-rose-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-amber-400" />
         <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-        <div className="ml-3 rounded-md border border-border bg-white px-3 py-1 text-[11px] text-muted-foreground">
+        <div className="ml-3 rounded-md border border-border bg-card px-3 py-1 text-[11px] text-muted-foreground">
           app.geo-sensor.ai/dashboard
         </div>
       </div>
-      <div className="bg-white p-5">{children}</div>
+      <div className="bg-card p-5">{children}</div>
     </div>
   )
 }

@@ -35,7 +35,7 @@ function getQueryTypeVariant(type: string) {
     case 'exploration':
       return 'bg-purple-500/10 text-purple-600 border-purple-500/20'
     default:
-      return 'bg-gray-500/10 text-gray-600 border-gray-500/20'
+      return 'bg-muted text-muted-foreground border-border'
   }
 }
 

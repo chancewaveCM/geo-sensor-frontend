@@ -44,11 +44,11 @@ export function HeroSection() {
             </Button>
           </div>
           <div className="mt-6 flex flex-wrap gap-3 text-xs text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
               카드 등록 없이 시작
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
               187개 팀 사용 중
             </span>

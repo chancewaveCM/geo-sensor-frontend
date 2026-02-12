@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { cn } from '@/lib/utils'
 import { Breadcrumbs } from './Breadcrumbs'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import type { AppHeaderProps, TimeRange } from './types'
 
 export function AppHeader({
@@ -96,6 +97,9 @@ export function AppHeader({
               </button>
             </div>
           )}
+
+          {/* Theme toggle */}
+          <ThemeToggle />
 
           {/* Notifications */}
           <button

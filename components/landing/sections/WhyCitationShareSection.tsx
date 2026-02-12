@@ -36,7 +36,7 @@ export function WhyCitationShareSection() {
                 특정 질문 묶음에서 브랜드가 실제로 얼마나 언급되는지를 측정하는 지표입니다.
                 클릭률 대신 AI 추천 점유율을 봅니다.
               </p>
-              <div className="mt-4 rounded-xl border-l-4 border-brand-orange bg-brand-orange/5 p-4 text-sm text-gray-700">
+              <div className="mt-4 rounded-xl border-l-4 border-brand-orange bg-brand-orange/5 p-4 text-sm text-foreground">
                 질문: "프로젝트 관리 툴 추천해줘" <br />
                 응답 3개 중 1개에서 브랜드가 언급되면 Citation Share는 33%입니다.
               </div>

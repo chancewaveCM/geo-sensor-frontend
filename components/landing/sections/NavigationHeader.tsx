@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { cn } from '@/lib/utils'
 
 interface NavItem {
@@ -92,8 +93,8 @@ export function NavigationHeader() {
       cn(
         'fixed inset-x-0 top-0 z-50 transition-all duration-300',
         isScrolled
-          ? 'border-b border-border bg-white/95 shadow-sm backdrop-blur-md'
-          : 'border-b border-transparent bg-white/80 backdrop-blur-sm'
+          ? 'border-b border-border bg-card/95 shadow-sm backdrop-blur-md'
+          : 'border-b border-transparent bg-card/80 backdrop-blur-sm'
       ),
     [isScrolled]
   )
@@ -120,7 +121,7 @@ export function NavigationHeader() {
               aria-current={activeId === item.id ? 'page' : undefined}
               onClick={() => handleScrollTo(item.id)}
               className={cn(
-                'relative text-sm font-medium text-gray-600 transition-colors hover:text-brand-navy',
+                'relative text-sm font-medium text-muted-foreground transition-colors hover:text-brand-navy',
                 activeId === item.id && 'font-semibold text-brand-navy'
               )}
             >
@@ -130,8 +131,10 @@ export function NavigationHeader() {
           ))}
         </nav>
 
+        <ThemeToggle />
+
         <div className="hidden items-center gap-2 md:flex">
-          <Button asChild variant="ghost" className="rounded-full text-gray-700 hover:text-brand-navy">
+          <Button asChild variant="ghost" className="rounded-full text-foreground hover:text-brand-navy">
             <Link href="/login">로그인</Link>
           </Button>
           <Button
@@ -144,7 +147,7 @@ export function NavigationHeader() {
 
         <button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-gray-700 md:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-foreground md:hidden"
           aria-label={isMobileMenuOpen ? '모바일 메뉴 닫기' : '모바일 메뉴 열기'}
           aria-haspopup="menu"
           aria-controls={mobileMenuPanelId}
@@ -160,7 +163,7 @@ export function NavigationHeader() {
           id={mobileMenuPanelId}
           role="menu"
           aria-label="모바일 네비게이션 메뉴"
-          className="border-t border-border bg-white/95 px-4 py-4 md:hidden"
+          className="border-t border-border bg-card/95 px-4 py-4 md:hidden"
         >
           <div className="flex flex-col gap-1">
             {NAV_ITEMS.map((item) => (
@@ -169,7 +172,7 @@ export function NavigationHeader() {
                 type="button"
                 role="menuitem"
                 className={cn(
-                  'rounded-lg px-3 py-2 text-left text-sm font-medium text-gray-700 transition-colors hover:bg-muted hover:text-brand-navy',
+                  'rounded-lg px-3 py-2 text-left text-sm font-medium text-foreground transition-colors hover:bg-muted hover:text-brand-navy',
                   activeId === item.id && 'bg-muted text-brand-navy'
                 )}
                 onClick={() => handleScrollTo(item.id)}

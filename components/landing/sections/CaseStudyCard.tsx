@@ -15,7 +15,7 @@ export function CaseStudyCard({ industry, title, before, after, summary }: CaseS
       <div className="mt-5 grid grid-cols-2 gap-3">
         <div className="rounded-2xl border border-border bg-muted/50 p-3 text-center">
           <p className="text-xs font-medium text-muted-foreground">Before</p>
-          <p className="mt-1 text-xl font-bold text-gray-700">{before}</p>
+          <p className="mt-1 text-xl font-bold text-foreground">{before}</p>
         </div>
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50 p-3 text-center">
           <p className="text-xs font-medium text-emerald-700">After</p>

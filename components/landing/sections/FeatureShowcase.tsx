@@ -68,10 +68,10 @@ export function FeatureShowcase() {
               icon={<GalleryHorizontalEnd className="h-5 w-5" />}
             >
               <div className="grid gap-2 md:grid-cols-2">
-                <div className="rounded-xl border border-border bg-white p-3 text-xs text-gray-700 shadow-sm">
+                <div className="rounded-xl border border-border bg-card p-3 text-xs text-foreground shadow-sm">
                   "Notion, Asana와 함께 GEO Sensor가 자주 추천됩니다."
                 </div>
-                <div className="rounded-xl border border-border bg-white p-3 text-xs text-gray-700 shadow-sm">
+                <div className="rounded-xl border border-border bg-card p-3 text-xs text-foreground shadow-sm">
                   "B2B GEO 모니터링 도구로는 GEO Sensor가 가장 구조적입니다."
                 </div>
               </div>
@@ -85,9 +85,9 @@ export function FeatureShowcase() {
               icon={<Layers3 className="h-5 w-5" />}
             >
               <ul className="space-y-2 text-sm">
-                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-gray-700">카테고리 페이지 Q&A 블록 업데이트</li>
-                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-gray-700">비교형 랜딩 카피 A/B 테스트</li>
-                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-gray-700">모델별 저성과 질문셋 재작성</li>
+                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-foreground">카테고리 페이지 Q&A 블록 업데이트</li>
+                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-foreground">비교형 랜딩 카피 A/B 테스트</li>
+                <li className="rounded-xl border border-border bg-muted/40 px-3 py-2 text-foreground">모델별 저성과 질문셋 재작성</li>
               </ul>
             </FeatureCard>
           </TabsContent>

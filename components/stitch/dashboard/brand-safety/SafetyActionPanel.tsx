@@ -73,7 +73,7 @@ export function SafetyActionPanel({
         className={cn(
           "flex items-center gap-2 text-[10px] font-bold px-2 py-1 rounded mb-4",
           settings.shieldActive
-            ? "text-success bg-black/20"
+            ? "text-success bg-success/10"
             : "text-warning bg-warning/10"
         )}
         role="status"
@@ -86,7 +86,7 @@ export function SafetyActionPanel({
         <Button
           variant="secondary"
           size="sm"
-          className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold border-0"
+          className="flex-1 bg-background/10 hover:bg-background/20 text-white text-xs font-bold border-0"
           onClick={() => onAction('refresh')}
           aria-label="Refresh data"
         >
@@ -96,7 +96,7 @@ export function SafetyActionPanel({
         <Button
           variant="secondary"
           size="sm"
-          className="flex-1 bg-white/10 hover:bg-white/20 text-white text-xs font-bold border-0"
+          className="flex-1 bg-background/10 hover:bg-background/20 text-white text-xs font-bold border-0"
           onClick={() => onAction('config')}
           aria-label="Open configuration"
         >
