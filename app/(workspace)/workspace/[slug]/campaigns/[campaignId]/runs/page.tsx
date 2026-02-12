@@ -72,11 +72,11 @@ export default function RunsPage() {
   const handleTriggerRun = () => {
     triggerRun({ trigger_type: 'manual', llm_providers: selectedProviders }, {
       onSuccess: () => {
-        toast.success('Campaign run triggered successfully!')
+        toast.success('캠페인 실행이 시작되었습니다!')
         setDialogOpen(false)
       },
       onError: () => {
-        toast.error('Failed to trigger run')
+        toast.error('실행 시작에 실패했습니다')
       }
     })
   }
@@ -101,9 +101,9 @@ export default function RunsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Run History</h1>
+          <h1 className="text-3xl font-bold tracking-tight">실행 기록</h1>
           <p className="text-muted-foreground mt-1">
-            View and manage campaign execution runs
+            캠페인 실행 기록을 확인하고 관리하세요
           </p>
         </div>
 
@@ -111,16 +111,16 @@ export default function RunsPage() {
           <DialogTrigger asChild>
             <Button className="bg-brand-orange hover:bg-brand-orange-hover">
               <Play className="h-4 w-4 mr-2" />
-              Trigger New Run
+              새 실행 시작
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Trigger Campaign Run</DialogTitle>
+              <DialogTitle>캠페인 실행 시작</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 mt-4">
               <div className="space-y-3">
-                <Label>LLM Providers</Label>
+                <Label>LLM 제공자</Label>
                 <div className="space-y-2">
                   {['openai', 'gemini', 'anthropic'].map((provider) => (
                     <div key={provider} className="flex items-center space-x-2">
@@ -149,14 +149,14 @@ export default function RunsPage() {
                   onClick={() => setDialogOpen(false)}
                   className="flex-1"
                 >
-                  Cancel
+                  취소
                 </Button>
                 <Button
                   onClick={handleTriggerRun}
                   disabled={triggering || selectedProviders.length === 0}
                   className="flex-1 bg-brand-orange hover:bg-brand-orange-hover"
                 >
-                  {triggering ? 'Triggering...' : 'Trigger Run'}
+                  {triggering ? '시작 중...' : '실행 시작'}
                 </Button>
               </div>
             </div>
@@ -169,17 +169,17 @@ export default function RunsPage() {
         <CardContent className="flex items-center gap-4 p-4">
           <Filter className="h-4 w-4 text-muted-foreground" />
           <div className="flex items-center gap-2">
-            <Label className="text-sm font-medium">Status:</Label>
+            <Label className="text-sm font-medium">상태:</Label>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All</SelectItem>
-                <SelectItem value="pending">Pending</SelectItem>
-                <SelectItem value="executing">Executing</SelectItem>
-                <SelectItem value="completed">Completed</SelectItem>
-                <SelectItem value="failed">Failed</SelectItem>
+                <SelectItem value="all">전체</SelectItem>
+                <SelectItem value="pending">대기 중</SelectItem>
+                <SelectItem value="executing">실행 중</SelectItem>
+                <SelectItem value="completed">완료</SelectItem>
+                <SelectItem value="failed">실패</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -199,14 +199,14 @@ export default function RunsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Run #</TableHead>
-                  <TableHead>Trigger</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>LLM Providers</TableHead>
-                  <TableHead>Queries</TableHead>
-                  <TableHead>Started</TableHead>
-                  <TableHead>Completed</TableHead>
-                  <TableHead>Duration</TableHead>
+                  <TableHead>실행 #</TableHead>
+                  <TableHead>트리거</TableHead>
+                  <TableHead>상태</TableHead>
+                  <TableHead>LLM 제공자</TableHead>
+                  <TableHead>쿼리</TableHead>
+                  <TableHead>시작일</TableHead>
+                  <TableHead>완료일</TableHead>
+                  <TableHead>소요 시간</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -253,7 +253,7 @@ export default function RunsPage() {
                             <span className="text-muted-foreground">/{run.total_queries}</span>
                             {run.failed_queries > 0 && (
                               <span className="text-destructive ml-2">
-                                ({run.failed_queries} failed)
+                                ({run.failed_queries} 실패)
                               </span>
                             )}
                           </div>
@@ -282,8 +282,8 @@ export default function RunsPage() {
             <div className="text-center py-12">
               <p className="text-muted-foreground">
                 {statusFilter === 'all'
-                  ? 'No runs yet. Trigger your first run to get started.'
-                  : `No ${statusFilter} runs found.`}
+                  ? '아직 실행 기록이 없습니다. 첫 번째 실행을 시작하세요.'
+                  : `${statusFilter === 'pending' ? '대기 중' : statusFilter === 'executing' ? '실행 중' : statusFilter === 'completed' ? '완료' : '실패'}인 실행이 없습니다.`}
               </p>
             </div>
           )}

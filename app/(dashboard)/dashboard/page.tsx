@@ -26,6 +26,7 @@ import {
   useCampaignSummary,
 } from '@/lib/hooks/use-campaigns'
 import { getChartColors } from '@/lib/design-tokens'
+import { cn } from '@/lib/utils'
 import { FolderKanban, TrendingUp, BarChart3, AlertCircle, Megaphone, ArrowUpRight } from 'lucide-react'
 import Link from 'next/link'
 
@@ -171,7 +172,7 @@ export default function DashboardPage() {
           value={selectedCampaignId?.toString()}
           onValueChange={(value) => setSelectedCampaignId(Number(value))}
         >
-          <SelectTrigger className="w-full max-w-xs">
+          <SelectTrigger className={cn("w-full max-w-xs transition-all", !selectedCampaignId && "border-2 border-brand-orange ring-2 ring-brand-orange/20 animate-pulse")}>
             <SelectValue placeholder="캠페인을 선택하세요" />
           </SelectTrigger>
           <SelectContent>

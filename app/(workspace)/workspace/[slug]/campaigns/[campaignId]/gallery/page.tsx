@@ -47,7 +47,7 @@ export default function GalleryPage() {
   if (!workspaceId) {
     return (
       <div className="p-8">
-        <p className="text-muted-foreground">Loading workspace...</p>
+        <p className="text-muted-foreground">워크스페이스 로딩 중...</p>
       </div>
     )
   }
@@ -58,10 +58,10 @@ export default function GalleryPage() {
     <div className="p-8 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gallery</h1>
+          <h1 className="text-3xl font-bold">갤러리</h1>
           {data && (
             <p className="text-muted-foreground mt-1">
-              {responses.length} response{responses.length !== 1 ? 's' : ''}
+              {responses.length}개의 응답
             </p>
           )}
         </div>
@@ -93,9 +93,9 @@ export default function GalleryPage() {
         </div>
       ) : (
         <div className="text-center py-12 border-2 border-dashed rounded-lg">
-          <p className="text-muted-foreground">No responses found</p>
+          <p className="text-muted-foreground">응답이 없습니다</p>
           <p className="text-sm text-muted-foreground mt-1">
-            Try adjusting your filters or run a campaign to generate responses
+            필터를 조정하거나 캠페인을 실행하여 응답을 생성하세요
           </p>
         </div>
       )}

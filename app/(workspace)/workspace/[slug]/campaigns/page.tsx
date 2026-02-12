@@ -41,7 +41,7 @@ export default function CampaignsPage() {
     e.preventDefault()
     createCampaign(formData, {
       onSuccess: () => {
-        toast.success('Campaign created successfully!')
+        toast.success('캠페인이 생성되었습니다!')
         setOpen(false)
         setFormData({
           name: '',
@@ -52,7 +52,7 @@ export default function CampaignsPage() {
         })
       },
       onError: () => {
-        toast.error('Failed to create campaign')
+        toast.error('캠페인 생성에 실패했습니다')
       }
     })
   }
@@ -62,9 +62,9 @@ export default function CampaignsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Campaigns</h1>
+          <h1 className="text-3xl font-bold tracking-tight">캠페인 관리</h1>
           <p className="text-muted-foreground mt-1">
-            Manage and monitor your citation analysis campaigns
+            인용 분석 캠페인을 관리하고 모니터링하세요
           </p>
         </div>
 
@@ -72,19 +72,19 @@ export default function CampaignsPage() {
           <DialogTrigger asChild>
             <Button className="bg-brand-orange hover:bg-brand-orange-hover">
               <Plus className="h-4 w-4 mr-2" />
-              Create Campaign
+              캠페인 생성
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Create New Campaign</DialogTitle>
+              <DialogTitle>새 캠페인 만들기</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="name">Campaign Name *</Label>
+                <Label htmlFor="name">캠페인 이름 *</Label>
                 <Input
                   id="name"
-                  placeholder="Q1 2026 Brand Analysis"
+                  placeholder="2026 1분기 브랜드 분석"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   required
@@ -92,10 +92,10 @@ export default function CampaignsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="target_brand">Target Brand *</Label>
+                <Label htmlFor="target_brand">목표 브랜드 *</Label>
                 <Input
                   id="target_brand"
-                  placeholder="Your Brand Name"
+                  placeholder="브랜드 이름"
                   value={formData.target_brand}
                   onChange={(e) => setFormData({ ...formData, target_brand: e.target.value })}
                   required
@@ -103,10 +103,10 @@ export default function CampaignsPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">설명</Label>
                 <Textarea
                   id="description"
-                  placeholder="Campaign objectives and notes..."
+                  placeholder="캠페인 목표 및 메모..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   rows={3}
@@ -115,9 +115,9 @@ export default function CampaignsPage() {
 
               <div className="flex items-center justify-between p-4 border rounded-lg">
                 <div className="space-y-0.5">
-                  <Label htmlFor="schedule">Automatic Scheduling</Label>
+                  <Label htmlFor="schedule">자동 스케줄링</Label>
                   <p className="text-sm text-muted-foreground">
-                    Run campaign on a schedule
+                    캠페인을 일정에 따라 실행
                   </p>
                 </div>
                 <Switch
@@ -131,7 +131,7 @@ export default function CampaignsPage() {
 
               {formData.schedule_enabled && (
                 <div className="space-y-2">
-                  <Label htmlFor="interval">Interval (hours)</Label>
+                  <Label htmlFor="interval">간격 (시간)</Label>
                   <Input
                     id="interval"
                     type="number"
@@ -151,14 +151,14 @@ export default function CampaignsPage() {
                   onClick={() => setOpen(false)}
                   className="flex-1"
                 >
-                  Cancel
+                  취소
                 </Button>
                 <Button
                   type="submit"
                   disabled={isPending}
                   className="flex-1 bg-brand-orange hover:bg-brand-orange-hover"
                 >
-                  {isPending ? 'Creating...' : 'Create Campaign'}
+                  {isPending ? '생성 중...' : '캠페인 생성'}
                 </Button>
               </div>
             </form>

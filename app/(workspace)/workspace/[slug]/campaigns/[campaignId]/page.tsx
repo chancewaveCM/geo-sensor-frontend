@@ -79,10 +79,10 @@ export default function CampaignDashboardPage() {
   const handleTriggerRun = () => {
     triggerRun({ trigger_type: 'manual', llm_providers: ['openai', 'gemini'] }, {
       onSuccess: () => {
-        toast.success('Campaign run triggered successfully!')
+        toast.success('캠페인 실행이 시작되었습니다!')
       },
       onError: () => {
-        toast.error('Failed to trigger run')
+        toast.error('실행 시작에 실패했습니다')
       }
     })
   }
@@ -110,9 +110,9 @@ export default function CampaignDashboardPage() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h2 className="text-xl font-semibold mb-2">Campaign not found</h2>
+        <h2 className="text-xl font-semibold mb-2">캠페인을 찾을 수 없습니다</h2>
         <Button onClick={() => router.push(`/workspace/${slug}/campaigns`)}>
-          Back to Campaigns
+          캠페인 목록으로
         </Button>
       </div>
     )
@@ -143,7 +143,7 @@ export default function CampaignDashboardPage() {
             className="bg-brand-orange hover:bg-brand-orange-hover"
           >
             <Play className="h-4 w-4 mr-2" />
-            {triggering ? 'Triggering...' : 'Trigger Run'}
+            {triggering ? '실행 중...' : '실행 시작'}
           </Button>
         </div>
       </div>
@@ -151,26 +151,26 @@ export default function CampaignDashboardPage() {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KPICard
-          title="Total Runs"
+          title="총 실행 수"
           value={totalRuns}
           icon={<BarChart3 className="h-5 w-5" />}
         />
         <KPICard
-          title="Active Queries"
+          title="활성 쿼리"
           value={activeQueries}
-          subtitle="Ready for execution"
+          subtitle="실행 준비 완료"
           icon={<FileSearch className="h-5 w-5" />}
         />
         <KPICard
-          title="Completed Queries"
+          title="완료된 쿼리"
           value={completedQueries}
-          subtitle="From latest run"
+          subtitle="최근 실행 기준"
           icon={<CheckCircle2 className="h-5 w-5" />}
         />
         <KPICard
-          title="Citation Share"
+          title="인용 점유율"
           value={citationSharePlaceholder}
-          subtitle="Latest run"
+          subtitle="최근 실행"
           icon={<TrendingUp className="h-5 w-5" />}
         />
       </div>
@@ -195,13 +195,13 @@ export default function CampaignDashboardPage() {
           {/* Recent Runs */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-lg">Recent Runs</CardTitle>
+              <CardTitle className="text-lg">최근 실행 기록</CardTitle>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => router.push(`/workspace/${slug}/campaigns/${campaignId}/runs` as any)}
               >
-                View All
+                전체 보기
               </Button>
             </CardHeader>
             <CardContent>
@@ -215,11 +215,11 @@ export default function CampaignDashboardPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Run #</TableHead>
-                      <TableHead>Trigger</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Queries</TableHead>
-                      <TableHead>Started</TableHead>
+                      <TableHead>실행 #</TableHead>
+                      <TableHead>트리거</TableHead>
+                      <TableHead>상태</TableHead>
+                      <TableHead>쿼리</TableHead>
+                      <TableHead>시작일</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -240,7 +240,7 @@ export default function CampaignDashboardPage() {
                           {run.completed_queries}/{run.total_queries}
                           {run.failed_queries > 0 && (
                             <span className="text-destructive ml-1">
-                              ({run.failed_queries} failed)
+                              ({run.failed_queries} 실패)
                             </span>
                           )}
                         </TableCell>
@@ -253,7 +253,7 @@ export default function CampaignDashboardPage() {
                 </Table>
               ) : (
                 <div className="text-center py-8 text-muted-foreground">
-                  <p>No runs yet. Trigger your first run to get started.</p>
+                  <p>아직 실행 기록이 없습니다. 첫 번째 실행을 시작하세요.</p>
                 </div>
               )}
             </CardContent>
@@ -299,8 +299,8 @@ export default function CampaignDashboardPage() {
               <FileSearch className="h-6 w-6 text-brand-orange" />
             </div>
             <div>
-              <h3 className="font-semibold">Query Management</h3>
-              <p className="text-sm text-muted-foreground">Manage query definitions</p>
+              <h3 className="font-semibold">쿼리 관리</h3>
+              <p className="text-sm text-muted-foreground">쿼리 정의를 관리합니다</p>
             </div>
           </CardContent>
         </Card>
@@ -314,8 +314,8 @@ export default function CampaignDashboardPage() {
               <Image className="h-6 w-6 text-brand-orange" />
             </div>
             <div>
-              <h3 className="font-semibold">Gallery</h3>
-              <p className="text-sm text-muted-foreground">Browse LLM responses</p>
+              <h3 className="font-semibold">갤러리</h3>
+              <p className="text-sm text-muted-foreground">LLM 응답을 탐색합니다</p>
             </div>
           </CardContent>
         </Card>
@@ -329,8 +329,8 @@ export default function CampaignDashboardPage() {
               <Settings className="h-6 w-6 text-brand-orange" />
             </div>
             <div>
-              <h3 className="font-semibold">Operations</h3>
-              <p className="text-sm text-muted-foreground">Manage operations</p>
+              <h3 className="font-semibold">작업</h3>
+              <p className="text-sm text-muted-foreground">작업을 관리합니다</p>
             </div>
           </CardContent>
         </Card>

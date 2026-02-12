@@ -130,7 +130,7 @@ export default function ComparePage() {
   if (!workspaceId) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <p className="text-muted-foreground">Loading workspace...</p>
+        <p className="text-muted-foreground">워크스페이스 로딩 중...</p>
       </div>
     )
   }
@@ -138,14 +138,14 @@ export default function ComparePage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Compare Responses</h1>
+        <h1 className="text-2xl font-bold">응답 비교</h1>
       </div>
 
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'llm' | 'date' | 'version')}>
         <TabsList>
-          <TabsTrigger value="llm">LLM vs LLM</TabsTrigger>
-          <TabsTrigger value="date">Date vs Date</TabsTrigger>
-          <TabsTrigger value="version">Version vs Version</TabsTrigger>
+          <TabsTrigger value="llm">LLM 간 비교</TabsTrigger>
+          <TabsTrigger value="date">날짜 간 비교</TabsTrigger>
+          <TabsTrigger value="version">버전 간 비교</TabsTrigger>
         </TabsList>
 
         <TabsContent value="llm" className="space-y-4">
@@ -153,25 +153,25 @@ export default function ComparePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Run ID</label>
+                  <label className="mb-2 block text-sm font-medium">실행 ID</label>
                   <Input
                     type="number"
                     value={llmParams.runId}
                     onChange={(e) =>
                       setLlmParams((prev) => ({ ...prev, runId: e.target.value }))
                     }
-                    placeholder="Enter run ID"
+                    placeholder="실행 ID 입력"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Query Version ID</label>
+                  <label className="mb-2 block text-sm font-medium">쿼리 버전 ID</label>
                   <Input
                     type="number"
                     value={llmParams.queryVersionId}
                     onChange={(e) =>
                       setLlmParams((prev) => ({ ...prev, queryVersionId: e.target.value }))
                     }
-                    placeholder="Enter query version ID"
+                    placeholder="쿼리 버전 ID 입력"
                   />
                 </div>
               </div>
@@ -179,7 +179,7 @@ export default function ComparePage() {
                 onClick={handleCompareLLMs}
                 disabled={compareLLMsMutation.isPending || !llmParams.runId || !llmParams.queryVersionId}
               >
-                Compare
+                비교
               </Button>
             </div>
           </Card>
@@ -190,48 +190,48 @@ export default function ComparePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Query Version ID</label>
+                  <label className="mb-2 block text-sm font-medium">쿼리 버전 ID</label>
                   <Input
                     type="number"
                     value={dateParams.queryVersionId}
                     onChange={(e) =>
                       setDateParams((prev) => ({ ...prev, queryVersionId: e.target.value }))
                     }
-                    placeholder="Enter query version ID"
+                    placeholder="쿼리 버전 ID 입력"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">LLM Provider</label>
+                  <label className="mb-2 block text-sm font-medium">LLM 제공자</label>
                   <Input
                     value={dateParams.llmProvider}
                     onChange={(e) =>
                       setDateParams((prev) => ({ ...prev, llmProvider: e.target.value }))
                     }
-                    placeholder="e.g. openai, anthropic"
+                    placeholder="예: openai, anthropic"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Run ID A</label>
+                  <label className="mb-2 block text-sm font-medium">실행 ID A</label>
                   <Input
                     type="number"
                     value={dateParams.runIdA}
                     onChange={(e) =>
                       setDateParams((prev) => ({ ...prev, runIdA: e.target.value }))
                     }
-                    placeholder="Enter run ID"
+                    placeholder="실행 ID 입력"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Run ID B</label>
+                  <label className="mb-2 block text-sm font-medium">실행 ID B</label>
                   <Input
                     type="number"
                     value={dateParams.runIdB}
                     onChange={(e) =>
                       setDateParams((prev) => ({ ...prev, runIdB: e.target.value }))
                     }
-                    placeholder="Enter run ID"
+                    placeholder="실행 ID 입력"
                   />
                 </div>
               </div>
@@ -245,7 +245,7 @@ export default function ComparePage() {
                   !dateParams.runIdB
                 }
               >
-                Compare
+                비교
               </Button>
             </div>
           </Card>
@@ -256,48 +256,48 @@ export default function ComparePage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Run ID</label>
+                  <label className="mb-2 block text-sm font-medium">실행 ID</label>
                   <Input
                     type="number"
                     value={versionParams.runId}
                     onChange={(e) =>
                       setVersionParams((prev) => ({ ...prev, runId: e.target.value }))
                     }
-                    placeholder="Enter run ID"
+                    placeholder="실행 ID 입력"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">LLM Provider</label>
+                  <label className="mb-2 block text-sm font-medium">LLM 제공자</label>
                   <Input
                     value={versionParams.llmProvider}
                     onChange={(e) =>
                       setVersionParams((prev) => ({ ...prev, llmProvider: e.target.value }))
                     }
-                    placeholder="e.g. openai, anthropic"
+                    placeholder="예: openai, anthropic"
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Query Version ID A</label>
+                  <label className="mb-2 block text-sm font-medium">쿼리 버전 ID A</label>
                   <Input
                     type="number"
                     value={versionParams.queryVersionIdA}
                     onChange={(e) =>
                       setVersionParams((prev) => ({ ...prev, queryVersionIdA: e.target.value }))
                     }
-                    placeholder="Enter version ID"
+                    placeholder="버전 ID 입력"
                   />
                 </div>
                 <div>
-                  <label className="mb-2 block text-sm font-medium">Query Version ID B</label>
+                  <label className="mb-2 block text-sm font-medium">쿼리 버전 ID B</label>
                   <Input
                     type="number"
                     value={versionParams.queryVersionIdB}
                     onChange={(e) =>
                       setVersionParams((prev) => ({ ...prev, queryVersionIdB: e.target.value }))
                     }
-                    placeholder="Enter version ID"
+                    placeholder="버전 ID 입력"
                   />
                 </div>
               </div>
@@ -311,7 +311,7 @@ export default function ComparePage() {
                   !versionParams.queryVersionIdB
                 }
               >
-                Compare
+                비교
               </Button>
             </div>
           </Card>
@@ -327,13 +327,13 @@ export default function ComparePage() {
               <Input
                 value={comparisonName}
                 onChange={(e) => setComparisonName(e.target.value)}
-                placeholder="Enter comparison name..."
+                placeholder="비교 이름 입력..."
               />
               <Button
                 onClick={handleSaveComparison}
                 disabled={createComparisonMutation.isPending || !comparisonName}
               >
-                Save Comparison
+                비교 저장
               </Button>
             </div>
           </Card>
@@ -341,7 +341,7 @@ export default function ComparePage() {
       )}
 
       <div className="space-y-2">
-        <h2 className="text-lg font-semibold">Saved Comparisons</h2>
+        <h2 className="text-lg font-semibold">저장된 비교</h2>
         <SavedComparisons workspaceId={workspaceId} />
       </div>
     </div>
@@ -379,7 +379,7 @@ function LLMCompareResultView({ data }: { data: LLMCompareResponse }) {
               {resp.content}
             </div>
             <p className="mt-2 text-xs text-muted-foreground">
-              {resp.citation_count} citations - {resp.word_count} words
+              {resp.citation_count}개 인용 - {resp.word_count}단어
             </p>
           </Card>
         ))}
@@ -393,22 +393,22 @@ function LLMCompareResultView({ data }: { data: LLMCompareResponse }) {
           </h3>
           <div className="grid grid-cols-3 gap-4 text-sm">
             <div>
-              <span className="text-muted-foreground">Similarity:</span>{' '}
+              <span className="text-muted-foreground">유사도:</span>{' '}
               <span className="font-medium">{(comp.similarity * 100).toFixed(0)}%</span>
             </div>
             <div>
-              <span className="text-muted-foreground">Brand Overlap:</span>{' '}
+              <span className="text-muted-foreground">브랜드 겹침:</span>{' '}
               <span className="font-medium">{(comp.brand_overlap * 100).toFixed(0)}%</span>
             </div>
             <div>
-              <span className="text-muted-foreground">Shared:</span>{' '}
-              <span className="font-medium">{comp.shared_brands.length} brands</span>
+              <span className="text-muted-foreground">공통:</span>{' '}
+              <span className="font-medium">{comp.shared_brands.length}개 브랜드</span>
             </div>
           </div>
           <div className="mt-3 space-y-2">
             {comp.shared_brands.length > 0 && (
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-medium text-muted-foreground">Shared:</span>
+                <span className="text-xs font-medium text-muted-foreground">공통:</span>
                 {comp.shared_brands.map((b) => (
                   <Badge key={b} className="bg-green-100 text-green-800">{b}</Badge>
                 ))}
@@ -417,7 +417,7 @@ function LLMCompareResultView({ data }: { data: LLMCompareResponse }) {
             {comp.unique_a.length > 0 && (
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-muted-foreground">
-                  {comp.response_a.llm_provider} only:
+                  {comp.response_a.llm_provider} 전용:
                 </span>
                 {comp.unique_a.map((b) => (
                   <Badge key={b} className="bg-blue-100 text-blue-800">{b}</Badge>
@@ -427,7 +427,7 @@ function LLMCompareResultView({ data }: { data: LLMCompareResponse }) {
             {comp.unique_b.length > 0 && (
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-medium text-muted-foreground">
-                  {comp.response_b.llm_provider} only:
+                  {comp.response_b.llm_provider} 전용:
                 </span>
                 {comp.unique_b.map((b) => (
                   <Badge key={b} className="bg-orange-100 text-orange-800">{b}</Badge>
@@ -465,7 +465,7 @@ function DiffCompareResultView({
             {data.response_a.content}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {data.response_a.citation_count} citations - {data.response_a.word_count} words
+            {data.response_a.citation_count}개 인용 - {data.response_a.word_count}단어
           </p>
         </Card>
 
@@ -478,32 +478,32 @@ function DiffCompareResultView({
             {data.response_b.content}
           </div>
           <p className="mt-2 text-xs text-muted-foreground">
-            {data.response_b.citation_count} citations - {data.response_b.word_count} words
+            {data.response_b.citation_count}개 인용 - {data.response_b.word_count}단어
           </p>
         </Card>
       </div>
 
       {/* Diff summary */}
       <Card className="p-4">
-        <h3 className="mb-3 text-sm font-semibold">Comparison Diff</h3>
+        <h3 className="mb-3 text-sm font-semibold">비교 차이</h3>
         <div className="grid grid-cols-3 gap-4 text-sm mb-3">
           <div>
-            <span className="text-muted-foreground">Similarity:</span>{' '}
+            <span className="text-muted-foreground">유사도:</span>{' '}
             <span className="font-medium">{(diff.similarity * 100).toFixed(0)}%</span>
           </div>
           <div>
-            <span className="text-muted-foreground">Brand Overlap:</span>{' '}
+            <span className="text-muted-foreground">브랜드 겹침:</span>{' '}
             <span className="font-medium">{(diff.brand_overlap * 100).toFixed(0)}%</span>
           </div>
           <div>
-            <span className="text-muted-foreground">Content Changed:</span>{' '}
-            <span className="font-medium">{diff.content_changed ? 'Yes' : 'No'}</span>
+            <span className="text-muted-foreground">내용 변경:</span>{' '}
+            <span className="font-medium">{diff.content_changed ? '예' : '아니오'}</span>
           </div>
         </div>
         <div className="space-y-2">
           {diff.shared_brands.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">Shared:</span>
+              <span className="text-xs font-medium text-muted-foreground">공통:</span>
               {diff.shared_brands.map((b) => (
                 <Badge key={b} className="bg-green-100 text-green-800">{b}</Badge>
               ))}
@@ -511,7 +511,7 @@ function DiffCompareResultView({
           )}
           {diff.unique_a.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">{labelA} only:</span>
+              <span className="text-xs font-medium text-muted-foreground">{labelA} 전용:</span>
               {diff.unique_a.map((b) => (
                 <Badge key={b} className="bg-blue-100 text-blue-800">{b}</Badge>
               ))}
@@ -519,7 +519,7 @@ function DiffCompareResultView({
           )}
           {diff.unique_b.length > 0 && (
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground">{labelB} only:</span>
+              <span className="text-xs font-medium text-muted-foreground">{labelB} 전용:</span>
               {diff.unique_b.map((b) => (
                 <Badge key={b} className="bg-orange-100 text-orange-800">{b}</Badge>
               ))}

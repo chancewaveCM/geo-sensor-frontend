@@ -41,7 +41,7 @@ export default function OperationsPage() {
   if (!workspaceId) {
     return (
       <div className="flex h-96 items-center justify-center">
-        <p className="text-muted-foreground">Loading workspace...</p>
+        <p className="text-muted-foreground">워크스페이스 로딩 중...</p>
       </div>
     )
   }
@@ -49,40 +49,40 @@ export default function OperationsPage() {
   return (
     <div className="container mx-auto space-y-6 p-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Operations</h1>
+        <h1 className="text-2xl font-bold">작업</h1>
         <Button onClick={() => setCreateDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          Create Operation
+          작업 생성
         </Button>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <Card className="p-4">
-          <div className="text-sm text-muted-foreground">Pending</div>
+          <div className="text-sm text-muted-foreground">대기 중</div>
           <div className="text-2xl font-bold">{stats.pending}</div>
         </Card>
         <Card className="p-4">
-          <div className="text-sm text-muted-foreground">Approved</div>
+          <div className="text-sm text-muted-foreground">승인됨</div>
           <div className="text-2xl font-bold">{stats.approved}</div>
         </Card>
         <Card className="p-4">
-          <div className="text-sm text-muted-foreground">Rejected</div>
+          <div className="text-sm text-muted-foreground">거부됨</div>
           <div className="text-2xl font-bold">{stats.rejected}</div>
         </Card>
       </div>
 
       <Tabs value={statusFilter} onValueChange={setStatusFilter}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="pending">Pending</TabsTrigger>
-          <TabsTrigger value="approved">Approved</TabsTrigger>
-          <TabsTrigger value="rejected">Rejected</TabsTrigger>
+          <TabsTrigger value="all">전체</TabsTrigger>
+          <TabsTrigger value="pending">대기 중</TabsTrigger>
+          <TabsTrigger value="approved">승인됨</TabsTrigger>
+          <TabsTrigger value="rejected">거부됨</TabsTrigger>
         </TabsList>
 
         <TabsContent value={statusFilter} className="mt-4">
           {isLoading ? (
             <div className="rounded-lg border p-8 text-center">
-              <p className="text-sm text-muted-foreground">Loading operations...</p>
+              <p className="text-sm text-muted-foreground">작업 로딩 중...</p>
             </div>
           ) : (
             <OperationsLog

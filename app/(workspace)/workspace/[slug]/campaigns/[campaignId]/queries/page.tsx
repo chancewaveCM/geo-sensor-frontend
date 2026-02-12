@@ -82,7 +82,7 @@ export default function QueriesPage() {
     e.preventDefault()
     createQuery(newQueryForm, {
       onSuccess: () => {
-        toast.success('Query created successfully!')
+        toast.success('쿼리가 생성되었습니다!')
         setAddDialogOpen(false)
         setNewQueryForm({
           query_type: 'exploration',
@@ -92,7 +92,7 @@ export default function QueriesPage() {
         })
       },
       onError: () => {
-        toast.error('Failed to create query')
+        toast.error('쿼리 생성에 실패했습니다')
       }
     })
   }
@@ -103,7 +103,7 @@ export default function QueriesPage() {
 
     createVersion(newVersionForm, {
       onSuccess: () => {
-        toast.success('New version created successfully!')
+        toast.success('새 버전이 생성되었습니다!')
         setVersionDialogOpen(false)
         setNewVersionForm({
           text: '',
@@ -112,7 +112,7 @@ export default function QueriesPage() {
         })
       },
       onError: () => {
-        toast.error('Failed to create version')
+        toast.error('버전 생성에 실패했습니다')
       }
     })
   }
@@ -122,12 +122,12 @@ export default function QueriesPage() {
 
     retireQuery(selectedQuery, {
       onSuccess: () => {
-        toast.success('Query retired successfully!')
+        toast.success('쿼리가 비활성화되었습니다!')
         setRetireDialogOpen(false)
         setSelectedQuery(null)
       },
       onError: () => {
-        toast.error('Failed to retire query')
+        toast.error('쿼리 비활성화에 실패했습니다')
       }
     })
   }
@@ -141,7 +141,7 @@ export default function QueriesPage() {
   if (!workspaceId) {
     return (
       <div className="p-8">
-        <p className="text-muted-foreground">Loading workspace...</p>
+        <p className="text-muted-foreground">워크스페이스 로딩 중...</p>
       </div>
     )
   }
@@ -151,9 +151,9 @@ export default function QueriesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Query Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight">쿼리 관리</h1>
           <p className="text-muted-foreground mt-1">
-            Manage query definitions and version history
+            쿼리 정의 및 버전 이력을 관리하세요
           </p>
         </div>
 
@@ -161,16 +161,16 @@ export default function QueriesPage() {
           <DialogTrigger asChild>
             <Button className="bg-brand-orange hover:bg-brand-orange-hover">
               <Plus className="h-4 w-4 mr-2" />
-              Add Query
+              쿼리 추가
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
-              <DialogTitle>Add New Query</DialogTitle>
+              <DialogTitle>새 쿼리 추가</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreateQuery} className="space-y-4 mt-4">
               <div className="space-y-2">
-                <Label htmlFor="query_type">Query Type *</Label>
+                <Label htmlFor="query_type">쿼리 유형 *</Label>
                 <Select
                   value={newQueryForm.query_type}
                   onValueChange={(value) =>
@@ -181,14 +181,14 @@ export default function QueriesPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="exploration">Exploration</SelectItem>
-                    <SelectItem value="anchor">Anchor (Admin)</SelectItem>
+                    <SelectItem value="exploration">탐색</SelectItem>
+                    <SelectItem value="anchor">앵커 (관리자)</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="cluster">Intent Cluster</Label>
+                <Label htmlFor="cluster">의도 클러스터</Label>
                 <Select
                   value={newQueryForm.intent_cluster_id?.toString() || '0'}
                   onValueChange={(value) =>
@@ -196,7 +196,7 @@ export default function QueriesPage() {
                   }
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select cluster" />
+                    <SelectValue placeholder="클러스터 선택" />
                   </SelectTrigger>
                   <SelectContent>
                     {clusters?.map((cluster) => (
@@ -209,10 +209,10 @@ export default function QueriesPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="text">Query Text *</Label>
+                <Label htmlFor="text">쿼리 텍스트 *</Label>
                 <Textarea
                   id="text"
-                  placeholder="Enter your query text..."
+                  placeholder="쿼리 텍스트를 입력하세요..."
                   value={newQueryForm.text}
                   onChange={(e) =>
                     setNewQueryForm({ ...newQueryForm, text: e.target.value })
@@ -223,10 +223,10 @@ export default function QueriesPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="persona">Persona Type</Label>
+                <Label htmlFor="persona">페르소나 유형</Label>
                 <Input
                   id="persona"
-                  placeholder="e.g., default, expert, beginner"
+                  placeholder="예: default, expert, beginner"
                   value={newQueryForm.persona_type}
                   onChange={(e) =>
                     setNewQueryForm({ ...newQueryForm, persona_type: e.target.value })
@@ -241,14 +241,14 @@ export default function QueriesPage() {
                   onClick={() => setAddDialogOpen(false)}
                   className="flex-1"
                 >
-                  Cancel
+                  취소
                 </Button>
                 <Button
                   type="submit"
                   disabled={creating}
                   className="flex-1 bg-brand-orange hover:bg-brand-orange-hover"
                 >
-                  {creating ? 'Creating...' : 'Create Query'}
+                  {creating ? '생성 중...' : '쿼리 생성'}
                 </Button>
               </div>
             </form>
@@ -259,13 +259,13 @@ export default function QueriesPage() {
       {/* Filters */}
       <Card>
         <CardContent className="flex items-center gap-4 p-4">
-          <Label className="text-sm font-medium">Cluster:</Label>
+          <Label className="text-sm font-medium">클러스터:</Label>
           <Select value={selectedCluster} onValueChange={setSelectedCluster}>
             <SelectTrigger className="w-[200px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Clusters</SelectItem>
+              <SelectItem value="all">전체 클러스터</SelectItem>
               {clusters?.map((cluster) => (
                 <SelectItem key={cluster.id} value={cluster.id.toString()}>
                   {cluster.name}
@@ -279,9 +279,9 @@ export default function QueriesPage() {
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList>
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="anchor">Anchor</TabsTrigger>
-          <TabsTrigger value="exploration">Exploration</TabsTrigger>
+          <TabsTrigger value="all">전체</TabsTrigger>
+          <TabsTrigger value="anchor">앵커</TabsTrigger>
+          <TabsTrigger value="exploration">탐색</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="mt-6">
@@ -313,7 +313,7 @@ export default function QueriesPage() {
           ) : (
             <div className="text-center py-12 border-2 border-dashed rounded-lg">
               <p className="text-muted-foreground">
-                No queries found. Add your first query to get started.
+                쿼리가 없습니다. 첫 번째 쿼리를 추가하세요.
               </p>
             </div>
           )}
@@ -324,14 +324,14 @@ export default function QueriesPage() {
       <Dialog open={versionDialogOpen} onOpenChange={setVersionDialogOpen}>
         <DialogContent className="sm:max-w-[600px]">
           <DialogHeader>
-            <DialogTitle>Create New Version</DialogTitle>
+            <DialogTitle>새 버전 생성</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleCreateVersion} className="space-y-4 mt-4">
             <div className="space-y-2">
-              <Label htmlFor="version_text">Query Text *</Label>
+              <Label htmlFor="version_text">쿼리 텍스트 *</Label>
               <Textarea
                 id="version_text"
-                placeholder="Enter updated query text..."
+                placeholder="업데이트된 쿼리 텍스트를 입력하세요..."
                 value={newVersionForm.text}
                 onChange={(e) => setNewVersionForm({ ...newVersionForm, text: e.target.value })}
                 rows={4}
@@ -340,10 +340,10 @@ export default function QueriesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="version_persona">Persona Type</Label>
+              <Label htmlFor="version_persona">페르소나 유형</Label>
               <Input
                 id="version_persona"
-                placeholder="e.g., default, expert, beginner"
+                placeholder="예: default, expert, beginner"
                 value={newVersionForm.persona_type}
                 onChange={(e) =>
                   setNewVersionForm({ ...newVersionForm, persona_type: e.target.value })
@@ -352,10 +352,10 @@ export default function QueriesPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="change_reason">Change Reason *</Label>
+              <Label htmlFor="change_reason">변경 사유 *</Label>
               <Textarea
                 id="change_reason"
-                placeholder="Why are you creating a new version?"
+                placeholder="새 버전을 만드는 이유를 입력하세요"
                 value={newVersionForm.change_reason}
                 onChange={(e) =>
                   setNewVersionForm({ ...newVersionForm, change_reason: e.target.value })
@@ -372,14 +372,14 @@ export default function QueriesPage() {
                 onClick={() => setVersionDialogOpen(false)}
                 className="flex-1"
               >
-                Cancel
+                취소
               </Button>
               <Button
                 type="submit"
                 disabled={creatingVersion}
                 className="flex-1 bg-brand-orange hover:bg-brand-orange-hover"
               >
-                {creatingVersion ? 'Creating...' : 'Create Version'}
+                {creatingVersion ? '생성 중...' : '버전 생성'}
               </Button>
             </div>
           </form>
@@ -390,20 +390,20 @@ export default function QueriesPage() {
       <AlertDialog open={retireDialogOpen} onOpenChange={setRetireDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Retire Query?</AlertDialogTitle>
+            <AlertDialogTitle>쿼리를 비활성화하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will mark the query as retired and it will no longer be executed in future runs.
-              This action cannot be undone.
+              이 작업은 쿼리를 비활성화 상태로 표시하며, 향후 실행에서 더 이상 실행되지 않습니다.
+              이 작업은 취소할 수 없습니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleRetireQuery}
               disabled={retiring}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {retiring ? 'Retiring...' : 'Retire Query'}
+              {retiring ? '비활성화 중...' : '쿼리 비활성화'}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -436,7 +436,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
               {query.query_type === 'anchor' && (
                 <Badge variant="outline" className="text-xs">
                   <Shield className="h-3 w-3 mr-1" />
-                  Admin Only
+                  관리자 전용
                 </Badge>
               )}
               <span className="text-sm text-muted-foreground">
@@ -446,7 +446,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
             <p className="text-sm leading-relaxed">{latestVersion?.text || query.initial_text}</p>
             {query.intent_cluster_name && (
               <p className="text-xs text-muted-foreground">
-                Cluster: {query.intent_cluster_name}
+                클러스터: {query.intent_cluster_name}
               </p>
             )}
           </div>
@@ -458,7 +458,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
               disabled={query.is_retired}
             >
               <History className="h-4 w-4 mr-1" />
-              New Version
+              새 버전
             </Button>
             {!query.is_retired && (
               <Button
@@ -468,7 +468,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
                 className="text-destructive hover:text-destructive"
               >
                 <Archive className="h-4 w-4 mr-1" />
-                Retire
+                비활성화
               </Button>
             )}
           </div>
@@ -480,7 +480,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
           <Accordion type="single" collapsible>
             <AccordionItem value="versions" className="border-0">
               <AccordionTrigger className="text-sm text-muted-foreground hover:no-underline py-2">
-                View {versions.length - 1} previous version{versions.length > 2 ? 's' : ''}
+                이전 버전 {versions.length - 1}개 보기
               </AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-3 pt-2">
@@ -497,7 +497,7 @@ function QueryCard({ query, workspaceId, campaignId, onNewVersion, onRetire }: Q
                       <p className="text-sm">{version.text}</p>
                       {version.change_reason && (
                         <p className="text-xs text-muted-foreground italic">
-                          Reason: {version.change_reason}
+                          사유: {version.change_reason}
                         </p>
                       )}
                     </div>
