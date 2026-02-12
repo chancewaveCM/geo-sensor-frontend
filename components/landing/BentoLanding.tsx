@@ -256,7 +256,7 @@ function Gauge({ percent }: { percent: number }) {
   return (
     <div className="relative h-[130px] w-[130px]">
       <svg viewBox="0 0 120 120" className="h-full w-full">
-        <circle cx="60" cy="60" r={radius} fill="none" className="stroke-muted" strokeWidth="12" />
+        <circle cx="60" cy="60" r={radius} fill="none" className="stroke-gray-200" strokeWidth="12" />
         <circle
           cx="60"
           cy="60"
@@ -292,7 +292,7 @@ function MiniBar({ label, value }: { label: string; value: number }) {
         <span>{label}</span>
         <span>{value}%</span>
       </div>
-      <div className="h-2 rounded-full bg-muted">
+      <div className="h-2 rounded-full bg-gray-200">
         <div className="h-2 rounded-full bg-gradient-to-r from-brand-orange to-brand-navy" style={{ width: `${value}%` }} />
       </div>
     </div>

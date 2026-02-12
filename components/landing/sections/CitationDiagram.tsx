@@ -26,13 +26,13 @@ export function CitationDiagram() {
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border bg-card p-4">
-          <div className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+        <div className="rounded-2xl border border-gray-700 bg-gray-900 p-4">
+          <div className="inline-flex items-center gap-1 text-xs text-gray-300">
             <Gauge className="h-3.5 w-3.5" />
             Citation Share
           </div>
-          <p className="mt-1 text-2xl font-bold text-foreground">33%</p>
-          <p className="mt-1 text-xs text-muted-foreground">3개 모델 중 1개 언급</p>
+          <p className="mt-1 text-2xl font-bold text-gray-100">33%</p>
+          <p className="mt-1 text-xs text-gray-400">3개 모델 중 1개 언급</p>
         </div>
       </div>
     </div>

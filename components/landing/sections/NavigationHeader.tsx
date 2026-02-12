@@ -121,7 +121,7 @@ export function NavigationHeader() {
               aria-current={activeId === item.id ? 'page' : undefined}
               onClick={() => handleScrollTo(item.id)}
               className={cn(
-                'relative text-sm font-medium text-muted-foreground transition-colors hover:text-brand-navy',
+                'relative text-sm font-medium text-gray-600 transition-colors hover:text-brand-navy',
                 activeId === item.id && 'font-semibold text-brand-navy'
               )}
             >
@@ -146,7 +146,7 @@ export function NavigationHeader() {
 
         <button
           type="button"
-          className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border text-foreground md:hidden"
+          className="inline-flex h-9 w-9 items-center justify-center justify-self-end rounded-md border border-border text-foreground md:hidden"
           aria-label={isMobileMenuOpen ? '모바일 메뉴 닫기' : '모바일 메뉴 열기'}
           aria-haspopup="menu"
           aria-controls={mobileMenuPanelId}
