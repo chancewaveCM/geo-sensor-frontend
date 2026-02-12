@@ -185,12 +185,7 @@ export default function CampaignSettingsPage() {
   return (
     <ErrorBoundary>
       <div className="container mx-auto py-8 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold">{campaign.name}</h1>
-          <p className="text-muted-foreground">캠페인 설정</p>
-        </div>
-
-      <Tabs defaultValue="schedule" className="space-y-6">
+        <Tabs defaultValue="schedule" className="space-y-6">
         <TabsList>
           <TabsTrigger value="schedule">스케줄 설정</TabsTrigger>
           <TabsTrigger value="notifications">알림 설정</TabsTrigger>

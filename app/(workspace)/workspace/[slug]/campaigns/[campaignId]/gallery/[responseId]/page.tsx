@@ -73,21 +73,8 @@ export default function GalleryDetailPage() {
 
   return (
     <div className="p-8 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link
-              href={`/workspace/${slug}/campaigns/${campaignId}/gallery` as any}
-              className="hover:text-foreground transition-colors"
-            >
-              Gallery
-            </Link>
-            <span>/</span>
-            <span>Response #{data.id}</span>
-          </div>
-          <h1 className="text-3xl font-bold">Response Detail</h1>
-        </div>
+      {/* Actions */}
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-2">
           <Button
             variant="outline"

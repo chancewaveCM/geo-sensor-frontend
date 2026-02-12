@@ -137,10 +137,6 @@ export default function ComparePage() {
 
   return (
     <div className="container mx-auto space-y-6 p-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">응답 비교</h1>
-      </div>
-
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'llm' | 'date' | 'version')}>
         <TabsList>
           <TabsTrigger value="llm">LLM 간 비교</TabsTrigger>

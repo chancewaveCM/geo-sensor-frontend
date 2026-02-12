@@ -148,15 +148,8 @@ export default function QueriesPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">쿼리 관리</h1>
-          <p className="text-muted-foreground mt-1">
-            쿼리 정의 및 버전 이력을 관리하세요
-          </p>
-        </div>
-
+      {/* Actions */}
+      <div className="flex items-center justify-end">
         <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-brand-orange hover:bg-brand-orange-hover">

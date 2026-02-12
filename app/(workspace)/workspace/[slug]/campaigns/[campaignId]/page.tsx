@@ -121,32 +121,29 @@ export default function CampaignDashboardPage() {
   return (
     <ErrorBoundary>
       <div className="space-y-6 animate-in fade-in duration-500">
-        {/* Header */}
+        {/* Actions */}
         <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight">{campaign.name}</h1>
           <Badge className={cn('text-xs', getStatusVariant(campaign.status))}>
             {campaign.status}
           </Badge>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              onClick={() => router.push(`/workspace/${slug}/campaigns/${campaignId}/settings`)}
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              설정
+            </Button>
+            <Button
+              onClick={handleTriggerRun}
+              disabled={triggering}
+              className="bg-brand-orange hover:bg-brand-orange-hover"
+            >
+              <Play className="h-4 w-4 mr-2" />
+              {triggering ? '실행 중...' : '실행 시작'}
+            </Button>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            onClick={() => router.push(`/workspace/${slug}/campaigns/${campaignId}/settings`)}
-          >
-            <Settings className="h-4 w-4 mr-2" />
-            설정
-          </Button>
-          <Button
-            onClick={handleTriggerRun}
-            disabled={triggering}
-            className="bg-brand-orange hover:bg-brand-orange-hover"
-          >
-            <Play className="h-4 w-4 mr-2" />
-            {triggering ? '실행 중...' : '실행 시작'}
-          </Button>
-        </div>
-      </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">

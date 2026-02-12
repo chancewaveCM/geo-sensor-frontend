@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LayoutDashboard, Megaphone, Settings, ChevronRight, X, Layers, Play, Search, Image, GitCompareArrows, ClipboardList, Send } from 'lucide-react'
+import { LayoutDashboard, Megaphone, Settings, ChevronRight, X, Layers, Send } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 interface WorkspaceSidebarProps {
@@ -23,7 +23,7 @@ interface NavSection {
   items: NavItem[]
 }
 
-function getNavSections(slug: string, pathname: string): NavSection[] {
+function getNavSections(slug: string): NavSection[] {
   const sections: NavSection[] = [
     {
       title: '워크스페이스',
@@ -46,47 +46,6 @@ function getNavSections(slug: string, pathname: string): NavSection[] {
       ],
     },
   ]
-
-  // Check if we're in a campaign route
-  const campaignMatch = pathname.match(/\/workspace\/[^/]+\/campaigns\/([^/]+)/)
-  if (campaignMatch) {
-    const campaignId = campaignMatch[1]
-    sections.push({
-      title: '캠페인 상세',
-      items: [
-        {
-          title: '대시보드',
-          href: `/workspace/${slug}/campaigns/${campaignId}`,
-          icon: LayoutDashboard,
-        },
-        {
-          title: '실행',
-          href: `/workspace/${slug}/campaigns/${campaignId}/runs`,
-          icon: Play,
-        },
-        {
-          title: '쿼리',
-          href: `/workspace/${slug}/campaigns/${campaignId}/queries`,
-          icon: Search,
-        },
-        {
-          title: '갤러리',
-          href: `/workspace/${slug}/campaigns/${campaignId}/gallery`,
-          icon: Image,
-        },
-        {
-          title: '비교',
-          href: `/workspace/${slug}/campaigns/${campaignId}/gallery/compare`,
-          icon: GitCompareArrows,
-        },
-        {
-          title: '작업',
-          href: `/workspace/${slug}/campaigns/${campaignId}/operations`,
-          icon: ClipboardList,
-        },
-      ],
-    })
-  }
 
   sections.push({
     title: '도구',
@@ -114,7 +73,7 @@ export function WorkspaceSidebar({
   onClose,
 }: WorkspaceSidebarProps) {
   const pathname = usePathname()
-  const sections = getNavSections(slug, pathname)
+  const sections = getNavSections(slug)
 
   return (
     <>

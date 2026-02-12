@@ -98,15 +98,8 @@ export default function RunsPage() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">실행 기록</h1>
-          <p className="text-muted-foreground mt-1">
-            캠페인 실행 기록을 확인하고 관리하세요
-          </p>
-        </div>
-
+      {/* Actions */}
+      <div className="flex items-center justify-end">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-brand-orange hover:bg-brand-orange-hover">
