@@ -6,6 +6,7 @@ import {
   GitBranch,
   LineChart,
   Settings,
+  Wand2,
 } from 'lucide-react'
 import type { NavSection, BreadcrumbItem } from './types'
 
@@ -29,6 +30,7 @@ export const navigationSections: NavSection[] = [
     title: '도구',
     items: [
       { title: 'AI 분석', href: '/analysis', icon: LineChart },
+      { title: '콘텐츠 최적화', href: '/dashboard/content-optimizer', icon: Wand2 },
     ],
   },
   {
@@ -60,6 +62,10 @@ export const routeConfig: Record<string, { title: string; breadcrumbs: Breadcrum
   '/analysis': {
     title: 'AI 분석',
     breadcrumbs: [{ label: '도구' }, { label: 'AI 분석' }],
+  },
+  '/dashboard/content-optimizer': {
+    title: 'GEO 콘텐츠 최적화',
+    breadcrumbs: [{ label: '도구' }, { label: '콘텐츠 최적화' }],
   },
   '/settings': {
     title: '설정',
